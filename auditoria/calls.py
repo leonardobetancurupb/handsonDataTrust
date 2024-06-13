@@ -60,8 +60,35 @@ def validate_log():
 
   return response.text
 
+def search_logs(initial_date,final_date):
+  
+  url = "http://127.0.0.1:5000/search"
+  
+  payload = {
+    "initial_date" : initial_date,
+    "final_date" : final_date
+  }
+
+  def generate_token():
+    token = "PALABRA"+str(payload)+time.strftime("%Y-%m-%d", time.localtime())
+    token = hashlib.sha256(token.encode()).hexdigest()
+    return token
+
+  generated_token = generate_token()
+
+  headers = {
+  'Content-Type': 'application/json',
+  'Authorization': f'Bearer {generated_token}'
+  }
+
+  response = requests.request("GET", url, headers=headers, data=json.dumps(payload))
+
+  return response.text
 
 # Sample calls
-send_log(type,description,source,destination)
 
-validate_log()
+# print(send_log(type,description,source,destination))
+
+# print(validate_log())
+
+print(search_logs("2024-06-01","2024-06-13"))

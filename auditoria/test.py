@@ -2,6 +2,7 @@ import json
 import time
 import hashlib
 from flask import Flask, jsonify, request
+from datetime import datetime
 
 # Function: Add log to file
 def add_log(content, source, destination, type):
@@ -101,6 +102,35 @@ def validate_token(payload):
     
     return False
 
+def search_log(initial_date,final_date):
+
+    i_date = datetime.strptime(initial_date, "%Y-%m-%d")
+    i_epoch = int(time.mktime(i_date.timetuple()))
+
+    f_date = datetime.strptime(final_date, "%Y-%m-%d")
+    f_epoch = int(time.mktime(f_date.timetuple()))
+
+    response = []
+
+    with open(file, 'r') as f:
+
+        logs = f.readlines()
+        if not logs:
+            print("Empty file.")
+            return None
+        
+        for registry in logs:
+            log = json.loads(registry)
+
+            #validation on timestamp between dates
+            log_timestamp = log.get('timestamp')
+
+            if log_timestamp > i_epoch and log_timestamp < f_epoch:
+                response.append(log)
+        
+    return response
+
+
 app = Flask(__name__)
 
 # Log file path
@@ -147,6 +177,25 @@ def validation_reply():
         response = {'auth' : 'Token validated', 'log_status' : status} 
 
     else: response = {'auth' : 'Invalid token :(', 'log_status' : " null "} 
+
+    return jsonify(response), 201
+
+@app.route('/search', methods=['GET'])
+def search_reply():
+
+    payload = request.get_data(as_text=True)
+    
+    if validate_token(payload):
+        
+        content = json.loads(payload)
+        initial_date = content.get('initial_date')
+        final_date = content.get('final_date')
+
+        logs = search_log(initial_date,final_date)
+
+        response = {'auth' : 'Token validated', 'response' : logs} 
+
+    else: response = {'auth' : 'Invalid token :(', 'response' : " null "} 
 
     return jsonify(response), 201
 
