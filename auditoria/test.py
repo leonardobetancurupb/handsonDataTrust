@@ -102,13 +102,30 @@ def validate_token(payload):
     
     return False
 
-def search_log(initial_date,final_date):
 
-    i_date = datetime.strptime(initial_date, "%Y-%m-%d")
-    i_epoch = int(time.mktime(i_date.timetuple()))
+def search_log(req):
 
-    f_date = datetime.strptime(final_date, "%Y-%m-%d")
-    f_epoch = int(time.mktime(f_date.timetuple()))
+    if 'initial_date' in req:
+
+        initial_date = req.get('initial_date')
+        i_date = datetime.strptime(initial_date, "%Y-%m-%d")
+        i_epoch = int(time.mktime(i_date.timetuple()))
+
+    else : i_epoch = 0
+
+    if 'final_date' in req:
+
+        final_date = req.get('final_date')
+        f_date = datetime.strptime(final_date, "%Y-%m-%d")
+        f_epoch = int(time.mktime(f_date.timetuple()))
+
+    else : f_epoch = time.time()
+
+    type_req = ""
+
+    if 'type' in req:
+        type_req = req.get('type')
+
 
     response = []
 
@@ -124,9 +141,16 @@ def search_log(initial_date,final_date):
 
             #validation on timestamp between dates
             log_timestamp = log.get('timestamp')
+            log_type = log.get('type')
 
-            if log_timestamp > i_epoch and log_timestamp < f_epoch:
-                response.append(log)
+            if type_req and type_req == log_type:
+
+                if log_timestamp > i_epoch and log_timestamp < f_epoch:
+                    response.append(log)
+            
+            elif not type_req :
+                if log_timestamp > i_epoch and log_timestamp < f_epoch:
+                    response.append(log)
         
     return response
 
@@ -188,10 +212,7 @@ def search_reply():
     if validate_token(payload):
         
         content = json.loads(payload)
-        initial_date = content.get('initial_date')
-        final_date = content.get('final_date')
-
-        logs = search_log(initial_date,final_date)
+        logs = search_log(content)
 
         response = {'auth' : 'Token validated', 'response' : logs} 
 

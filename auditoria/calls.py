@@ -10,6 +10,15 @@ source = "user_1"
 destination = "rds_db_1"
 description = {"query":"SELECT * from TABLE personas"}
 
+
+# Example search format
+
+search_info = {
+    "initial_date" : "2024-06-01",
+    "final_date" : "2024-06-13",
+    "type" : type
+  }
+
 def send_log(type,content,source,destination):
 
   url = "http://127.0.0.1:5000/response"
@@ -60,14 +69,11 @@ def validate_log():
 
   return response.text
 
-def search_logs(initial_date,final_date):
+def search_logs(data):
   
   url = "http://127.0.0.1:5000/search"
   
-  payload = {
-    "initial_date" : initial_date,
-    "final_date" : final_date
-  }
+  payload = data
 
   def generate_token():
     token = "PALABRA"+str(payload)+time.strftime("%Y-%m-%d", time.localtime())
@@ -91,4 +97,4 @@ def search_logs(initial_date,final_date):
 
 # print(validate_log())
 
-print(search_logs("2024-06-01","2024-06-13"))
+print(search_logs(search_info))
