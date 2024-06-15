@@ -16,7 +16,8 @@ description = {"query":"SELECT * from TABLE personas"}
 search_info = {
     "initial_date" : "2024-06-01",
     "final_date" : "2024-06-13",
-    "type" : type
+    "type" : type,
+    "user" : "user_1"
   }
 
 def send_log(type,content,source,destination):

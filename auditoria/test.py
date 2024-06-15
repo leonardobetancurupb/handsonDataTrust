@@ -122,10 +122,13 @@ def search_log(req):
     else : f_epoch = time.time()
 
     type_req = ""
+    user = ""
 
     if 'type' in req:
         type_req = req.get('type')
 
+    if 'user' in req:
+        user = req.get('user')
 
     response = []
 
@@ -142,6 +145,7 @@ def search_log(req):
             #validation on timestamp between dates
             log_timestamp = log.get('timestamp')
             log_type = log.get('type')
+            log_user = log.get('user')
 
             if type_req and type_req == log_type:
 
@@ -149,6 +153,15 @@ def search_log(req):
                     response.append(log)
             
             elif not type_req :
+                if log_timestamp > i_epoch and log_timestamp < f_epoch:
+                    response.append(log)
+
+            if user and user == log_user:
+
+                if log_timestamp > i_epoch and log_timestamp < f_epoch:
+                    response.append(log)
+            
+            elif not user :
                 if log_timestamp > i_epoch and log_timestamp < f_epoch:
                     response.append(log)
         
