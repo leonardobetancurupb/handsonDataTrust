@@ -30,6 +30,10 @@ from .app import views
 router = DefaultRouter()
 router.register(r'persons', views.PersonViewSet)
 router.register(r'holders', views.HolderViewSet)
+router.register(r'consumers', views.ConsumerViewSet)
+router.register(r'admin', views.AdminViewSet)
+router.register(r'policy', views.PolicyViewSet)
+router.register(r'data', views.DataViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
