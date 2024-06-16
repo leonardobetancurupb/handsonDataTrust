@@ -18,7 +18,7 @@ search_info = {
     "final_date" : "2024-06-13",
     "type" : type,
     "user" : "user_1"
-  }
+}
 
 def send_log(type,content,source,destination):
 

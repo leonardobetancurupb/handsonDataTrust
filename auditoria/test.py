@@ -156,14 +156,16 @@ def search_log(req):
                 if log_timestamp > i_epoch and log_timestamp < f_epoch:
                     response.append(log)
 
-            if user and user == log_user:
+#LOGS DUPLICADOS. ANIDAR CONDICIONES
 
-                if log_timestamp > i_epoch and log_timestamp < f_epoch:
-                    response.append(log)
+            # if user and user == log_user:
+
+            #     if log_timestamp > i_epoch and log_timestamp < f_epoch:
+            #         response.append(log)
             
-            elif not user :
-                if log_timestamp > i_epoch and log_timestamp < f_epoch:
-                    response.append(log)
+            # elif not user :
+            #     if log_timestamp > i_epoch and log_timestamp < f_epoch:
+            #         response.append(log)
         
     return response
 
