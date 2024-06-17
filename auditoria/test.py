@@ -50,6 +50,8 @@ def get_last_log(file):
         last_log = logs[-1]
         return json.loads(last_log)
 
+# Functions to validate logs
+
 def validate_log(file):
 
     with open(file, 'r') as f:
@@ -81,6 +83,54 @@ def validate_log(file):
         
         return "Consistent Log!"
 
+def validate_log_by_id(id):
+
+    with open(file, 'r') as f:
+
+        logs = f.readlines()
+        if not logs:
+            print("Empty file.")
+            return None
+        
+        for registry in logs:
+            log = json.loads(registry)
+
+            if id == log.get('log_id'):
+                
+                #validation on registered log equals calculated log
+                registered_hash = log.pop('actual_hash')
+                actual_hash = hashlib.sha256(str(log).encode()).hexdigest()
+
+                if actual_hash != registered_hash:
+                    return f"Error on log: {log['log_id']}"
+        
+        return "Consistent Log! (verified individually)"    
+
+def validate_log_by_range(start_id, end_id):
+
+    with open(file, 'r') as f:
+
+        logs = f.readlines()
+        if not logs:
+            print("Empty file.")
+            return None
+        
+        for registry in logs:
+            log = json.loads(registry)
+            log_id = log.get('log_id')
+
+            if start_id < log_id and log_id < end_id:
+                
+                #validation on registered log equals calculated log
+                registered_hash = log.pop('actual_hash')
+                actual_hash = hashlib.sha256(str(log).encode()).hexdigest()
+
+                if actual_hash != registered_hash:
+                    return f"Error on log: {log['log_id']}"
+        
+        return "Consistent Log! (verified in a range of logs)"
+
+# validate communication token
 def validate_token(payload):
 
     content = json.loads(payload)
@@ -103,6 +153,7 @@ def validate_token(payload):
     return False
 
 
+# partial function to validate logs
 def search_log(req):
 
     if 'initial_date' in req:
