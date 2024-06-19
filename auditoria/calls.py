@@ -3,6 +3,7 @@ import json
 import time
 import hashlib
 
+address = "http://audit-app:5000"
 
 # Example data
 type = "query"
@@ -22,7 +23,7 @@ search_info = {
 
 def send_log(type,content,source,destination):
 
-  url = "http://127.0.0.1:5000/response"
+  url = address+"/response"
   
   payload = {
       
@@ -50,7 +51,7 @@ def send_log(type,content,source,destination):
 
 def validate_log():
     
-  url = "http://127.0.0.1:5000/validate"
+  url = address+"/validate"
   
   payload = {}
 
@@ -72,7 +73,7 @@ def validate_log():
 
 def search_logs(data):
   
-  url = "http://127.0.0.1:5000/search"
+  url = address+"/search"
   
   payload = data
 
@@ -94,8 +95,10 @@ def search_logs(data):
 
 # Sample calls
 
-# print(send_log(type,description,source,destination))
+while True:
+  time.sleep(30)
+  print(send_log(type,description,source,destination))
 
 # print(validate_log())
 
-print(search_logs(search_info))
+

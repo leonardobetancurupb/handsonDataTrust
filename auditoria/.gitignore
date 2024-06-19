@@ -1,5 +1,5 @@
 __pycache__/
 web-test/
 *.pem
-pruebas.py
-docker-compose.yaml
+*.ppk
+*sender.txt

@@ -1,0 +1,42 @@
+version: "3.8"
+services: 
+
+  audit-app:
+    image: python:3.12.2
+    container_name: audit-app
+    hostname: audit-app
+    networks: 
+      - default
+    ports:
+      - "5000:5000"
+    expose:
+      - "5000"
+    volumes:
+      - ./audit:/audit
+    working_dir: /audit
+    command: bash -c "pip install -r requirements_audit.txt && python app.py"
+
+  sender-app:
+    image: python:3.12.2
+    container_name: sender-app
+    hostname: sender-app
+    networks: 
+      - default
+    ports:
+      - "80:80"
+    expose:
+      - "80"
+    volumes:
+      - ./sender:/sender
+    working_dir: /sender
+    command: bash -c "pip install -r requirements_sender.txt && python calls.py"
+
+networks:
+  default:
+    ipam:
+      config:
+      - subnet: 172.19.1.0/24
+
+volumes:
+    sender-app: ~
+    audit-app: ~
