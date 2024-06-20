@@ -1,8 +1,10 @@
 import json
 import time
 import hashlib
+import pandas as pd
 from flask import Flask, jsonify, request
 from datetime import datetime
+
 
 # Function: Add log to file
 def add_log(content, source, destination, type):
@@ -83,7 +85,7 @@ def validate_log(file):
         
         return "Consistent Log!"
 
-def validate_log_by_id(id):
+def validate_log_by_id(file, id):
 
     with open(file, 'r') as f:
 
@@ -106,7 +108,7 @@ def validate_log_by_id(id):
         
         return "Consistent Log! (verified individually)"    
 
-def validate_log_by_range(start_id, end_id):
+def validate_log_by_range(file,start_id, end_id):
 
     with open(file, 'r') as f:
 
@@ -119,7 +121,7 @@ def validate_log_by_range(start_id, end_id):
             log = json.loads(registry)
             log_id = log.get('log_id')
 
-            if start_id < log_id and log_id < end_id:
+            if start_id <= log_id and log_id <= end_id:
                 
                 #validation on registered log equals calculated log
                 registered_hash = log.pop('actual_hash')
@@ -131,6 +133,7 @@ def validate_log_by_range(start_id, end_id):
         return "Consistent Log! (verified in a range of logs)"
 
 # validate communication token
+
 def validate_token(payload):
 
     content = json.loads(payload)
@@ -152,74 +155,30 @@ def validate_token(payload):
     
     return False
 
+# Search functions
 
-# partial function to validate logs
-def search_log(req):
+def search_logs(file, key, value):
 
-    if 'initial_date' in req:
+    df = pd.read_json(file, lines=True)
 
-        initial_date = req.get('initial_date')
-        i_date = datetime.strptime(initial_date, "%Y-%m-%d")
-        i_epoch = int(time.mktime(i_date.timetuple()))
+    result = df[df[key]==value]
+    result.to_csv('result.csv', index=False)
+    return 
 
-    else : i_epoch = 0
+def search_logs_by_date(file, initial_date, final_date):
 
-    if 'final_date' in req:
+    if isinstance(initial_date, str):
+        initial_date = pd.to_datetime(initial_date)
+    if isinstance(final_date, str):
+        final_date = pd.to_datetime(final_date)
 
-        final_date = req.get('final_date')
-        f_date = datetime.strptime(final_date, "%Y-%m-%d")
-        f_epoch = int(time.mktime(f_date.timetuple()))
+    df = pd.read_json(file, lines=True, convert_dates={'timestamp': False})
 
-    else : f_epoch = time.time()
-
-    type_req = ""
-    user = ""
-
-    if 'type' in req:
-        type_req = req.get('type')
-
-    if 'user' in req:
-        user = req.get('user')
-
-    response = []
-
-    with open(file, 'r') as f:
-
-        logs = f.readlines()
-        if not logs:
-            print("Empty file.")
-            return None
-        
-        for registry in logs:
-            log = json.loads(registry)
-
-            #validation on timestamp between dates
-            log_timestamp = log.get('timestamp')
-            log_type = log.get('type')
-            log_user = log.get('user')
-
-            if type_req and type_req == log_type:
-
-                if log_timestamp > i_epoch and log_timestamp < f_epoch:
-                    response.append(log)
-            
-            elif not type_req :
-                if log_timestamp > i_epoch and log_timestamp < f_epoch:
-                    response.append(log)
-
-#LOGS DUPLICADOS. ANIDAR CONDICIONES
-
-            # if user and user == log_user:
-
-            #     if log_timestamp > i_epoch and log_timestamp < f_epoch:
-            #         response.append(log)
-            
-            # elif not user :
-            #     if log_timestamp > i_epoch and log_timestamp < f_epoch:
-            #         response.append(log)
-        
-    return response
-
+    result = df[(df['timestamp'] >= initial_date) & (df['timestamp'] <= final_date)]
+    
+    result.to_csv('result.csv', index=False)
+    
+    return 
 
 app = Flask(__name__)
 
@@ -227,7 +186,7 @@ app = Flask(__name__)
 file = "audit.txt"
 
 @app.route('/response', methods=['POST'])
-def reply():
+def log_reply():
 
 
     payload = request.get_data(as_text=True)
@@ -252,8 +211,6 @@ def reply():
         }
 
         return jsonify(response), 401
-    
-
 
 @app.route('/validate', methods=['GET'])
 def validation_reply():
@@ -270,17 +227,65 @@ def validation_reply():
 
     return jsonify(response), 201
 
-@app.route('/search', methods=['GET'])
-def search_reply():
+@app.route('/validate/id', methods=['GET'])
+def validation_id_reply():
+
+    payload = request.get_data(as_text=True)
+
+    if validate_token(payload):
+    
+        content = json.loads(payload)
+        status = validate_log_by_id(file,content.pop('log_id'))
+
+        response = {'auth' : 'Token validated', 'log_status' : status} 
+
+    else: response = {'auth' : 'Invalid token :(', 'log_status' : " null "} 
+
+    return jsonify(response), 201
+
+@app.route('/validate/range', methods=['GET'])
+def validation_range_reply():
+
+    payload = request.get_data(as_text=True)
+
+    if validate_token(payload):
+    
+        content = json.loads(payload)
+        status = validate_log_by_range(file,content.pop('start_id'),content.pop('end_id'))
+
+        response = {'auth' : 'Token validated', 'log_status' : status} 
+
+    else: response = {'auth' : 'Invalid token :(', 'log_status' : " null "} 
+
+    return jsonify(response), 201
+
+@app.route('/search/key', methods=['GET'])
+def search_key_reply():
 
     payload = request.get_data(as_text=True)
     
     if validate_token(payload):
         
         content = json.loads(payload)
-        logs = search_log(content)
+        logs = search_logs(file, content.pop('key'), content.pop('value'))
 
-        response = {'auth' : 'Token validated', 'response' : logs} 
+        response = {'auth' : 'Token validated', 'response' : "Response loaded in result.csv"} 
+
+    else: response = {'auth' : 'Invalid token :(', 'response' : " null "} 
+
+    return jsonify(response), 201
+
+@app.route('/search/date', methods=['GET'])
+def search_date_reply():
+
+    payload = request.get_data(as_text=True)
+    
+    if validate_token(payload):
+        
+        content = json.loads(payload)
+        logs = search_logs_by_date(file, content.pop('initial_date'), content.pop('final_date'))
+
+        response = {'auth' : 'Token validated', 'response' : "Response loaded in result.csv"} 
 
     else: response = {'auth' : 'Invalid token :(', 'response' : " null "} 
 
