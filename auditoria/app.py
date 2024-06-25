@@ -2,7 +2,7 @@ import json
 import time
 import hashlib
 import pandas as pd
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, Response	
 from datetime import datetime
 
 
@@ -162,8 +162,8 @@ def search_logs(file, key, value):
     df = pd.read_json(file, lines=True)
 
     result = df[df[key]==value]
-    result.to_csv('result.csv', index=False)
-    return 
+    x = result.to_json(orient='records', date_format='iso')
+    return x
 
 def search_logs_by_date(file, initial_date, final_date):
 
@@ -175,10 +175,12 @@ def search_logs_by_date(file, initial_date, final_date):
     df = pd.read_json(file, lines=True, convert_dates={'timestamp': False})
 
     result = df[(df['timestamp'] >= initial_date) & (df['timestamp'] <= final_date)]
+    print(result.head())
     
-    result.to_csv('result.csv', index=False)
-    
-    return 
+    x = result.to_json(orient='records', date_format='iso')
+    print(x)
+
+    return x
 
 app = Flask(__name__)
 
@@ -269,11 +271,12 @@ def search_key_reply():
         content = json.loads(payload)
         logs = search_logs(file, content.pop('key'), content.pop('value'))
 
-        response = {'auth' : 'Token validated', 'response' : "Response loaded in result.csv"} 
 
-    else: response = {'auth' : 'Invalid token :(', 'response' : " null "} 
+    else:
+        response = {'auth' : 'Invalid token :(', 'response' : " null "}
+        return response
 
-    return jsonify(response), 201
+    return Response(logs, mimetype='application/json'), 201
 
 @app.route('/search/date', methods=['GET'])
 def search_date_reply():
@@ -285,11 +288,13 @@ def search_date_reply():
         content = json.loads(payload)
         logs = search_logs_by_date(file, content.pop('initial_date'), content.pop('final_date'))
 
-        response = {'auth' : 'Token validated', 'response' : "Response loaded in result.csv"} 
+        response = logs
 
-    else: response = {'auth' : 'Invalid token :(', 'response' : " null "} 
+    else: 
+        response = {'auth' : 'Invalid token :(', 'response' : " null "}
+        return response
 
-    return jsonify(response), 201
+    return Response(logs, mimetype='application/json'), 201
 
 
 

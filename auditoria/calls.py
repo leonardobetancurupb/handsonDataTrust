@@ -180,10 +180,8 @@ def search_logs_by_key(key, value):
 
 
 # # CODE TO TEST SERVICE IN CONTAINER
+print(search_logs_by_key("type", "query"))
 
-# while True:
-#   time.sleep(30)
-#   print(send_log(type,description,source,destination))
 
 # # print(validate_log())
 
