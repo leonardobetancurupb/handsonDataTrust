@@ -13,8 +13,12 @@ services:
 
   backend:
     build: ./backend
+    # command: python -m http.server -d /code 8001
+    command: python -m flask --app demo1 run --host=0.0.0.0 --port=5000
     networks:
       - backend
+    volumes:
+      - ./backend/src:/code
     depends_on:
       db:
         condition: service_started

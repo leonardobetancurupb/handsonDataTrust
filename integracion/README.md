@@ -13,5 +13,6 @@ docker compose down
 ```sh
 docker compose exec -it db bash
 docker compose exec -it web bash
-
+docker compose exec -it backend bash
+docker compose exec -it auditoria bash
 ```
