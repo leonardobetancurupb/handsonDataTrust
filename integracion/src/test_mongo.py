@@ -1,6 +1,9 @@
 import os
 import pymongo
 
+print(f'PyMongo version: {pymongo.__version__}')
+
+
 myclient = pymongo.MongoClient("mongodb://db:27017/", username=os.getenv('MONGO_USERNAME'), password=os.getenv('MONGO_PASSWORD'))
 
 mydb = myclient["mydatabase"]
