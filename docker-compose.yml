@@ -1,0 +1,44 @@
+version: "3.8",
+services: 
+  mongo-db: 
+    image: mongo:3.6
+    hostname: mongo-db
+    container_name: mongo-db
+    networks: 
+      - default
+    expose: 
+      - "27017"
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-db:/data
+
+  audit-app:
+    image: python:3.12.2
+    container_name: audit-app
+    hostname: audit-app
+    networks: 
+      - default
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./audit:/audit
+    working_dir: /audit
+    command: bash -c "pip install -r requirements_audit.txt && python app.py"
+
+  django-app:
+    image: python:3.12.2
+    container_name: django-app
+    hostname: django-app
+    networks: 
+      - default
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./django:/django
+    working_dir: /app
+    command: bash -c "pip install -r requirements.txt && python manage.py runserver 0.0.0.0:8000"
+
+  volumes:
+    mongo-db: ~
+    audit-app: ~

@@ -2,7 +2,11 @@ import requests
 import json
 import time
 import hashlib
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.core.files.storage import FileSystemStorage
 class Operations:
+    
     @staticmethod
     def send_log(type,content,source,destination):
         url = "http://127.0.0.1:5000/response"
@@ -10,7 +14,7 @@ class Operations:
             "type" : type,
             "from" : source,
             "to"   : destination,
-            "content" : content
+            "content" : content #TODO json -> cosas importantes que se crean necesarias
         }
 
         def generate_token():
@@ -28,3 +32,12 @@ class Operations:
         #response = requests.request("POST", url, headers=headers, data=json.dumps(payload))
 
         #return response.text
+
+    @staticmethod
+    def saveData(request):
+        file = request.FILES['file']
+        fs = FileSystemStorage()
+        filename = fs.save(file.name, file)
+        file_url = fs.url(filename)
+ 
+        return JsonResponse({'urlFile': file_url})
