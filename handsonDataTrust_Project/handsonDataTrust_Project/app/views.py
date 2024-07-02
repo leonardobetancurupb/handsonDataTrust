@@ -4,6 +4,25 @@ from .serializers import PersonSerializer, HolderSerializer, ConsumerSerializer,
 from django_filters.rest_framework import DjangoFilterBackend
 from .filters import PersonFilter
 from .operations import Operations
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.core.files.storage import FileSystemStorage
+
+@csrf_exempt
+def saveData(request):
+    if request.method == 'POST':
+        file = request.FILES['archivo']
+        fs = FileSystemStorage()
+        filename = fs.save(file.name, file)
+        archivo_url = fs.url(filename)
+        return JsonResponse({'urlfile': archivo_url})
+    return JsonResponse({'error': 'invalid method'}, status=405)
+
+def handle_uploaded_file(f):
+    with open('some/file/name.txt', 'wb+') as destination:
+        for chunk in f.chunks():
+            destination.write(chunk)
+
 
 class PersonViewSet(viewsets.ModelViewSet):
     queryset = Person.objects.all()

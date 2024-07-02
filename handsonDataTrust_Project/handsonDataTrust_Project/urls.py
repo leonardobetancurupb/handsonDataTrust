@@ -34,6 +34,8 @@ router.register(r'consumers', views.ConsumerViewSet)
 router.register(r'admin', views.AdminViewSet)
 router.register(r'policy', views.PolicyViewSet)
 router.register(r'data', views.DataViewSet)
+router.register(r'saveData', views.saveData)
+
 
 urlpatterns = [
     path('', include(router.urls)),
