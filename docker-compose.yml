@@ -13,19 +13,6 @@ services:
     volumes:
       - mongo-db:/data
 
-  audit-app:
-    image: python:3.12.2
-    container_name: audit-app
-    hostname: audit-app
-    networks: 
-      - default
-    ports:
-      - "5000:5000"
-    volumes:
-      - ./audit:/audit
-    working_dir: /audit
-    command: bash -c "pip install -r requirements_audit.txt && python app.py"
-
   django-app:
     image: python:3.12.2
     container_name: django-app
@@ -41,4 +28,3 @@ services:
 
   volumes:
     mongo-db: ~
-    audit-app: ~
