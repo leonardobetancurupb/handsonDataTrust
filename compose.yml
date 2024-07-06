@@ -1,0 +1,58 @@
+services:
+
+  db:
+    image: mongo:latest
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: rootpassword
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - backend
+
+  backend:
+    build: ./backend
+    # command: python -m http.server -d /code 8001
+    command: python -m flask --app demo1 run --host=0.0.0.0 --port=5000
+    networks:
+      - backend
+    volumes:
+      - ./backend/src:/code
+    depends_on:
+      db:
+        condition: service_started
+
+  auditoria:
+    build: ./auditoria
+    networks:
+      - backend
+
+  web:
+    build: ./data_trust/main
+    command: python manage.py runserver 0.0.0.0:80
+    ports:
+      - "80:80"
+    networks:
+      - frontend
+      - backend
+    volumes:
+      - ./data_trust/main:/code
+    depends_on:
+      backend:
+        condition: service_started
+      auditoria:
+        condition: service_started
+    environment:
+      - MONGO_USERNAME=root
+      - MONGO_PASSWORD=rootpassword
+
+
+
+networks:
+  backend:
+  frontend:
+
+
+volumes:
+  mongo-data:
