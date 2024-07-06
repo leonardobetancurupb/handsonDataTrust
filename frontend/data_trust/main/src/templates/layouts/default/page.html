@@ -1,0 +1,92 @@
+{% load static %}
+{% load bootstrap4 %}
+{% load i18n %}
+
+
+{% get_current_language as language_code %}
+
+<!DOCTYPE html>
+<html lang="{{ language_code }}">
+<head>
+
+    <meta charset="utf-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="DATA TRUST.">
+    <meta name="author" content="Luisa Alvarez Bello - John Andersson Cardenas Quiros - Juan Pablo Montoya Orozco - UPB">
+
+
+    <title>HandsonDataTrust</title>
+    <link rel="icon" href={% static 'favicon.ico' %}>
+    <link href={% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %} rel="stylesheet">
+    <link href={% static 'assets/css/style.css' %} rel="stylesheet">
+
+</head>
+
+<body>
+
+<nav class="navbar  barra-home   fixed-top d-flex justify-content-end">
+
+    
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse nav_barra " id="navbarsExampleDefault">
+        <ul class="navbar-nav mr-auto nav_menu bg-light text-dark">
+            {% if request.user.is_authenticated %}
+                {% if request.user.is_superuser %}
+                    <li class="nav-item">
+                        <a class="nav-link" href={% url 'admin:login' %}>{% trans 'Django administration' %}</a>
+                    </li>
+                {% endif %}
+                <li class="nav-item ">
+                    <a class="nav-link" href={% url 'accounts:change_password' %}>{% trans 'Change password' %}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href={% url 'accounts:change_profile' %}>{% trans 'Change profile' %}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href={% url 'accounts:change_email' %}>{% trans 'Change email' %}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href={% url 'accounts:log_out_confirm' %}>{% trans 'Log out' %}</a>
+                </li>
+            {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href={% url 'accounts:log_in' %}>{% trans 'Log in' %}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href={% url 'accounts:sign_up' %}>{% trans 'Create an account' %}</a>
+                </li>
+            {% endif %}
+        </ul>
+
+       
+    </div>
+
+</nav>
+
+<div class="container-fluid mt-5 ml-n5 pt-1 d-flex justify-content-center">
+
+    {% bootstrap_messages %}
+
+    {% block content %}
+        No content.
+    {% endblock %}
+
+</div>
+
+<script src={% static 'assets/vendor/jquery/jquery-3.4.1.min.js' %}></script>
+<script src={% static 'assets/vendor/popper/popper.min.js' %}></script>
+<script src={% static 'assets/vendor/bootstrap/js/bootstrap.min.js' %}></script>
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src={% static 'assets/js/ie10-viewport-bug-workaround.js' %}></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

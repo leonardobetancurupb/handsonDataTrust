@@ -1,0 +1,52 @@
+{% extends 'layouts/default/page.html' %}
+
+{% load i18n %}
+
+{% block content %}
+
+    {% if request.user.is_authenticated %}
+
+    {% load static %}
+
+    
+
+    <div class="row w-100 ml-5">
+      <div class="col-1 shadow-sm p-n1 border border-1">
+        <div class="nav flex-column nav-pills text-center fixed-left" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+          <a href={% url 'accounts:settings' %}>Settings</a>
+        </div>
+      </div>
+      <div class="col-md-10 vw-100 vh-100">
+
+            <div class="ventana-home">
+      
+              <div class="lap-home bg-light p-4 border">
+                <h3>
+                  Select User Privileges
+                </h3>
+                <br>
+
+                <ul class="w-100 h-100 mt-3">
+                  <li class="p-3  bg-secondary mb-2 text-white">
+                    <a class="text-white" href={% url 'holder:home' %}>Holder</a>
+                  </li>
+                  <li class="p-3  bg-secondary mb-2 text-white">
+                    <a class="text-white" href={% url 'administrator:menu' %}>Admin</a>
+                  </li>
+                  <li class="p-3  bg-secondary mb-2 text-white">
+                    <a class="text-white" href={% url 'consumer:info' %}>Consumer</a>
+                  </li>
+                </ul>
+              </div>
+
+        </div>
+      </div>
+
+      {% else %}
+      <script>
+        window.onload=function() {
+            window.location.href = "{% url 'accounts:log_in' %}";
+        }  
+    </script>
+    {% endif %}
+{% endblock %}

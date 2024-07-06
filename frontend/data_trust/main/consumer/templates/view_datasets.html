@@ -1,0 +1,65 @@
+{% extends 'layouts/default/page.html' %}
+
+{% load i18n %}
+
+{% block content %}
+
+    {% if request.user.is_authenticated %}
+
+    {% load static %}
+
+    
+
+    <div class="row w-100 ml-5 mt-2">
+        <div class="col-1 shadow-sm p-1 border border-1">
+          <div class="nav flex-column nav-pills text-center" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+               <a href={% url 'consumer:info' %}>Home</a>
+               <a href={% url 'consumer:view_datasets' %}>Datasets</a>
+            <a href={% url 'consumer:consumer_history' %}>Projects</a>
+            <a href={% url 'accounts:settings' %}>Settings</a>
+          </div>
+        </div>
+        <div class="col-md-10 vw-100 vh-100">
+
+            <div class="ventana-home">
+      
+              <div class="lap-home bg-light p-4 border border-1">
+                <h3>
+                    Schemas
+                </h3>
+                <br>
+                <div class="container mt-5">
+                  <div class="form-group">
+                      <input type="text" id="searchInput" class="form-control" placeholder="Search...">
+                  </div>
+                  <div class="row scrollable-container" id="cardContainer">
+                      <div class="col-md-6 mb-4 card-wrapper">
+                          <div class="card">
+                              <img src="https://via.placeholder.com/150" class="card-img-top" alt="...">
+                              <div class="card-body">
+                                  <h5 class="card-title">Demograph Data</h5>
+                                  <h6 class="card-subtitle mb-2 text-muted">Social</h6>
+                                  <p class="card-text">datasets: n#</p>
+                                  <a href="#" class="btn btn-primary">Select</a>
+               
+                                  <img src={% static "assets/img/download.png" %} alt="">
+                                  <img src={% static "assets/img/delete.png" %} alt="">
+                                  <img src={% static "assets/img/history.png" %} alt="">
+                              </div>
+                          </div>
+                      </div>
+                  
+                </div>
+              </div>
+
+        </div>
+      </div>
+
+      {% else %}
+      <script>
+        window.onload=function() {
+            window.location.href = "{% url 'accounts:log_in' %}";
+        }  
+    </script>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,110 @@
+{% extends 'layouts/default/page.html' %}
+
+{% load i18n %}
+
+{% block content %}
+
+    {% if request.user.is_authenticated %}
+
+    {% load static %}
+
+    
+
+    <div class="row w-100 ml-5 mt-2">
+      <div class="col-1 shadow-sm p-1 border border-1">
+        <div class="nav flex-column nav-pills text-center" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+             <a href={% url 'administrator:menu' %}>Home</a>
+           <a href={% url 'administrator:policy' %}>Policies</a>
+          <a href={% url 'administrator:schemas' %}>Schemas</a>
+          <a href={% url 'administrator:view_users' %}>Users</a>
+          <a href={% url 'accounts:settings' %}>Settings</a>
+        </div>
+      </div>
+      <div class="col-md-10 vw-100 vh-100">
+
+            <div class="ventana-home">
+      
+              <div class="lap-home bg-light p-4 border border-1">
+                <h3>
+                   List of Users 
+                </h3>
+                <br>
+                <div class="container mt-5">
+                  <h2>Tabla de Usuarios</h2>
+                  <table class="table table-striped">
+                      <thead>
+                          <tr>
+                              <th>ID</th>
+                              <th>Nombre</th>
+                              <th>Email</th>
+                              <th>Rol</th>
+                              <th>Acciones</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                          <!-- Ejemplo de fila de usuario -->
+                          <tr>
+                              <td>1</td>
+                              <td>Juan Pérez</td>
+                              <td>juan.perez@example.com</td>
+                              <td>
+                                <select class="form-control" id="idTypeUser">
+                                    <option value="opcion1">Admin</option>
+                                    <option value="opcion2" selected>Consumer</option> <!-- Esta opción estará seleccionada por defecto -->
+                                    <option value="opcion3">Holder</option>
+                                </select>
+                              </td>
+                              <td>
+                                  <button class="btn btn-primary btn-sm" onclick="verHistorial(1)">Ver Historial</button>
+                                  <button class="btn btn-danger btn-sm" onclick="eliminarUsuario(1)">Eliminar</button>
+                              </td>
+                          </tr>
+                          <tr>
+                              <td>2</td>
+                              <td>María López</td>
+                              <td>maria.lopez@example.com</td>
+                              <td>
+                                <select class="form-control" id="idTypeUser">
+                                    <option value="opcion1">Admin</option>
+                                    <option value="opcion2" selected>Consumer</option> <!-- Esta opción estará seleccionada por defecto -->
+                                    <option value="opcion3">Holder</option>
+                                </select>
+                              </td>
+                              <td>
+                                  <button class="btn btn-primary btn-sm" onclick="verHistorial(2)">Ver Historial</button>
+                                  <button class="btn btn-danger btn-sm" onclick="eliminarUsuario(2)">Eliminar</button>
+                              </td>
+                          </tr>
+                          <!-- Agregar más filas según sea necesario -->
+                      </tbody>
+                  </table>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+        
+        
+        <script>
+            function verHistorial(userId) {
+                // Implementar la lógica para ver el historial del usuario
+                alert('Ver historial del usuario con ID: ' + userId);
+            }
+        
+            function eliminarUsuario(userId) {
+                // Implementar la lógica para eliminar el usuario
+                const confirmacion = confirm('¿Está seguro de que desea eliminar al usuario con ID: ' + userId + '?');
+                if (confirmacion) {
+                    alert('Usuario con ID: ' + userId + ' eliminado.');
+                    // Aquí deberías agregar la lógica real para eliminar al usuario
+                }
+            }
+        </script>
+      {% else %}
+      <script>
+        window.onload=function() {
+            window.location.href = "{% url 'accounts:log_in' %}";
+        }  
+    </script>
+    {% endif %}
+{% endblock %}

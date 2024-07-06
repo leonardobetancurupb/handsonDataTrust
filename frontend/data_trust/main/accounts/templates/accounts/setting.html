@@ -1,0 +1,66 @@
+{% extends 'layouts/default/page.html' %}
+{% load static %}
+{% load bootstrap4 %}
+{% load i18n %}
+
+{% block content %}
+
+<div class="cuerpo-principal">
+    <div class="inicio-de-sesin d-flex flex-column">
+
+      <div class="ventana-input">
+        <div class="encabezado-input">
+
+          <div class="text-title-input">
+            <a href={% url 'index' %}>
+              <img src={% static "assets/img/back.png" %} alt="">
+            </a>
+            <br>
+            {% trans 'Administration' %}</div>
+        </div>
+        <div class="lap_2">
+          <h3>
+            Perfil Options.
+          </h3> 
+          <br>
+          
+        
+            <hr>
+
+                <ul>
+                  {% if request.user.is_authenticated %}
+                    {% if request.user.is_superuser %}
+                        <li class="">
+                            <a class=" " href={% url 'admin:login' %}>{% trans 'Django administration' %}</a>
+                        </li>
+                    {% endif %}
+                    <li class="">
+                        <a class="" href={% url 'accounts:change_password' %}>{% trans 'Change password' %}</a>
+                    </li>
+                    <li class="">
+                        <a class="" href={% url 'accounts:change_profile' %}>{% trans 'Change profile' %}</a>
+                    </li>
+                    <li class="">
+                        <a class="" href={% url 'accounts:change_email' %}>{% trans 'Change email' %}</a>
+                    </li>
+                    <li class="">
+                        <a class="" href={% url 'accounts:log_out_confirm' %}>{% trans 'Log out' %}</a>
+                      </li>
+                {% else %}
+                    <li class="">
+                        <a class=" " href={% url 'accounts:log_in' %}>{% trans 'Log in' %}</a>
+                    </li>
+                    <li class="">
+                        <a class="" href={% url 'accounts:sign_up' %}>{% trans 'Create an account' %}</a>
+                    </li>
+                {% endif %}
+                </ul>
+              </li>
+            </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
+

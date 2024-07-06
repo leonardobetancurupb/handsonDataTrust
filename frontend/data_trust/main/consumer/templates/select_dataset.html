@@ -1,0 +1,58 @@
+{% extends 'layouts/default/page.html' %}
+
+{% load i18n %}
+
+{% block content %}
+
+    {% if request.user.is_authenticated %}
+
+    {% load static %}
+
+    
+
+    <div class="row w-100 ml-5 mt-2">
+        <div class="col-1 shadow-sm p-1 border border-1">
+          <div class="nav flex-column nav-pills text-center" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+               <a href={% url 'consumer:info' %}>Home</a>
+               <a href={% url 'consumer:view_datasets' %}>Datasets</a>
+            <a href={% url 'consumer:consumer_history' %}>Projects</a>
+            <a href={% url 'accounts:settings' %}>Settings</a>
+          </div>
+        </div>
+        <div class="col-md-10 vw-100 vh-100">
+
+            <div class="ventana-home">
+      
+              <div class="lap-home bg-light p-4 border border-1">
+                <h3>
+                    Schema Selected
+                </h3>
+                <br>
+                <div class="container mt-5">
+                  <div class="card">
+                      <div class="card-header">
+                          <h4 id="item-category">Categoría: </h4>
+                      </div>
+                      <div class="card-body">
+                          <p id="item-description"><strong>Descripción: </strong></p>
+                          <p id="item-format"><strong>Formato: </strong></p>
+                          <p id="item-schema"><strong>Schema: </strong></p>
+                          <p id="item-idPolicy"><strong>Política ID: </strong></p>
+                          <p id="item-url"><strong>URL: </strong><a href="#" id="item-url-link"></a></p>
+                      </div>
+                  </div>
+                  <button class="btn btn-primary">Leer Términos y Condiciones</button>
+              </div>
+              </div>
+
+        </div>
+      </div>
+      <script src={% static 'assets/js/manage_datasets.js' %}></script>
+      {% else %}
+      <script>
+        window.onload=function() {
+            window.location.href = "{% url 'accounts:log_in' %}";
+        }  
+    </script>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,85 @@
+{% extends 'layouts/default/page.html' %}
+
+{% load i18n %}
+
+{% block content %}
+
+    {% if request.user.is_authenticated %}
+
+    {% load static %}
+
+    
+
+    <div class="row w-100 ml-5 mt-2">
+        <div class="col-1 shadow-sm p-1 border border-1">
+          <div class="nav flex-column nav-pills text-center" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+               <a href={% url 'holder:home' %}>Home</a>
+               <a href={% url 'holder:datasets' %}>Datasets</a>
+            <a href={% url 'holder:schemas_owner' %}>Schemas</a>
+            <a href={% url 'accounts:settings' %}>Settings</a>
+          </div>
+        </div>
+        <div class="col-md-10 vw-100 vh-100">
+
+            <div class="ventana-home">
+      
+              <div class="lap-home bg-light p-4 border border-1">
+                <h3>
+                  Add Data
+                </h3>
+                <br>
+
+                <div class="container mt-5">
+                  <div class="card">
+                      <div class="card-header">
+                          <h4 id="item-category">Category: </h4>
+                      </div>
+                      <div class="card-body">
+                          <p id="item-description"><strong>Description: </strong></p>
+                          <p id="item-format"><strong>Format: </strong></p>
+                          <p id="item-idPolicy"><strong>Policy: </strong>
+                            <select class="form-control" id="idTypeUser">
+                              <option value="opcion1">Admin</option>
+                              <option value="opcion2" selected>Consumer</option>
+                              <option value="opcion3">Holder</option>
+                            </select>
+                          </p>
+                          <p id="item-schema"><strong>Schema: </strong>
+                            <select class="form-control" id="idTypeUser">
+                              <option value="opcion1">1</option>
+                              <option value="opcion2" selected>2</option>
+                              <option value="opcion3">3</option>
+                            </select>
+                          </p>
+                          <p class="" id="selectedSchema">
+                            
+                          </p>
+                      </div>
+                  </div>
+                  <div class="row mb-3 mt-1">
+                      <div class="col-md-6">
+                          <button class="btn btn-primary" onclick="exportToExcel()">Export template</button>
+                      </div>
+                      <div class="col-md-6">
+                        <form method="POST" action="https://0.0.0.0:8000/saveData" enctype="multipart/form-data">
+                          {% csrf_token %}
+                        <input type="file" class="form-control-file" id="fileInput" accept=".xlsx, .xls" onchange="importExcel(event)">
+                        <button type="submit">Upload</button>
+                        </form>
+                      </div>
+                  </div>
+              </div>
+              </div>
+
+        </div>
+      </div>
+      <script src={% static 'assets/js/manage_datasets.js' %}></script>
+      <script src={% static 'assets/js/manage_files.js' %}></script>
+      {% else %}
+      <script>
+        window.onload=function() {
+            window.location.href = "{% url 'accounts:log_in' %}";
+        }  
+    </script>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends 'layouts/default/page.html' %}
+{% load static %}
+{% load bootstrap4 %}
+{% load i18n %}
+
+{% block content %}
+
+<div class="cuerpo-principal">
+    <div class="inicio-de-sesin d-flex flex-column">
+
+      <div class="ventana-input">
+        <div class="encabezado-input">
+
+          <div class="text-title-input">{% trans 'Logged out' %}</div>
+        </div>
+        <div class="lap">
+            <p>
+                {% trans 'Thanks for spending some quality time with the site today.' %}
+            </p>
+        
+            <p>
+                <a href="{% url 'accounts:log_in' %}">{% trans 'Log in again' %}</a>
+            </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
+
