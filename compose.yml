@@ -30,6 +30,7 @@ services:
 
   web:
     build: ./data_trust/main
+    hostname: frontend
     command: python manage.py runserver 0.0.0.0:80
     ports:
       - "80:80"
@@ -46,6 +47,8 @@ services:
     environment:
       - MONGO_USERNAME=root
       - MONGO_PASSWORD=rootpassword
+    expose:
+      - "80"
 
 
 
