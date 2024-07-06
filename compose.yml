@@ -29,7 +29,7 @@ services:
       - backend
 
   web:
-    build: ./data_trust/main
+    build: ./frontend
     hostname: frontend
     command: python manage.py runserver 0.0.0.0:80
     ports:
