@@ -208,7 +208,7 @@ def gest_last_logs(count):
 app = Flask(__name__)
 
 # Log file path
-file = "src/audit.txt"
+file = "audit.txt"
 
 @app.route('/response', methods=['POST'])
 def log_reply():
