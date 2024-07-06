@@ -182,10 +182,33 @@ def search_logs_by_date(file, initial_date, final_date):
 
     return x
 
+def gest_last_logs(count):
+
+    returning_logs = {}
+    num = 0
+
+    with open(file, 'r') as f:
+
+        logs = f.readlines()
+        
+        if not logs:
+            print("Empty file.")
+            return None
+        
+        for registry in reversed(logs):
+            log = json.loads(registry)
+            returning_logs[f'{num}'] = log
+            num+=1
+            if num >= count:
+                break
+    
+    return returning_logs
+    
+
 app = Flask(__name__)
 
 # Log file path
-file = "audit.txt"
+file = "src/audit.txt"
 
 @app.route('/response', methods=['POST'])
 def log_reply():
@@ -295,6 +318,26 @@ def search_date_reply():
         return response
 
     return Response(logs, mimetype='application/json'), 201
+
+@app.route('/recent', methods=['GET'])
+def get_recent_logs():
+
+    payload = request.get_data(as_text=True)
+    
+    if validate_token(payload):
+        
+        content = json.loads(payload)
+        logs = gest_last_logs(content['count'])
+
+        response = logs
+
+    else: 
+        response = {'auth' : 'Invalid token :(', 'response' : " null "}
+        return response
+
+    return jsonify(response), 201
+
+
 
 ##PARAM 
 

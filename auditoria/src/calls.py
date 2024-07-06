@@ -6,11 +6,7 @@ import hashlib
 # address = http://audit-app:5000
 address = "http://localhost:5000"
 
-# Example data
-type = "query"
-source = "user_1"
-destination = "rds_db_1"
-description = {"query":"SELECT * from TABLE personas"}
+#address = "http://54.160.225.142:5000"
 
 
 def send_log(type,content,source,destination):
@@ -175,12 +171,34 @@ def search_logs_by_key(key, value):
 
 # print(search_logs_by_key("type", "query"))
 
+def get_last_logs(count):
 
+  url = address+"/recent"
+  
+  payload = {
+    'count' : count
+  }
 
+  def generate_token():
+    token = "PALABRA"+str(payload)+time.strftime("%Y-%m-%d", time.localtime())
+    token = hashlib.sha256(token.encode()).hexdigest()
+    return token
+
+  generated_token = generate_token()
+
+  headers = {
+  'Content-Type': 'application/json',
+  'Authorization': f'Bearer {generated_token}'
+  }
+
+  response = requests.request("GET", url, headers=headers, data=json.dumps(payload))
+
+  return response.text
 
 
 # # CODE TO TEST SERVICE IN CONTAINER
-print(search_logs_by_key("type", "query"))
+
+print(get_last_logs(10))
 
 
 # # print(validate_log())
