@@ -1,0 +1,90 @@
+{% extends 'layouts/default/page.html' %}
+
+{% load i18n %}
+
+{% block content %}
+
+    {% if request.user.is_authenticated %}
+
+    {% load static %}
+
+    
+    {% comment %} <a href={% url 'consumer:info' %}>Home</a>
+    <a href={% url 'consumer:view_datasets' %}>Datasets</a>
+    <a href={% url 'consumer:consumer_history' %}>Projects</a>
+    <a href={% url 'accounts:settings' %}>Settings</a> {% endcomment %}
+
+    <div class="row w-100 ml-4 mt-2 justify-content-between">
+        <div class="col-sm-2 shadow-sm p-1 border border-1">
+            <div class="nav flex-column nav-pills text-center mt-4" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                <ul class="list-group ml-0">
+                    <li class="list-group-item list-group-item-action ">
+                        <a href={% url 'consumer:info' %}>Home</a>
+                    </li >
+                    <li class="list-group-item list-group-item-action ">
+                        <a href={% url 'consumer:view_datasets' %}>Datasets</a>
+                    </li>
+                    <li class="list-group-item list-group-item-action ">
+                      <a href={% url 'consumer:consumer_history' %}>Projects</a>
+                    </li>
+
+                    <li class="list-group-item list-group-item-action ">
+                        <a href={% url 'accounts:settings' %}>Settings</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-9 w-100 vh-100 mt-5 mr-3 align-self-center">
+            <div class="ventana-home">
+                <div class="lap-home  p-2 border border-1">
+                    <h3>
+                    Recent Activity 
+                    </h3>
+                    <div class="container-fluid d-flex h-50">
+                        <div id="main" style="width: 80%;height:250px;"></div>
+                            <div class=" w-20 d-flex ">
+                                <img src={% static "assets/img/LOGO-REGULAR-LIGHT.svg" %} class="img-fluid h-50 w-100 align-self-center" alt="">
+                            </div>
+                        </div>  
+                        <div class="h-25">
+                            <h6>Projects</h6>
+                            <div class="h-100 sensor-table">
+                                <table class="table table-hover table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Project</th>
+                                            <th>Category</th>
+                                            <th>Expiration</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>Medical Cost Personal Data</td>
+                                            <td>Clustering</td>
+                                            <td>06/07/2025</td>
+                                            <td> <a href="{% url 'consumer:select_dataset_activated' %}"><img class="img-fluid table-icon" src={% static "assets/img/right.png" %} alt=""></a></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div>
+                        <a class="btn btn-primary mt-2" href="{% url 'consumer:consumer_history' %}">Projects</a>
+                    </div>
+                  </div>
+            </div>
+        </div>
+    </div>
+
+    <script src={% static 'assets/js/manage_analitycs.js' %}></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+    {% else %}
+    <script>
+        window.onload=function() {
+        window.location.href = "{% url 'accounts:log_in' %}";
+        }  
+    </script>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends 'layouts/default/page.html' %}
+{% load static %}
+{% load bootstrap4 %}
+{% load i18n %}
+
+{% block content %}
+
+<div class="cuerpo-principal">
+    <div class="inicio-de-sesin">
+
+      <div class="ventana-input">
+        <div class="encabezado-input">
+
+          <div class="text-title-input">Sign in</div>
+        </div>
+        <div class="lap4 register-form">
+            <form method="post" id="form-sign-in">
+              <div class="form-adapt">
+                {% csrf_token %}
+                {% bootstrap_form form %}
+              </div>
+                <button class="btn btn-success btn-sesion btn_registro btn-register">{% trans 'Create' %}</button>
+        
+            </form>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
+

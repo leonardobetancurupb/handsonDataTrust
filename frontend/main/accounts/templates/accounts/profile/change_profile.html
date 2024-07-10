@@ -1,0 +1,36 @@
+{% extends 'layouts/default/page.html' %}
+{% load static %}
+{% load bootstrap4 %}
+{% load i18n %}
+
+{% block content %}
+
+<div class="cuerpo-principal">
+    <div class="inicio-de-sesin">
+
+      <div class="ventana-input">
+        <div class="encabezado-input">
+          <div class="pie-overlap">
+            <img class="org-argos" src={% static "assets/img/logo_hori.svg"%} />
+            <img class="org" src={% static "assets/img/upb_icon.svg"%} />
+          </div>
+          <div class="text-title-input">{% trans 'Change profile' %}</div>
+        </div>
+        <div class="lap_2">
+          Enter changes. <br><br>
+            <form method="post" class="form_pequeno">
+
+                {% csrf_token %}
+                {% bootstrap_form form %}
+        
+                <button class="btn btn-success btn-sesion" id="">{% trans 'Change' %}</button>
+        
+            </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
+
+

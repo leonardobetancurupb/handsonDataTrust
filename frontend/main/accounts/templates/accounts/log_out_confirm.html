@@ -1,0 +1,30 @@
+{% extends 'layouts/default/page.html' %}
+{% load static %}
+{% load bootstrap4 %}
+{% load i18n %}
+
+{% block content %}
+
+<div class="cuerpo-principal">
+    <div class="inicio-de-sesin d-flex flex-column">
+
+      <div class="ventana-input">
+        <div class="encabezado-input">
+          <div class="text-title-input">{% trans 'Logged out' %}</div>
+        </div>
+        <div class="lap_2">
+            <p>
+                {% trans 'Confirm this action:' %}
+            </p>
+        
+            <form action="{% url 'accounts:log_out' %}" method="post" class="form_pequeno">
+                {% csrf_token %}
+                <button class="btn btn-success">{% trans 'Log out' %}</button>
+            </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
+
