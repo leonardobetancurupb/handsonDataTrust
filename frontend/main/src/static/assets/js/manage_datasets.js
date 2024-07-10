@@ -26,6 +26,34 @@ document.addEventListener('DOMContentLoaded', function() {
     displayItemDetails(itemDetails);
 });
 
+document.getElementById('dataForm').addEventListener('submit', async function(event) {
+    event.preventDefault(); // Prevenir el comportamiento por defecto del formulario
+
+    // Capturar los datos del formulario
+    const formData = new FormData(event.target);
+    const dataObj = Object.fromEntries(formData.entries());
+    const file = dataObj['File']
+    // Llamar al método createData
+    try {
+        const response_file = await createFile(file);
+        dataObj['url'] = response_file;
+        const response = await createData(dataObj);
+        console.log('Response:', response);
+    } catch (error) {
+        console.error('Error:', error);
+    }
+});
+
+async function createFile(dataObj) {
+    const response = await fetch(`${API_BASE_URL}/saveData/holder/${user_id}/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(dataObj)
+    });
+    return response.json();
+}
 
 async function createData(dataObj) {
     const response = await fetch(`${API_BASE_URL}/data/`, {

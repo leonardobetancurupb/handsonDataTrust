@@ -28,3 +28,13 @@ def view_users(request):
 
 def history_user(request):
     return render(request, 'history_user.html')
+
+
+def registered_data(request):
+    return render(request, 'registered_data.html')
+
+def history(request):
+    return render(request, 'history.html')
+
+def data_selected(request):
+    return render(request, 'data_selected.html')

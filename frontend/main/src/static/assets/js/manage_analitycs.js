@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Configuración del gráfico de línea
     option = {
         title: {
-            text: 'Ejemplo de Gráfico de Línea'
+            text: 'Count'
         },
         tooltip: {
             trigger: 'axis'
@@ -17,14 +17,14 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         xAxis: {
             type: 'category',
-            data: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo']
+            data: ['Mond', 'Thue', 'Wedn', 'Thur', 'Frid', 'Satu', 'Sund']
         },
         yAxis: {
             type: 'value'
         },
         series: [
             {
-                name: 'Ventas',
+                name: 'Count',
                 type: 'line',
                 data: [150, 230, 224, 218, 135, 147, 260]
             }

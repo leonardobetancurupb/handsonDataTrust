@@ -44,9 +44,6 @@ services:
         condition: service_started
       auditoria:
         condition: service_started
-    environment:
-      - MONGO_USERNAME=root
-      - MONGO_PASSWORD=rootpassword
     expose:
       - "80"
 
