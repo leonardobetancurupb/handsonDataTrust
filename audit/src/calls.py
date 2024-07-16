@@ -221,15 +221,36 @@ def search_by_structure(struct):
 
   return response.text
 
+def get_all_types():
+
+  url = address+"/types"
+  payload = {}
+
+  def generate_token():
+    token = "PALABRA"+str(payload)+time.strftime("%Y-%m-%d", time.localtime())
+    token = hashlib.sha256(token.encode()).hexdigest()
+    return token
+
+  generated_token = generate_token()
+
+  headers = {
+  'Content-Type': 'application/json',
+  'Authorization': f'Bearer {generated_token}'
+  }
+
+  response = requests.request("GET", url, headers=headers, data=json.dumps(payload))
+
+  return response.text
 
 # # CODE TO TEST SERVICE IN CONTAINER
 
-busqueda = {
-  "source" : 'User',
-  "type" : 'DELETE'
-}
+# busqueda = {
+#   "source" : 'User',
+#   "type" : 'DELETE'
+# }
 
-print(search_by_structure(busqueda))
+print(get_all_types())
+
 
 
 # # print(validate_log())

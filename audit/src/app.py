@@ -165,7 +165,6 @@ def search_logs(file, key, value):
     x = result.to_json(orient='records', date_format='iso')
     return x
 
-<<<<<<< HEAD
 def search_logs_by_struct(file, struct):
 
     df = pd.read_json(file, lines=True)
@@ -179,8 +178,6 @@ def search_logs_by_struct(file, struct):
     x = result.to_json(orient='records', date_format='iso')
     return x
 
-=======
->>>>>>> fde9d6a536b4605f76fb07b672a5caffb99744d6
 def search_logs_by_date(file, initial_date, final_date):
 
     if isinstance(initial_date, str):
@@ -220,15 +217,32 @@ def gest_last_logs(count):
     
     return returning_logs
     
+# Redux functions
+
+def get_all_types():
+  
+  df = pd.read_json("src/audit.txt", lines=True)
+
+  create = (df['type'] == "CREATE").sum()
+  get = (df['type'] == "GET").sum()
+  get_id = (df['type'] == "GET_ID").sum()
+  update = (df['type'] == "UPDATE").sum()
+  delete = (df['type'] == "DELETE").sum()
+
+  result = {
+    "CREATE" : str(create),
+    "GET" : str(get),
+    "GET_ID" : str(get_id),
+    "UPDATE" : str(update),
+    "DELETE" : str(delete)
+  }
+  
+  return result
 
 app = Flask(__name__)
 
 # Log file path
-<<<<<<< HEAD
 file = "src/audit.txt"
-=======
-file = "audit.txt"
->>>>>>> fde9d6a536b4605f76fb07b672a5caffb99744d6
 
 @app.route('/response', methods=['POST'])
 def log_reply():
@@ -321,7 +335,6 @@ def search_key_reply():
 
     return Response(logs, mimetype='application/json'), 201
 
-<<<<<<< HEAD
 @app.route('/search/struct', methods=['GET'])
 def search_struct_reply():
 
@@ -338,8 +351,6 @@ def search_struct_reply():
 
     return Response(logs, mimetype='application/json'), 201
 
-=======
->>>>>>> fde9d6a536b4605f76fb07b672a5caffb99744d6
 @app.route('/search/date', methods=['GET'])
 def search_date_reply():
 
@@ -358,10 +369,6 @@ def search_date_reply():
 
     return Response(logs, mimetype='application/json'), 201
 
-<<<<<<< HEAD
-
-=======
->>>>>>> fde9d6a536b4605f76fb07b672a5caffb99744d6
 @app.route('/recent', methods=['GET'])
 def get_recent_logs():
 
@@ -380,7 +387,22 @@ def get_recent_logs():
 
     return jsonify(response), 201
 
+@app.route('/types', methods=['GET'])
+def get_log_types():
 
+    
+    payload = request.get_data(as_text=True)
+    
+    if validate_token(payload):
+        
+        response = get_all_types()
+
+    else: 
+        response = {'auth' : 'Invalid token :(', 'response' : " null "}
+        return response
+
+    return jsonify(response), 201
+    
 
 ##PARAM 
 
