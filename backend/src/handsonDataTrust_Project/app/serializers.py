@@ -1,6 +1,6 @@
 #Serializers can convert Models to JSON and JSON to Models
 from rest_framework import serializers
-from .models import Person, Holder, Consumer, Admin, Policy, Data
+from .models import Person, Holder, Consumer, Admin, Policy, Data, Schema, Category
 
 class PersonSerializer(serializers.ModelSerializer):
     class Meta:
@@ -28,10 +28,23 @@ class AdminSerializer(serializers.ModelSerializer):
 class PolicySerializer(serializers.ModelSerializer):
     class Meta:
         model = Policy
-        fields = ['id','name','description','category','estimatedTime','Value']
+        fields = ['id','name','description','idCategory','estimatedTime','Value']
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ['id','category']
+
+class SchemaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Schema
+        fields = ['id','structure','description']
 
 class DataSerializer(serializers.ModelSerializer):
+    idCategory = serializers.PrimaryKeyRelatedField(queryset=Category.objects.all())
+    idSchema = serializers.PrimaryKeyRelatedField(queryset=Schema.objects.all())
     idPolicy = serializers.PrimaryKeyRelatedField(queryset=Policy.objects.all())
     class Meta:
         model = Data
-        fields = ['id','category','description','format','schema','idPolicy','url']
+        fields = ['id','idCategory','format','idSchema','idPolicy','url']
+

@@ -34,9 +34,11 @@ router.register(r'consumers', views.ConsumerViewSet)
 router.register(r'admin', views.AdminViewSet)
 router.register(r'policy', views.PolicyViewSet)
 router.register(r'data', views.DataViewSet)
-router.register(r'saveData', views.saveData)
-
+router.register(r'category', views.CategoryViewSet)
+router.register(r'schema', views.SchemaViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('saveData/<str:userType>/<str:idUser>/', views.saveData, name='saveData'),
+    path('download/<str:filename>/', views.downloadFile, name='downloadFile'),
 ]

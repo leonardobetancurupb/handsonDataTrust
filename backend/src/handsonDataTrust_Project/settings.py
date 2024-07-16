@@ -25,8 +25,7 @@ SECRET_KEY = 'django-insecure-s#0o++5kw)w)y0&wp!9-%rka%y_u8f8lw*ee&x$lm!#1$)bcsq
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['0.0.0.0','127.0.0.1','54.197.173.166']
 
 # Application definition
 
@@ -38,9 +37,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_filters',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -74,17 +76,20 @@ WSGI_APPLICATION = 'handsonDataTrust_Project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
+
 DATABASES = {
     'default': {
         'ENGINE': 'djongo',
         'NAME': 'Motor',
-        'CLIENT': {
-            'host': 'mongodb+srv://ander:ander@cluster0.saoz6dd.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0',
-        }
+        'CLIENT':{
+	   'host':'mongodb://root:rootpassword@db:27017',
+	},
     }
 }
 
-
+#'CLIENT': {
+#            'host': 'mongodb+srv://ander:ander@cluster0.saoz6dd.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0',
+#        }
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
 
@@ -125,3 +130,4 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+CORS_ALLOW_ALL_ORIGINS = True
