@@ -1,0 +1,53 @@
+{% load static %}
+{% load bootstrap4 %}
+{% load i18n %}
+
+{% load livereload_tags %}
+{% livereload_script %}
+
+{% get_current_language as language_code %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="utf-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="DATA TRUST.">
+    <meta name="author" content="Luisa Alvarez Bello - John Andersson Cardenas Quiros - Juan Pablo Montoya Orozco - UPB">
+
+
+    <title>HandsonDataTrust</title>
+    <link rel="icon" href={% static 'favicon.ico' %}>
+    <link href={% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %} rel="stylesheet">
+    <link href={% static 'assets/css/style.css' %} rel="stylesheet">
+
+</head>
+
+<body>
+
+<nav class="navbar  barra-home   fixed-top d-flex justify-content-start">
+    <img src={% static "assets/img/LOGO-SHORT-LIGHT.png" %} class="img-fluid logo" alt="">
+</nav>
+
+<div class="container-fluid mt-3 ml-n5 d-flex justify-content-center">
+
+    {% bootstrap_messages %}
+
+    {% block content %}
+        No content.
+    {% endblock %}
+
+</div>
+
+{% comment %} <script src={% static 'assets/vendor/jquery/jquery-3.4.1.min.js' %}></script>
+<script src={% static 'assets/vendor/popper/popper.min.js' %}></script>
+<script src={% static 'assets/vendor/bootstrap/js/bootstrap.min.js' %}></script>
+<script src={% static 'assets/js/ie10-viewport-bug-workaround.js' %}></script> {% endcomment %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

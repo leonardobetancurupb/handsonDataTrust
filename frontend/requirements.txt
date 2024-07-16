@@ -1,0 +1,10 @@
+Django==5.0.1
+pandas
+matplotlib
+numpy
+bootstrap4
+django-bootstrap4
+plotly
+requests
+openpyxl
+django-livereload-server

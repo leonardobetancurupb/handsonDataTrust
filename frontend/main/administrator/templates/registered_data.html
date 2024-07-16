@@ -1,0 +1,152 @@
+{% extends 'layouts/default/page.html' %}
+
+{% load i18n %}
+
+{% block content %}
+
+    {% if request.user.is_authenticated %}
+
+    {% load static %}
+
+    
+
+    <div class="row w-100 ml-4 mt-2 justify-content-between">
+        <div class="col-sm-2 shadow-sm p-1 border border-1">
+            <div class="nav flex-column nav-pills text-center mt-4" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                <ul class="list-group ml-0">
+                    <li class="list-group-item list-group-item-action ">
+                        <a href={% url 'administrator:menu' %}>Home</a>
+                    </li >
+                    <li class="list-group-item list-group-item-action ">
+                        <a href={% url 'administrator:policy' %}>Policies</a>
+                    </li>
+                    <li class="list-group-item list-group-item-action ">
+                        <a href={% url 'administrator:create_policy' %}>New Policy</a>
+                    </li>
+                    <li class="list-group-item list-group-item-action ">
+                        <a href={% url 'administrator:schemas' %}>Schemas</a>
+                    </li>
+                    <li class="list-group-item list-group-item-action ">
+                        <a href={% url 'administrator:create_schemas' %}>New Schema</a>
+                    </li>
+                    <li class="list-group-item list-group-item-action ">
+                        <a href={% url 'administrator:registered_data' %}>Datasets</a>
+                    </li>
+                    <li class="list-group-item list-group-item-action ">
+                        <a href={% url 'administrator:view_users' %}>Users</a>
+                    </li>
+                    <li class="list-group-item list-group-item-action ">
+                        <a href={% url 'administrator:history' %}>History</a>
+                    </li>
+                    <li class="list-group-item list-group-item-action ">
+                        <a href={% url 'accounts:settings' %}>Settings</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-9 w-100 vh-100 mt-5 mr-3 align-self-center">
+            <div class="ventana-home">
+                <div class="lap-home  p-2 border border-1">
+                    <div class="form-group ">
+                        <h3>
+                            Datasets
+                        </h3>
+                    Filters
+                    <hr>
+                    <div class="row">
+                        <div class="col w-25">
+                            <label for="searchInput" class="form-label">Category</label>
+                            <input type="text" id="searchInput" class="form-control w-100 border border-secondary" placeholder="Search...">
+                        </div>
+                        <div class="col w-25">
+                            <label for="searchDate" class="form-label">Expiration</label>
+                            <input type="date" id="searchDate" class="form-control  w-100 border border-secondary" placeholder="Search...">
+                        </div>
+                        <div class="col w-25  w-100">
+                            <label for="PolicyInput" class="form-label ">Policy</label>
+                                <br>
+                                <select name="PolicyInput" id="PolicyInput" class="form-select">
+                                <!-- Opción por defecto -->
+                                <option value="" disabled selected>Select a Policy</option>
+                                    <option value="Only for studies">Only for studies</option>
+                                    <option value="Only for developments">Only for developments</option>
+                                </select>
+                        </div>
+                        <div class="col w-25  w-100">
+                            <label for="SchemaInput" class="form-label">Schema</label>
+                                <br>
+                                <select name="SchemaInput" id="SchemaInput" class="form-select">
+                                <!-- Opción por defecto -->
+                                <option value="" disabled selected>Select a Schema</option>
+                                    <option value="Only for studies">Medical Cost Personal</option>
+                                    <option value="Only for developments">Bank Personal Loan</option>
+                                </select>
+                        </div>
+                    </div>
+                </div>
+            <div class="container mt-1 sensor-table">
+                <div class="row" id="cardContainer">
+                    <div class="col-md-6 mb-4 card-wrapper">
+                        <div class="card">
+                            <div class="w-100 h-25 bg-secondary rounded-top d-flex justify-content-center text-light">
+                                -
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">Medical Cost Personal Data</h5>
+                                <h6 class="card-subtitle mb-2 text-muted btn">Clustering</h6>
+                                <p class="card-text">Expiration: 06/01/2025</p>
+                                <div class="d-flex justify-content-between">
+                                    <a href="{% url 'administrator:data_selected' %}" class="btn btn-primary">Select</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4 card-wrapper">
+                        <div class="card">
+                            <div class="w-100 h-25 bg-secondary rounded-top d-flex justify-content-center text-light">
+                                -
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">Bank Personal Loan</h5>
+                                <h6 class="card-subtitle mb-2 text-muted btn">Machine Learning</h6>
+                                <p class="card-text">Expiration: 06/07/2025</p>
+                                <div class="d-flex justify-content-between">
+                                    <a href="{% url 'administrator:data_selected' %}" class="btn btn-primary">Select</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+
+      <!-- Modal -->
+      {% comment %} <div class="modal" id="staticBackdrop" >
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Delete</h5>
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+              Are you sure to delete that datatset?
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-danger">Accept</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> {% endcomment %}
+
+    {% else %}
+    <script>
+        window.onload=function() {
+            window.location.href = "{% url 'accounts:log_in' %}";
+        }  
+    </script>
+    {% endif %}
+{% endblock %}

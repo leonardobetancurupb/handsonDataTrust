@@ -1,0 +1,130 @@
+{% extends 'layouts/default/page.html' %}
+
+{% load i18n %}
+
+{% block content %}
+
+    {% if request.user.is_authenticated %}
+
+    {% load static %}
+
+    <div class="row w-100 ml-4 mt-2 justify-content-between">
+        <div class="col-sm-2 shadow-sm p-1 border border-1">
+            <div class="nav flex-column nav-pills text-center mt-4" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                <ul class="list-group ml-0">
+                    <li class="list-group-item list-group-item-action ">
+                        <a href={% url 'administrator:menu' %}>Home</a>
+                    </li >
+                    <li class="list-group-item list-group-item-action ">
+                        <a href={% url 'administrator:policy' %}>Policies</a>
+                    </li>
+                    <li class="list-group-item list-group-item-action ">
+                        <a href={% url 'administrator:create_policy' %}>New Policy</a>
+                    </li>
+                    <li class="list-group-item list-group-item-action ">
+                        <a href={% url 'administrator:schemas' %}>Schemas</a>
+                    </li>
+                    <li class="list-group-item list-group-item-action ">
+                        <a href={% url 'administrator:create_schemas' %}>New Schema</a>
+                    </li>
+                    <li class="list-group-item list-group-item-action ">
+                        <a href={% url 'administrator:registered_data' %}>Datasets</a>
+                    </li>
+                    <li class="list-group-item list-group-item-action ">
+                        <a href={% url 'administrator:view_users' %}>Users</a>
+                    </li>
+                    <li class="list-group-item list-group-item-action ">
+                        <a href={% url 'administrator:history' %}>History</a>
+                    </li>
+                    <li class="list-group-item list-group-item-action ">
+                        <a href={% url 'accounts:settings' %}>Settings</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-9 w-100 vh-100 mt-5 mr-3 align-self-center">
+            <div class="ventana-home">
+                <div class="lap-home  p-3 border border-1">
+                    <div class="d-flex justify-content-between w-100">
+                        <h3>
+                            Manage Logs 
+                        </h3>
+                    </div>
+                    <div class="row form-group">
+                        Filters
+                        <hr>
+                        <div class="col w-25">
+                            <input type="text" id="searchInput" class="form-control" placeholder="Search...">
+                        </div>
+                        <div class="col w-25">
+                            <input type="date" id="searchDate" class="form-control" placeholder="Search...">
+                        </div>
+                    </div>
+                    History
+                    <div class="container mt-1 w-100 sensor-table form-group h-75">
+                        <table class="table table-sm table-hover ">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Source</th>
+                                    <th>Action</th>
+                                    <th>Destination</th>
+                                    <th>Timestamp</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Ejemplo de fila de usuario -->
+                                <tr>
+                                    <td>78</td>
+                                    <td>3</td>
+                                    <td>GET</td>
+                                    <td>Data</td>
+                                    <td>06/07/2025 16:35:143</td>
+                                </tr>
+                                <tr>
+                                    <td>79</td>
+                                    <td>3</td>
+                                    <td>GET</td>
+                                    <td>Data</td>
+                                    <td>06/07/2025 16:36:143</td>
+                                </tr>
+                                <tr>
+                                    <td>80</td>
+                                    <td>3</td>
+                                    <td>GET</td>
+                                    <td>Data</td>
+                                    <td>06/07/2025 16:44:143</td>
+                                </tr>
+                                <tr>
+                                    <td>81</td>
+                                    <td>3</td>
+                                    <td>GET</td>
+                                    <td>Data</td>
+                                    <td>06/07/2025 16:48:143</td>
+                                </tr>
+                                <tr>
+                                    <td>82</td>
+                                    <td>3</td>
+                                    <td>POST</td>
+                                    <td>Data</td>
+                                    <td>06/07/2025 16:50:143</td>
+                                </tr>
+                            <!-- Agregar más filas según sea necesario -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src={% static 'assets/js/manage_analitycs.js' %}></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+    {% else %}
+    <script>
+        window.onload=function() {
+        window.location.href = "{% url 'accounts:log_in' %}";
+        }  
+    </script>
+    {% endif %}
+{% endblock %}
