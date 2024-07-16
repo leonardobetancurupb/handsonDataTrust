@@ -1,2 +1,0 @@
-# handsonDataTrust
-Explore our probe of concept of a Data Trust framework on GitHub, fostering transparent, ethical, and secure data practices. Empower your organization with robust governance and trustworthiness in data handling.

@@ -2,32 +2,28 @@ import json
 import hashlib
 import time
 import requests
+import pandas as pd
 
 address = "http://audit:5000"
 
-def get_last_logs(count):
-  
+struct = {
+    "source" : "Admin",
+    "type" : "CREATE"
+}
 
-  url = address+"/recent"
-  
-  payload = {
-    'count' : count
-  }
+def search_logs_by_struct(struct):
 
-  def generate_token():
-    token = "PALABRA"+str(payload)+time.strftime("%Y-%m-%d", time.localtime())
-    token = hashlib.sha256(token.encode()).hexdigest()
-    return token
+    df = pd.read_json("src/audit.txt", lines=True)
 
-  generated_token = generate_token()
+    condition = pd.Series([True] * len(df))
+    
+    for key, value in struct.items():
+        condition &= (df[key] == value)
 
-  headers = {
-  'Content-Type': 'application/json',
-  'Authorization': f'Bearer {generated_token}'
-  }
+    result = df[condition]
 
-  response = requests.request("GET", url, headers=headers, data=json.dumps(payload))
+    result.to_csv("result.csv")
+    # x = result.to_json(orient='records', date_format='iso')
+    # return x
 
-  return response.text
-
-print(get_last_logs(10))
+search_logs_by_struct(struct)

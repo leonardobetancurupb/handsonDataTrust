@@ -4,9 +4,11 @@ import time
 import hashlib
 
 # address = http://audit-app:5000
-# address = "http://localhost:5000"
+address = "http://localhost:5000"
 
-address = "http://54.197.173.166:5000"
+# address = "http://54.197.173.166:5000"
+
+
 
 
 def send_log(type,content,source,destination):
@@ -195,12 +197,42 @@ def get_last_logs(count):
 
   return response.text
 
+## FUNCTIONS FOR FRONTEND
+
+def search_by_structure(struct):
+
+  url = address+"/search/struct"
+  
+  payload = struct
+
+  def generate_token():
+    token = "PALABRA"+str(payload)+time.strftime("%Y-%m-%d", time.localtime())
+    token = hashlib.sha256(token.encode()).hexdigest()
+    return token
+
+  generated_token = generate_token()
+
+  headers = {
+  'Content-Type': 'application/json',
+  'Authorization': f'Bearer {generated_token}'
+  }
+
+  response = requests.request("GET", url, headers=headers, data=json.dumps(payload))
+
+  return response.text
+
 
 # # CODE TO TEST SERVICE IN CONTAINER
 
-print(get_last_logs(10))
+busqueda = {
+  "source" : 'User',
+  "type" : 'DELETE'
+}
+
+print(search_by_structure(busqueda))
 
 
 # # print(validate_log())
+
 
 

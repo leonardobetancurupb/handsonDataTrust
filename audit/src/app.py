@@ -165,6 +165,19 @@ def search_logs(file, key, value):
     x = result.to_json(orient='records', date_format='iso')
     return x
 
+def search_logs_by_struct(file, struct):
+
+    df = pd.read_json(file, lines=True)
+
+    condition = pd.Series([True] * len(df))
+    
+    for key, value in struct.items():
+        condition &= (df[key] == value)
+
+    result = df[condition]
+    x = result.to_json(orient='records', date_format='iso')
+    return x
+
 def search_logs_by_date(file, initial_date, final_date):
 
     if isinstance(initial_date, str):
@@ -208,7 +221,7 @@ def gest_last_logs(count):
 app = Flask(__name__)
 
 # Log file path
-file = "audit.txt"
+file = "src/audit.txt"
 
 @app.route('/response', methods=['POST'])
 def log_reply():
@@ -301,6 +314,22 @@ def search_key_reply():
 
     return Response(logs, mimetype='application/json'), 201
 
+@app.route('/search/struct', methods=['GET'])
+def search_struct_reply():
+
+    payload = request.get_data(as_text=True)
+    
+    if validate_token(payload):
+        
+        content = json.loads(payload)
+        logs = search_logs_by_struct(file, content)
+
+    else:
+        response = {'auth' : 'Invalid token :(', 'response' : " null "}
+        return response
+
+    return Response(logs, mimetype='application/json'), 201
+
 @app.route('/search/date', methods=['GET'])
 def search_date_reply():
 
@@ -318,6 +347,7 @@ def search_date_reply():
         return response
 
     return Response(logs, mimetype='application/json'), 201
+
 
 @app.route('/recent', methods=['GET'])
 def get_recent_logs():
