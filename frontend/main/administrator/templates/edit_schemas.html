@@ -39,6 +39,9 @@
                         <a href={% url 'administrator:history' %}>History</a>
                     </li>
                     <li class="list-group-item list-group-item-action ">
+                        <a href={% url 'administrator:category' %}>Category</a>
+                      </li>
+                    <li class="list-group-item list-group-item-action ">
                         <a href={% url 'accounts:settings' %}>Settings</a>
                     </li>
                 </ul>
@@ -51,37 +54,73 @@
                         <h3>
                             Schema 
                         </h3>
-                        <a href={% url 'administrator:create_schemas' %} class="btn btn-light border border-secondary">
-                            <img src={% static "assets/img/add.png" %} alt="">
-                            Create New
-                        </a>
-                    </div>
-                    <hr>
-                    <div class="container mt-3">
-                    <form>
-                        <div class="form-group">
-                            <label for="name">Name</label>
-                            <input type="text" class="form-control" id="name" placeholder="Enter name">
+                        <div>
+                            <a href={% url 'administrator:create_schemas' %} class="btn btn-light border border-secondary">
+                                <img src={% static "assets/img/add.png" %} alt="">
+                                Create New
+                            </a>
+                            <a href="#" class="btn btn-light border border-secondary" data-toggle="modal" data-target="#confirmDeleteModal">
+                              <img src={% static "assets/img/delete.png" %} alt="">
+                              Delete
+                          </a>
                         </div>
+                    </div>
+                    <div class="container mt-3 overflow-auto">
+                    <form id="schemaForm">
+                        <div class="form-group">
+                            <label for="id">Id</label>
+                            <input type="text" class="form-control" id="id" name="id" placeholder="Enter id" disabled>
+                        </div>
+                        {% comment %} <div class="form-group">
+                            <label for="name">Name</label>
+                            <input type="text" class="form-control" id="name" name="name" placeholder="Enter name">
+                        </div> {% endcomment %}
                         <div class="form-group">
                             <label for="description">Description</label>
-                            <textarea class="form-control" id="description" rows="3" placeholder="Enter description"></textarea>
+                            <textarea class="form-control font-size-small" id="description" name="description" rows="3" placeholder="Enter description"></textarea>
                         </div>
                         <div class="form-group">
-                            <label for="JSON Format">JSON Format</label>
-                            <textarea class="form-control" id="JSON Format" rows="8" placeholder="Enter description"></textarea>
+                            <label for="structure">JSON Format</label>
+                            <textarea class="form-control font-size-small" id="structure" name="structure" rows="8" placeholder="Enter structure"></textarea>
+                            
                         </div>
                         <div class="w-100 d-flex justify-content-end">
-                          <button type="submit" class="btn btn-primary">Submit</button>
+                          <button type="submit" id="submitJsonButton" class="btn btn-primary" disabled>Submit</button>
                         </div>
                     </form>
+                    <!-- Botón para validar el formato JSON -->
+                    <div>
+                        <button id="validateJsonButton" class="btn btn-primary btn-sm">Validate JSON</button>
+                        <!-- Div para mostrar el mensaje de validación -->
+                        <div id="validationMessage" class="mt-2 "></div>
+                    </div>
+                    
                   </div>
               </div>
           </div>
       </div>
+      <!-- Modal -->
+      <div class="modal" id="confirmDeleteModal" >
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Delete</h5>
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+              Are you sure to delete it?
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-danger " id="confirmDeleteButton">Accept</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     </div>
 
-    <script src={% static 'assets/js/manage_analitycs.js' %}></script>
+    <script src={% static 'assets/js/manage_schemas_edit.js' %}></script>
     <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
     {% else %}
     <script>

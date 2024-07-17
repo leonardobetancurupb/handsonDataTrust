@@ -11,16 +11,16 @@
         <div class="nav flex-column nav-pills text-center mt-4" id="v-pills-tab" role="tablist" aria-orientation="vertical">
           <ul class="list-group ml-0">
             <li class="list-group-item list-group-item-action ">
-                <a href={% url 'holder:home' %}>Home</a>
+                <a class="text-success" href={% url 'holder:home' %}>Home</a>
               </li >
               <li class="list-group-item list-group-item-action ">
-                <a href={% url 'holder:schemas_owner' %}>Datasets</a>
+                <a class="text-success" href={% url 'holder:schemas_owner' %}>Datasets</a>
               </li>
               <li class="list-group-item list-group-item-action ">
-                <a href={% url 'holder:register_datasets' %}>Create New</a>
+                <a class="text-success" href={% url 'holder:register_datasets' %}>Create New</a>
               </li>
               <li class="list-group-item list-group-item-action ">
-                <a href={% url 'accounts:settings' %}>Settings</a>
+                <a class="text-success" href={% url 'accounts:settings' %}>Settings</a>
               </li>
             </ul>
           </div>
@@ -36,34 +36,35 @@
                   <form action="" method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="mb-3">
-                      <label for="CategoryInput" class="form-label">Category</label>
-                      <input type="text" class="form-control" id="CategoryInput" placeholder="Propiety">
+                      <label for="idCategory" class="form-label">Category</label>
+                      <br>
+                      {% comment %} <input type="text" class="form-control" id="CategoryInput" placeholder="Propiety"> {% endcomment %}
+                      <select name="idCategory" id="idCategory" class="form-select">
+                        <!-- Opción por defecto -->
+                        <option value="" disabled selected>Select a Category</option>
+                      </select>
                     </div>
                     <div class="mb-3">
                       <label for="DescriptionInput" class="form-label">Description</label>
                       <textarea class="form-control" id="DescriptionInput" rows="3" placeholder="Give a description to your dataset"></textarea>
                     </div>
                     <div class="mb-3">
-                      <label for="PolicyInput" class="form-label">Policy</label>
+                      <label for="idPolicy" class="form-label">Policy</label>
                       <br>
-                      <select name="PolicyInput" id="PolicyInput" class="form-select">
+                      <select name="idPolicy" id="idPolicy" class="form-select">
                         <!-- Opción por defecto -->
                         <option value="" disabled selected>Select a Policy</option>
-                          <option value="Only for studies">Only for studies</option>
-                          <option value="Only for developments">Only for developments</option>
                       </select>
-                      <button class="btn btn-sm btn-outline-primary ml-3" id="viewPolicyBtn" disabled>View policy selected</button>
+                      <button class="btn btn-sm btn-outline-success ml-3" id="viewPolicyBtn" disabled>View policy selected</button>
                     </div>
                     <div class="mb-3">
-                      <label for="SchemaInput" class="form-label">Schema</label>
+                      <label for="idSchema" class="form-label">Schema</label>
                       <br>
-                      <select name="SchemaInput" id="SchemaInput" class="form-select">
+                      <select name="idSchema" id="idSchema" class="form-select">
                         <!-- Opción por defecto -->
                         <option value="" disabled selected>Select a Schema</option>
-                          <option value="Medical Cost Personal">Medical Cost Personal</option>
-                          <option value="Bank Personal Loan">Bank Personal Loan</option>
                       </select>
-                      <button class="btn btn-sm btn-outline-primary ml-3" id="viewSchemaBtn" disabled>View schema selected</button>
+                      <button class="btn btn-sm btn-outline-success ml-3" id="viewSchemaBtn" disabled>View schema selected</button>
                       
                     </div>
                     <div class="mb-3">
@@ -72,7 +73,7 @@
                     </div>
                     <div class="row mb-3 mt-1">
                       <div class="col-md-6 ">
-                        <button class="btn btn-primary" onclick="exportToExcel()" id="exportToExcelBtn" disabled>Export template</button>
+                        <button class="btn btn-success" onclick="exportToExcel()" id="exportToExcelBtn" disabled>Export template</button>
                       </div>
                       <div class="col-md-6 ">
                         <div class="custom-file-input ml-2">
@@ -82,7 +83,7 @@
                       </div>
                     </div>
                     <div class="d-flex justify-content-end">
-                      <button type="submit" class="btn btn-primary">Submit</button>
+                      <button type="submit" class="btn btn-success">Submit</button>
                     </div>
                   </form>
                   

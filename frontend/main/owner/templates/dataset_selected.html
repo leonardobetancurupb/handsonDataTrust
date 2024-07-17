@@ -80,11 +80,11 @@
                         </div>
                         <div class="col"> 
                           <p id="item-idPolicy"><strong>Policy: </strong>Only for studies</p>
-                          <button type="button" class="btn btn-sm btn-outline-primary ml-3" data-toggle="modal" data-target="#ModalPolicy">View policy selected</button>
+                          <button type="button" class="btn btn-sm btn-outline-success ml-3" data-toggle="modal" data-target="#ModalPolicy">View policy selected</button>
                         </div>
                         <div class="col"> 
                           <p id="item-schema"><strong>Schema: </strong> Medical Cost Personal</p>
-                          <button type="button" class="btn btn-sm btn-outline-primary ml-3" data-toggle="modal" data-target="#myModal">View schema selected</button>
+                          <button type="button" class="btn btn-sm btn-outline-success ml-3" data-toggle="modal" data-target="#myModal">View schema selected</button>
                         </div>
                       </div>
                     </div>
@@ -187,7 +187,7 @@
                     </strong>
                     <ul>
                       <li>
-                        age: age of primary beneficiary
+                        age: age of success beneficiary
                       </li>
                       <li>
                         sex: insurance contractor gender, female, male
@@ -283,6 +283,53 @@
 
     </div>
     {% else %}
+    <script>
+      document.getElementById('showJsonBtn').addEventListener('click', function() {
+        var json = {
+          "type": "object",
+          "properties": {
+            "age": {
+              "type": "integer",
+              "description": "Age of success beneficiary"
+            },
+            "sex": {
+              "type": "string",
+              "description": "Insurance contractor gender, female, male",
+              "enum": ["female", "male"]
+            },
+            "bmi": {
+              "type": "number",
+              "description": "Body mass index, providing an understanding of body, weights that are relatively high or low relative to height, objective index of body weight (kg / m ^ 2) using the ratio of height to weight, ideally 18.5 to 24.9"
+            },
+            "children": {
+              "type": "integer",
+              "description": "Number of children covered by health insurance / Number of dependents"
+            },
+            "smoker": {
+              "type": "string",
+              "description": "Smoking",
+              "enum": ["yes", "no"]
+            },
+            "region": {
+              "type": "string",
+              "description": "The beneficiary's residential area in the US, northeast, southeast, southwest, northwest.",
+              "enum": ["northeast", "southeast", "southwest", "northwest"]
+            },
+            "charges": {
+              "type": "number",
+              "description": "Individual medical costs billed by health insurance"
+            }
+          },
+          "required": ["age", "sex", "bmi", "children", "smoker", "region", "charges"]
+        };
+        
+
+          var formattedJson = JSON.stringify(json, null, 2); // Formatea el JSON con indentación de 2 espacios
+          var jsonOutput = document.getElementById('jsonOutput');
+          jsonOutput.textContent = formattedJson;
+          jsonOutput.style.display = 'block'; // Muestra el div que contiene el JSON formateado
+      });
+  </script>
     <script>
       window.onload=function() {
         window.location.href = "{% url 'accounts:log_in' %}";

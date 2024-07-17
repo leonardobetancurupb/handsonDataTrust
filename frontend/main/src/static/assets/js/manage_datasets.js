@@ -1,99 +1,84 @@
-const API_BASE_URL = 'https://http://127.0.0.1:8000/';
-document.addEventListener('DOMContentLoaded', function() {
-    // Datos de ejemplo
-    var itemDetails = {
-        category: 'Tecnología',
-        description: 'Un artículo sobre las últimas tendencias en tecnología.',
-        format: 'Artículo',
-        schema: 'SchemaTech',
-        idPolicy: 'Policy123',
-        url: 'https://www.ejemplo.com/articulo-tecnologia'
+
+document.addEventListener("DOMContentLoaded", function() {
+    fetchDatasets();
+});
+function fetchDatasets() {
+    const myHeaders2 = new Headers();
+    myHeaders2.append("Content-Type", "application/json");
+    
+    const requestOptions2 = {
+        method: "GET",
+        headers: myHeaders2,
     };
-
-    // Función para mostrar los detalles del elemento
-    function displayItemDetails(details) {
-        document.getElementById('item-category').textContent += details.category;
-        document.getElementById('item-description').textContent += details.description;
-        document.getElementById('item-format').textContent += details.format;
-        document.getElementById('item-schema').textContent += details.schema;
-        document.getElementById('item-idPolicy').textContent += details.idPolicy;
-        var urlElement = document.getElementById('item-url-link');
-        urlElement.href = details.url;
-        urlElement.textContent = details.url;
-    }
-
-    // Llamar a la función para mostrar los detalles
-    displayItemDetails(itemDetails);
-});
-
-document.getElementById('dataForm').addEventListener('submit', async function(event) {
-    event.preventDefault(); // Prevenir el comportamiento por defecto del formulario
-
-    // Capturar los datos del formulario
-    const formData = new FormData(event.target);
-    const dataObj = Object.fromEntries(formData.entries());
-    const file = dataObj['File']
-    // Llamar al método createData
-    try {
-        const response_file = await createFile(file);
-        dataObj['url'] = response_file;
-        const response = await createData(dataObj);
-        console.log('Response:', response);
-    } catch (error) {
-        console.error('Error:', error);
-    }
-});
-
-async function createFile(dataObj) {
-    const response = await fetch(`${API_BASE_URL}/saveData/holder/${user_id}/`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(dataObj)
+    fetch('http://54.197.173.166:8000/schema/', requestOptions2)
+        .then(response => response.json())
+        .then(data => {
+            const select = document.getElementById('idSchema');
+            data.forEach(schema => {
+                const option = document.createElement('option');
+                option.value = schema.id;
+                option.textContent = schema.description;
+                select.appendChild(option);
+            });
+        })
+        .catch(error => console.error('Error fetching schemas:', error));
+        fetch('http://54.197.173.166:8000/policy/', requestOptions2)
+        .then(response => response.json())
+        .then(data => {
+            const select = document.getElementById('idPolicy');
+            data.forEach(policy => {
+                const option = document.createElement('option');
+                option.value = policy.id;
+                option.textContent = policy.name;
+                select.appendChild(option);
+            });
+        })
+        .catch(error => console.error('Error fetching policies:', error));
+        fetch('http://54.197.173.166:8000/category/', requestOptions2)
+        .then(response => response.json())
+        .then(data => {
+            const select = document.getElementById('idCategory');
+            data.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category.id;
+                option.textContent = category.category;
+                select.appendChild(option);
+            });
+        })
+        .catch(error => console.error('Error fetching categories:', error));
+}
+function submitDatasetForm(event) {
+    event.preventDefault(); // Evita el envío tradicional del formulario
+    
+    const form = event.target; // Obtiene el formulario
+    const formData = new FormData(form); // Crea un objeto FormData con los datos del formulario
+    
+    // Convierte FormData a un objeto JSON
+    const formDataObj = {};
+    formData.forEach((value, key) => {
+        formDataObj[key] = value;
     });
-    return response.json();
+    
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    console.log(JSON.stringify(formDataObj))
+    const requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: JSON.stringify(formDataObj),
+    };
+    formDataObj["url"] = "nuevoValor"; 
+
+    // Hacer la solicitud POST al servidor
+    fetch("http://54.197.173.166:8000/dataset/", requestOptions)
+        .then(response => response.text())
+        .then(result => {
+            console.log(result)
+            window.location.href = '/administrator/dataset';
+        })
+        .catch(error => console.error(error));
 }
 
-async function createData(dataObj) {
-    const response = await fetch(`${API_BASE_URL}/data/`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(dataObj)
-    });
-    return response.json();
-}
+// Event listener para el envío del formulario
+document.getElementById('datasetForm').addEventListener('submit', submitDatasetForm);
 
-async function getData(id) {
-    const response = await fetch(`${API_BASE_URL}/data/${id}/`, {
-        method: 'GET'
-    });
-    return response.json();
-}
-
-async function updateData(id, dataObj) {
-    const response = await fetch(`${API_BASE_URL}/data/${id}/`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(dataObj)
-    });
-    return response.json();
-}
-
-async function deleteData(id) {
-    const response = await fetch(`${API_BASE_URL}/data/${id}/`, {
-        method: 'DELETE'
-    });
-    return response.status === 204; // Eliminar devuelve 204 No Content si es exitoso
-}
-
-async function listData() {
-    const response = await fetch(`${API_BASE_URL}/data/`, {
-        method: 'GET'
-    });
-    return response.json();
-}

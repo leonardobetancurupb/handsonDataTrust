@@ -37,6 +37,9 @@
                         <a href={% url 'administrator:history' %}>History</a>
                     </li>
                     <li class="list-group-item list-group-item-action ">
+                        <a href={% url 'administrator:category' %}>Category</a>
+                    </li>
+                    <li class="list-group-item list-group-item-action ">
                         <a href={% url 'accounts:settings' %}>Settings</a>
                     </li>
                 </ul>
@@ -57,78 +60,53 @@
                     Filters
                     <div class="row form-group">
                         <div class="col w-25">
-                            <input type="text" id="searchInput" class="form-control" placeholder="Search...">
+                            <label for="searchInput">Name:</label>
+                            <input type="text" id="searchInput" class="form-control w-100" placeholder="Search...">
                         </div>
-                        <div class="col w-25">
-                            <input type="date" id="searchDate" class="form-control" placeholder="Search...">
+                        <div class="col w-75">
+                            Range Date
+                            <div class="d-flex w-100">
+                                <div class="col w-50">
+                                    <label for="startDate">From:</label>
+                                    <input type="date" id="startDate" class="form-control w-100" placeholder="Start Date">
+                                </div>
+                                <div class="col w-50">
+                                    <label for="endDate">To:</label>
+                                    <input type="date" id="endDate" class="form-control w-100" placeholder="End Date">
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="container mt-3">
+                    <div class="container mt-3 overflow-auto">
                         <div class="row scrollable-container" id="cardContainerPolicies">
-                            <div class="col-md-6 mb-4 card-wrapper">
-                                <div class="card border border-secondary">
-                                    <div class="card-body">
-                                        <h5 class="card-title"><strong class="btn btn-secondary mr-3" disabled>1</strong>Only for studies</h5>
-                                        <h6 class="card-subtitle mb-2 text-muted">Usage</h6>
-                                        <p class="card-text">
-                                            <ul>
-                                                <li>
-                                                    <strong>Expiration:</strong> 06/01/2025
-                                                </li>
-                                                <li>
-                                                    <strong>Value:</strong> $0.1
-                                                </li>
-                                            </ul>
-                                        </p>
-                                        <div class="d-flex justify-content-end">
-                                            <a href={% url 'administrator:edit_policy' %} class="btn btn-light btn-sm border border-secondary mr-3  h-25">
-                                                <img src={% static "assets/img/edit.png" %} class="table-icon" alt="">
-                                                Edit
-                                            </a>
-                                            <a href={% url 'administrator:edit_policy' %} class="btn btn-light btn-sm border border-secondary mr-3 h-25">
-                                                <img src={% static "assets/img/delete.png" %}  class="table-icon" alt="">
-                                                Delete
-                                            </a>                                    
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6 mb-4 card-wrapper">
-                                <div class="card border border-secondary">
-                                    <div class="card-body">
-                                        <h5 class="card-title"><strong class="btn btn-secondary mr-3" disabled>2</strong>Only for developments</h5>
-                                        <h6 class="card-subtitle mb-2 text-muted">Usage</h6>
-                                        <p class="card-text">
-                                            <ul>
-                                                <li>
-                                                    <strong>Expiration:</strong> 06/01/2025
-                                                </li>
-                                                <li>
-                                                    <strong>Value:</strong> $0.1
-                                                </li>
-                                            </ul>
-                                        </p>
-                                        <div class="d-flex justify-content-end">
-                                            <a href={% url 'administrator:edit_policy' %} class="btn btn-light btn-sm border border-secondary mr-3  h-25">
-                                                <img src={% static "assets/img/edit.png" %} class="table-icon" alt="">
-                                                Edit
-                                            </a>
-                                            <a href={% url 'administrator:edit_policy' %} class="btn btn-light btn-sm border border-secondary mr-3 h-25">
-                                                <img src={% static "assets/img/delete.png" %}  class="table-icon" alt="">
-                                                Delete
-                                            </a>                                    
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <!-- Modal -->
+        <div class="modal" id="confirmDeleteModal" >
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Delete</h5>
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                  Are you sure to delete it?
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-danger " id="confirmDeleteButton">Accept</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
     </div>
 
-    <script src={% static 'assets/js/manage_analitycs.js' %}></script>
+    <script src={% static 'assets/js/manage_policies_view.js' %}></script>
     <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
     {% else %}
     <script>

@@ -7,4 +7,4 @@ django-bootstrap4
 plotly
 requests
 openpyxl
-
+django-livereload-server

@@ -37,6 +37,9 @@
                         <a href={% url 'administrator:history' %}>History</a>
                     </li>
                     <li class="list-group-item list-group-item-action ">
+                        <a href={% url 'administrator:category' %}>Category</a>
+                    </li>
+                    <li class="list-group-item list-group-item-action ">
                         <a href={% url 'accounts:settings' %}>Settings</a>
                     </li>
                 </ul>
@@ -59,58 +62,38 @@
                         <div class="col w-25">
                             <input type="text" id="searchInput" class="form-control" placeholder="Search...">
                         </div>
-                        <div class="col w-25">
-                            <input type="date" id="searchDate" class="form-control" placeholder="Search...">
-                        </div>
+
                     </div>
-                    <div class="container mt-3">
-                        <div class="row scrollable-container" id="cardContainerPolicies">
-                            <div class="col-md-4 mb-4 card-wrapper">
-                                <div class="card border border-secondary">
-                                    <div class="card-body">
-                                        <h5 class="card-title"><strong class="btn btn-secondary mr-3" disabled>1</strong>Medical Cost Personal</h5>
-                                        <h6 class="card-subtitle mb-2 text-muted">Since 06/07/2024</h6>
-                                        <hr>
-                                        <div class="d-flex justify-content-end">
-                                            <a href={% url 'administrator:edit_schemas' %} class="btn btn-light btn-sm border border-secondary mr-3  h-25">
-                                                <img src={% static "assets/img/edit.png" %} class="table-icon" alt="">
-                                                Edit
-                                            </a>
-                                            <a href={% url 'administrator:edit_schemas' %} class="btn btn-light btn-sm border border-secondary mr-3 h-25">
-                                                <img src={% static "assets/img/delete.png" %}  class="table-icon" alt="">
-                                                Delete
-                                            </a>                                    
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4 mb-4 card-wrapper">
-                                <div class="card border border-secondary">
-                                    <div class="card-body">
-                                        <h5 class="card-title"><strong class="btn btn-secondary mr-3" disabled>2</strong>Bank Personal Loan</h5>
-                                        <h6 class="card-subtitle mb-2 text-muted">Since 06/07/2024</h6>
-                                        <hr>
-                                        <div class="d-flex justify-content-end">
-                                            <a href={% url 'administrator:edit_schemas' %} class="btn btn-light btn-sm border border-secondary mr-3  h-25">
-                                                <img src={% static "assets/img/edit.png" %} class="table-icon" alt="">
-                                                Edit
-                                            </a>
-                                            <a href={% url 'administrator:edit_schemas' %} class="btn btn-light btn-sm border border-secondary mr-3 h-25">
-                                                <img src={% static "assets/img/delete.png" %}  class="table-icon" alt="">
-                                                Delete
-                                            </a>                                    
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                    <div class="container mt-3 overflow-auto">
+                        <div class="row scrollable-container" id="cardContainerSchemas">
+                            
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <!-- Modal -->
+        <div class="modal" id="confirmDeleteModal" >
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Delete</h5>
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                  Are you sure to delete it?
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-danger " id="confirmDeleteButton">Accept</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
     </div>
 
-    <script src={% static 'assets/js/manage_analitycs.js' %}></script>
+    <script src={% static 'assets/js/manage_schemas_view.js' %}></script>
     <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
     {% else %}
     <script>

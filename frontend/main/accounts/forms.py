@@ -9,6 +9,8 @@ from django.utils import timezone
 from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 
+from accounts.models import UserData
+
 
 class UserCacheMixin:
     user_cache = None
@@ -112,6 +114,9 @@ class SignInViaEmailOrUsernameForm(SignIn, EmailOrUsernameForm):
 
 
 class SignUpForm(UserCreationForm):
+    
+    role = forms.ChoiceField(choices=[('consumer', 'Consumer'), ('data subject', 'Data Subject')], required=True, label=_('Role'))
+
     class Meta:
         model = User
         fields = settings.SIGN_UP_FIELDS
@@ -126,6 +131,14 @@ class SignUpForm(UserCreationForm):
             raise ValidationError(_('You can not use this email address.'))
 
         return email
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        if commit:
+            user.save()
+            profile = UserData.objects.get(user=user)
+            profile.role = self.cleaned_data['role']
+            profile.save()
+        return user
 
 
 class ResendActivationCodeForm(UserCacheMixin, forms.Form):

@@ -27,7 +27,7 @@
 
 <body>
 
-<nav class="navbar  barra-home   fixed-top d-flex justify-content-start">
+<nav class="navbar  barra-home   fixed-top d-flex justify-content-start" id="navbar">
     <img src={% static "assets/img/LOGO-SHORT-LIGHT.png" %} class="img-fluid logo" alt="">
 </nav>
 
@@ -40,7 +40,26 @@
     {% endblock %}
 
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var currentUrl = window.location.pathname;
 
+        var navbar = document.getElementById('navbar');
+        var urlActual = window.location.href;
+        var partesUrl = currentUrl.split('/');
+        var ultimoSegmento = partesUrl[1];
+        // Especifica la URL en la que deseas agregar la clase
+        var targetHolder = 'holder';
+        var targetConsumer = 'consumer';
+
+        if (ultimoSegmento === targetHolder) {
+            navbar.classList.add('bg-success');
+        }
+        if (ultimoSegmento === targetConsumer) {
+            navbar.classList.add('bg-danger');
+        }
+    });
+</script>
 {% comment %} <script src={% static 'assets/vendor/jquery/jquery-3.4.1.min.js' %}></script>
 <script src={% static 'assets/vendor/popper/popper.min.js' %}></script>
 <script src={% static 'assets/vendor/bootstrap/js/bootstrap.min.js' %}></script>

@@ -11,16 +11,16 @@
         <div class="nav flex-column nav-pills text-center mt-4" id="v-pills-tab" role="tablist" aria-orientation="vertical">
           <ul class="list-group ml-0">
             <li class="list-group-item list-group-item-action ">
-                <a href={% url 'holder:home' %}>Home</a>
+                <a class="text-success" href={% url 'holder:home' %}>Home</a>
               </li >
               <li class="list-group-item list-group-item-action ">
-                <a href={% url 'holder:schemas_owner' %}>Datasets</a>
+                <a class="text-success" href={% url 'holder:schemas_owner' %}>Datasets</a>
               </li>
               <li class="list-group-item list-group-item-action ">
-                <a href={% url 'holder:register_datasets' %}>Create New</a>
+                <a class="text-success" href={% url 'holder:register_datasets' %}>Create New</a>
               </li>
               <li class="list-group-item list-group-item-action ">
-                <a href={% url 'accounts:settings' %}>Settings</a>
+                <a class="text-success" href={% url 'accounts:settings' %}>Settings</a>
               </li>
             </ul>
           </div>
@@ -65,7 +65,7 @@
                           <option value="Only for studies">Only for studies</option>
                           <option value="Only for developments">Only for developments</option>
                       </select>
-                      <button type="button" class="btn btn-sm btn-outline-primary ml-3" data-toggle="modal" data-target="#ModalPolicy">View policy selected</button>
+                      <button type="button" class="btn btn-sm btn-outline-success ml-3" data-toggle="modal" data-target="#ModalPolicy">View policy selected</button>
                     </div>
                     <div class="mb-3">
                       <label for="SchemaInput" class="form-label">Schema</label>
@@ -76,7 +76,7 @@
                           <option value="Medical Cost Personal">Medical Cost Personal</option>
                           <option value="Bank Personal Loan">Bank Personal Loan</option>
                       </select>
-                      <button type="button" class="btn btn-sm btn-outline-primary ml-3" data-toggle="modal" data-target="#myModal">View schema selected</button>
+                      <button type="button" class="btn btn-sm btn-outline-success ml-3" data-toggle="modal" data-target="#myModal">View schema selected</button>
                       
                     </div>
                     <div class="mb-3">
@@ -85,7 +85,7 @@
                     </div>
                     <div class="row mb-3 mt-1">
                       <div class="col-md-6 ">
-                        <button class="btn btn-primary" onclick="exportToExcel()">Export template</button>
+                        <button class="btn btn-success" onclick="exportToExcel()">Export template</button>
                       </div>
                       <div class="col-md-6 ">
                         <div class="custom-file-input ml-2">
@@ -95,7 +95,7 @@
                       </div>
                     </div>
                     <div class="d-flex justify-content-end">
-                      <button type="submit" class="btn btn-primary">Submit</button>
+                      <button type="submit" class="btn btn-success">Submit</button>
                     </div>
                   </form>
                 </div>
@@ -140,7 +140,7 @@
                     </strong>
                     <ul>
                       <li>
-                        age: age of primary beneficiary
+                        age: age of success beneficiary
                       </li>
                       <li>
                         sex: insurance contractor gender, female, male
@@ -263,7 +263,7 @@
           "properties": {
             "age": {
               "type": "integer",
-              "description": "Age of primary beneficiary"
+              "description": "Age of success beneficiary"
             },
             "sex": {
               "type": "string",

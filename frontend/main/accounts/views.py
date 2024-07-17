@@ -19,6 +19,7 @@ from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
 from django.views.generic import View, FormView
 from django.conf import settings
+from .models import *
 
 from .utils import (
     send_activation_email, send_reset_password_email, send_forgotten_username_email, send_activation_change_email,
@@ -93,19 +94,19 @@ class SignUpView(GuestOnlyView, FormView):
     def form_valid(self, form):
         request = self.request
         user = form.save(commit=False)
-
+        print(user)
         if settings.DISABLE_USERNAME:
             # Set a temporary username
-            user.username = get_random_string()
+            user.username = get_random_string(12)
         else:
             user.username = form.cleaned_data['username']
 
         if settings.ENABLE_USER_ACTIVATION:
             user.is_active = False
-
-        # Create a user record
+        
         user.save()
-
+        
+        
         # Change the username to the "user_ID" form
         if settings.DISABLE_USERNAME:
             user.username = f'user_{user.id}'
@@ -117,7 +118,7 @@ class SignUpView(GuestOnlyView, FormView):
             act = Activation()
             act.code = code
             act.user = user
-            act.save()
+            act.save() 
 
             send_activation_email(request, user.email, code)
 
@@ -130,7 +131,18 @@ class SignUpView(GuestOnlyView, FormView):
             login(request, user)
 
             messages.success(request, _('You are successfully signed up!'))
-
+        # Create a user record
+        lastest_user = User.objects.latest('id')
+        if UserData.objects.all().count() > 0:
+            latest_user_data = UserData.objects.latest('id')
+            id_new = int(latest_user_data.id) + 1
+        else:
+            id_new=1
+        user_role = UserData.objects.create(
+                id = id_new,
+                role = request.POST['role'],
+                user_id = lastest_user.id
+            )
         return redirect('index')
 
 

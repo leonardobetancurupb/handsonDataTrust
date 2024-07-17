@@ -1,130 +1,61 @@
-const API_BASE_URL = 'https://http://127.0.0.1:8000/';
+var userIdToDelete = null;
 
-async function createAdmin(adminData) {
-    const response = await fetch(`${API_BASE_URL}/admin/`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(adminData)
-    });
-    return response.json();
+function confirmDelete(userId) {
+    userIdToDelete = userId;
 }
 
-async function getAdmin(id) {
-    const response = await fetch(`${API_BASE_URL}/admin/${id}/`, {
-        method: 'GET'
-    });
-    return response.json();
+document.getElementById('confirmDeleteButton').addEventListener('click', function() {
+    if (userIdToDelete !== null) {
+        fetch(`../delete_user/${userIdToDelete}/`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken'),
+                'Content-Type': 'application/json'
+            }
+        }).then(response => {
+            if (response.ok) {
+                location.reload();  // Refresh the page to update the user list
+            } else {
+                alert('Failed to delete user.');
+            }
+        });
+    }
+});
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
 }
 
-async function updateAdmin(id, adminData) {
-    const response = await fetch(`${API_BASE_URL}/admin/${id}/`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(adminData)
-    });
-    return response.json();
-}
+function filterTable() {
+    var nameFilter = document.getElementById('name').value.toLowerCase();
+    var emailFilter = document.getElementById('email').value.toLowerCase();
+    var table = document.getElementById('userTable');
+    var rows = table.getElementsByTagName('tr');
 
-async function deleteAdmin(id) {
-    const response = await fetch(`${API_BASE_URL}/admin/${id}/`, {
-        method: 'DELETE'
-    });
-    return response.status === 204; // Eliminar devuelve 204 No Content si es exitoso
-}
+    for (var i = 1; i < rows.length; i++) {
+        var cells = rows[i].getElementsByTagName('td');
+        var firstName = cells[0].textContent.toLowerCase();
+        var lastName = cells[1].textContent.toLowerCase();
+        var email = cells[2].textContent.toLowerCase();
 
-async function listAdmins() {
-    const response = await fetch(`${API_BASE_URL}/admin/`, {
-        method: 'GET'
-    });
-    return response.json();
-}
+        var nameMatch = (firstName + ' ' + lastName).indexOf(nameFilter) > -1;
+        var emailMatch = email.indexOf(emailFilter) > -1;
 
-async function createConsumer(consumerData) {
-    const response = await fetch(`${API_BASE_URL}/consumers/`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(consumerData)
-    });
-    return response.json();
-}
-
-async function getConsumer(id) {
-    const response = await fetch(`${API_BASE_URL}/consumers/${id}/`, {
-        method: 'GET'
-    });
-    return response.json();
-}
-
-async function updateConsumer(id, consumerData) {
-    const response = await fetch(`${API_BASE_URL}/consumers/${id}/`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(consumerData)
-    });
-    return response.json();
-}
-
-async function deleteConsumer(id) {
-    const response = await fetch(`${API_BASE_URL}/consumers/${id}/`, {
-        method: 'DELETE'
-    });
-    return response.status === 204; // Eliminar devuelve 204 No Content si es exitoso
-}
-
-async function listConsumers() {
-    const response = await fetch(`${API_BASE_URL}/consumers/`, {
-        method: 'GET'
-    });
-    return response.json();
-}
-
-async function createHolder(holderData) {
-    const response = await fetch(`${API_BASE_URL}/holders/`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(holderData)
-    });
-    return response.json();
-}
-
-async function getHolder(id) {
-    const response = await fetch(`${API_BASE_URL}/holders/${id}/`, {
-        method: 'GET'
-    });
-    return response.json();
-}
-
-async function updateHolder(id, holderData) {
-    const response = await fetch(`${API_BASE_URL}/holders/${id}/`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(holderData)
-    });
-    return response.json();
-}
-
-async function deleteHolder(id) {
-    const response = await fetch(`${API_BASE_URL}/holders/${id}/`, {
-        method: 'DELETE'
-    });
-    return response.status === 204; // Eliminar devuelve 204 No Content si es exitoso
-}
-
-async function listHolders() {
-    const response = await fetch(`${API_BASE_URL}/holders/`, {
-        method: 'GET'
-    });
-    return response.json();
+        if (nameMatch && emailMatch) {
+            rows[i].style.display = '';
+        } else {
+            rows[i].style.display = 'none';
+        }
+    }
 }

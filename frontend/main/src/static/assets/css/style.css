@@ -1095,10 +1095,22 @@ body{
     height: 15% !important;
 }
 
+.h-90{
+    height: 90% !important;
+}
+
+.w-90{
+    width: 90% !important;
+}
+
 .formatted-json {
     white-space: pre-wrap; /* Preserva los saltos de línea y los espacios */
     background-color: #f8f9fa; /* Color de fondo claro para resaltar */
     padding: 10px;
     border-radius: 5px;
     border: 1px solid #ddd;
+}
+
+.font-size-small{
+    font-size: 0.8rem;
 }
