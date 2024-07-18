@@ -168,6 +168,7 @@ def search_logs_by_date(initial_date, final_date):
   response = requests.request("GET", url, headers=headers, data=json.dumps(payload))
 
   data = response.json()
+  #log_list = list(data.values())
 
   return data
 
@@ -227,7 +228,8 @@ def get_last_logs(count):
   
   data = response.json()
 
-  return data
+  log_list = list(data.values())
+  return log_list
 
 # print(get_last_logs(10))
 
@@ -251,8 +253,9 @@ def get_all_logs():
 
   response = requests.request("GET", url, headers=headers, data=json.dumps(payload))
   data = response.json()
+  log_list = list(data.values())
 
-  return data
+  return log_list
 
 # print(get_all_logs())
 
@@ -277,12 +280,13 @@ def get_all_logs_user(user):
   }
 
   response = requests.request("GET", url, headers=headers, data=json.dumps(payload))
+  strdict = response.json().replace('"', "'")
+  dict = json.loads(strdict.replace("'", '"'))
 
-  data = response.json()
+  return dict
 
-  return data
+# print(get_all_logs_user("Admin"))
 
-# print(get_all_logs_user("Admin")) _________________________________________
 
 ## FUNCTIONS FOR FRONTEND
 
@@ -333,5 +337,5 @@ def get_all_types():
 
   return data
 
-print(get_all_types())
+#print(get_all_types())
 
