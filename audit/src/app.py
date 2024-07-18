@@ -165,6 +165,14 @@ def search_logs(file, key, value):
     x = result.to_json(orient='records', date_format='iso')
     return x
 
+def get_logs_by_user(user):
+    
+  df = pd.read_json("src/audit.txt", lines=True)
+  result = df[df['source']==user]
+
+  x = result.to_json(orient='records', date_format='iso')
+  return x
+
 def search_logs_by_struct(file, struct):
 
     df = pd.read_json(file, lines=True)
@@ -216,7 +224,26 @@ def gest_last_logs(count):
                 break
     
     return returning_logs
-    
+
+def get_all_logs():
+
+    returning_logs = {}
+
+    with open(file, 'r') as f:
+
+        logs = f.readlines()
+
+        if not logs:
+            print("Empty file.")
+            return None
+
+        for registry in reversed(logs):
+            log = json.loads(registry)
+            returning_logs[log['log_id']] = log
+
+    return returning_logs
+
+
 # Redux functions
 
 def get_all_types():
@@ -378,6 +405,41 @@ def get_recent_logs():
         
         content = json.loads(payload)
         logs = gest_last_logs(content['count'])
+
+        response = logs
+
+    else: 
+        response = {'auth' : 'Invalid token :(', 'response' : " null "}
+        return response
+
+    return jsonify(response), 201
+
+@app.route('/all', methods=['GET'])
+def all_logs():
+
+    payload = request.get_data(as_text=True)
+    
+    if validate_token(payload):
+        
+        logs = get_all_logs()
+
+        response = logs
+
+    else: 
+        response = {'auth' : 'Invalid token :(', 'response' : " null "}
+        return response
+
+    return jsonify(response), 201
+
+@app.route('/all/user', methods=['GET'])
+def get_user_logs():
+
+    payload = request.get_data(as_text=True)
+    
+    if validate_token(payload):
+        
+        content = json.loads(payload)
+        logs = get_logs_by_user(content['user'])
 
         response = logs
 
