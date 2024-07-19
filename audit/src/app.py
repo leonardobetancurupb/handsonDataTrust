@@ -266,6 +266,31 @@ def get_all_types():
   
   return result
 
+# Echart Function
+
+def get_logs_date_user(user):
+
+
+  df = pd.read_json("src/audit.txt", lines=True)
+  user_logs = df[df['source']==user]
+  user_logs['timestamp'] = pd.to_datetime(user_logs['timestamp'])
+  registers_per_day = user_logs.groupby(user_logs['timestamp'].dt.date).size()
+  registers_per_day = registers_per_day.reset_index(name='actions')
+
+  x = registers_per_day.to_json(orient='records', date_format='iso')
+  return x
+
+def get_logs_date():
+
+  df = pd.read_json("src/audit.txt", lines=True)
+  user_logs = df
+  user_logs['timestamp'] = pd.to_datetime(user_logs['timestamp'])
+  registers_per_day = user_logs.groupby(user_logs['timestamp'].dt.date).size()
+  registers_per_day = registers_per_day.reset_index(name='actions')
+
+  x = registers_per_day.to_json(orient='records', date_format='iso')
+  return x
+
 app = Flask(__name__)
 
 # Log file path
@@ -465,6 +490,40 @@ def get_log_types():
 
     return jsonify(response), 201
     
+@app.route('/chart/user', methods=['GET'])
+def get_logs_user_chart():
+
+    payload = request.get_data(as_text=True)
+    
+    if validate_token(payload):
+        
+        content = json.loads(payload)
+        logs = get_logs_date_user(content['user'])
+
+        response = logs
+
+    else: 
+        response = {'auth' : 'Invalid token :(', 'response' : " null "}
+        return response
+
+    return jsonify(response), 201
+
+@app.route('/chart/all', methods=['GET'])
+def get_logs__chart():
+
+    payload = request.get_data(as_text=True)
+    
+    if validate_token(payload):
+        
+        logs = get_logs_date()
+        response = logs
+
+    else: 
+        response = {'auth' : 'Invalid token :(', 'response' : " null "}
+        return response
+
+    return jsonify(response), 201
+
 
 ##PARAM 
 

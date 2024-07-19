@@ -339,3 +339,56 @@ def get_all_types():
 
 #print(get_all_types())
 
+#CALL FOR Echarts
+
+def get_logs_date_user(user):
+  url = address+"/chart/user"
+  
+  payload = {
+    'user' : user
+  }
+
+  def generate_token():
+    token = "PALABRA"+str(payload)+time.strftime("%Y-%m-%d", time.localtime())
+    token = hashlib.sha256(token.encode()).hexdigest()
+    return token
+
+  generated_token = generate_token()
+
+  headers = {
+  'Content-Type': 'application/json',
+  'Authorization': f'Bearer {generated_token}'
+  }
+
+  response = requests.request("GET", url, headers=headers, data=json.dumps(payload))
+  strdict = response.json().replace('"', "'")
+  dict = json.loads(strdict.replace("'", '"'))
+
+  return dict
+
+#print(get_logs_date_user("user_1"))
+
+def get_logs_date():
+  url = address+"/chart/all"
+  
+  payload = {}
+
+  def generate_token():
+    token = "PALABRA"+str(payload)+time.strftime("%Y-%m-%d", time.localtime())
+    token = hashlib.sha256(token.encode()).hexdigest()
+    return token
+
+  generated_token = generate_token()
+
+  headers = {
+  'Content-Type': 'application/json',
+  'Authorization': f'Bearer {generated_token}'
+  }
+
+  response = requests.request("GET", url, headers=headers, data=json.dumps(payload))
+  strdict = response.json().replace('"', "'")
+  dict = json.loads(strdict.replace("'", '"'))
+
+  return dict
+
+#print(get_logs_date())
