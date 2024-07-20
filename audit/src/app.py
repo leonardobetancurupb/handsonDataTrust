@@ -243,6 +243,19 @@ def get_all_logs():
 
     return returning_logs
 
+def get_consumers(user):
+
+
+  df = pd.read_json("src/audit.txt", lines=True)
+  df = df[df['source']==user]
+  result = df[df['type']=="UPDATE CONSUMPTION"]
+
+  x = result.to_json(orient='records', date_format='iso')
+  return x
+
+
+
+print(get_consumers("user_1"))
 
 # Redux functions
 
@@ -290,6 +303,7 @@ def get_logs_date():
 
   x = registers_per_day.to_json(orient='records', date_format='iso')
   return x
+
 
 app = Flask(__name__)
 
@@ -524,6 +538,23 @@ def get_logs__chart():
 
     return jsonify(response), 201
 
+@app.route('/consumers/user', methods=['GET'])
+def get_logs_user_consumers():
+
+    payload = request.get_data(as_text=True)
+    
+    if validate_token(payload):
+        
+        content = json.loads(payload)
+        logs = get_consumers(content['user'])
+
+        response = logs
+
+    else: 
+        response = {'auth' : 'Invalid token :(', 'response' : " null "}
+        return response
+
+    return jsonify(response), 201
 
 ##PARAM 
 

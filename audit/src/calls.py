@@ -59,7 +59,7 @@ def send_log(type,content,source,destination):
 
   return response.text
 
-# print(send_log(type,description,source,destination)) 
+# print(send_log("UPDATE CONSUMPTION",{"key":"value"},"user_1","Consumer")) 
 
 def validate_log():
     
@@ -338,6 +338,34 @@ def get_all_types():
   return data
 
 #print(get_all_types())
+
+def get_user_consumers(user):
+
+  url = address+"/consumers/user"
+  
+  payload = {
+    'user' : user
+  }
+
+  def generate_token():
+    token = "PALABRA"+str(payload)+time.strftime("%Y-%m-%d", time.localtime())
+    token = hashlib.sha256(token.encode()).hexdigest()
+    return token
+
+  generated_token = generate_token()
+
+  headers = {
+  'Content-Type': 'application/json',
+  'Authorization': f'Bearer {generated_token}'
+  }
+
+  response = requests.request("GET", url, headers=headers, data=json.dumps(payload))
+  strdict = response.json().replace('"', "'")
+  dict = json.loads(strdict.replace("'", '"'))
+
+  return dict
+
+print(get_user_consumers("user_1"))
 
 #CALL FOR Echarts
 
