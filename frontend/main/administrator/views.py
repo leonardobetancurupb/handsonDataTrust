@@ -5,30 +5,44 @@ from src.utils.logger import get_last_logs
 from django.contrib.auth import get_user_model
 from django.views.decorators.http import require_http_methods
 from django.middleware.csrf import get_token
-
+from django.core.cache import cache
 
 # Create your views here.
 def menu(request):
-    return render(request, 'menu.html')
+    template_name = 'menu.html'
+    variable_value = cache.get('access', 'Variable not found')
+    return render(request, template_name, {'token':variable_value})
 
 def policy(request):
-    return render(request, 'policy.html')
+    template_name = 'policy.html'
+    variable_value = cache.get('access', 'Variable not found')
+    return render(request, template_name, {'token':variable_value})
 
 def schemas(request):
-    return render(request, 'schemas.html')
+    template_name = 'schemas.html'
+    variable_value = cache.get('access', 'Variable not found')
+    return render(request, template_name, {'token':variable_value})
 
 
 def create_policy(request):
-    return render(request, 'create_policy.html')
+    template_name = 'create_policy.html'
+    variable_value = cache.get('access', 'Variable not found')
+    return render(request, template_name, {'token':variable_value})
 
 def edit_policy(request, id):
-    return render(request, 'edit_policy.html')
+    template_name = 'edit_policy.html'
+    variable_value = cache.get('access', 'Variable not found')
+    return render(request, template_name, {'token':variable_value})
 
 def create_schema(request):
-    return render(request, 'create_schemas.html')
+    template_name = 'create_schemas.html'
+    variable_value = cache.get('access', 'Variable not found')
+    return render(request, template_name, {'token':variable_value})
 
 def edit_schema(request, id):
-    return render(request, 'edit_schemas.html')
+    template_name = 'edit_schemas.html'
+    variable_value = cache.get('access', 'Variable not found')
+    return render(request, template_name, {'token':variable_value})
 
 def view_users(request):
     User = get_user_model()
@@ -36,29 +50,44 @@ def view_users(request):
     return render(request, 'view_users.html', {'users': users})
 
 def history_user(request):
-    return render(request, 'history_user.html')
+    template_name = 'history_user.html'
+    variable_value = cache.get('access', 'Variable not found')
+    return render(request, template_name, {'token':variable_value})
 
 
 def registered_data(request):
-    return render(request, 'registered_data.html')
+    template_name = 'registered_data.html'
+    variable_value = cache.get('access', 'Variable not found')
+    return render(request, template_name, {'token':variable_value})
 
 def history(request):
-    return render(request, 'history.html')
+    template_name = 'history.html'
+    variable_value = cache.get('access', 'Variable not found')
+    return render(request, template_name, {'token':variable_value})
 
 def data_selected(request):
-    return render(request, 'data_selected.html')
+    template_name = 'data_selected.html'
+    variable_value = cache.get('access', 'Variable not found')
+    return render(request, template_name, {'token':variable_value})
 
 def create_category(request):
-    return render(request, 'create_category.html')
+    template_name = 'create_category.html'
+    variable_value = cache.get('access', 'Variable not found')
+    return render(request, template_name, {'token':variable_value})
 
 def edit_category(request, id):
-    return render(request, 'edit_category.html')
+    template_name = 'edit_category.html'
+    variable_value = cache.get('access', 'Variable not found')
+    return render(request, template_name, {'token':variable_value})
 
 def category(request):
-    return render(request, 'category.html')
+    template_name = 'category.html'
+    variable_value = cache.get('access', 'Variable not found')
+    return render(request, template_name, {'token':variable_value})
 
 def logs(request):
-    # Ruta del archivo .txt (asegúrate de ajustar la ruta correctamente)
+    
+    # Ruta del archivo .txt
     input_file = 'src/utils/audit.txt'
     
     records = []
@@ -86,7 +115,8 @@ def logs(request):
 def delete_user(request, user_id):
 
     User = get_user_model()
-    if not request.user.is_authenticated:
+    variable_value = cache.get('access', 'Variable not found')
+    if variable_value == "Variable not found":
         return HttpResponseForbidden("You are not authorized to perform this action.")
     
     try:
@@ -95,3 +125,7 @@ def delete_user(request, user_id):
         return JsonResponse({'status': 'success'})
     except User.DoesNotExist:
         return JsonResponse({'status': 'error', 'message': 'User not found'})
+    
+    
+def logs_example(request):
+    return JsonResponse(get_last_logs(10), safe=False)

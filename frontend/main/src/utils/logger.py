@@ -61,3 +61,7 @@ def get_last_logs(count):
 
     return response.text
 
+def generate_token(payload):
+    token = "PALABRA"+str(payload)+time.strftime("%Y-%m-%d", time.localtime())
+    token = hashlib.sha256(token.encode()).hexdigest()
+    return token

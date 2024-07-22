@@ -75,7 +75,7 @@ const loadSchemas = async () => {
                 <div class="col-md-4 mb-4 card-wrapper">
                     <div class="card border border-secondary">
                         <div class="card-body">
-                            <h5 class="card-title"><strong class="btn btn-secondary mr-3" disabled>${schema.id}</strong>${schema.description}</h5>
+                            <h5 class="card-title"><strong class="btn btn-secondary mr-3" disabled>${schema.id}</strong>${schema.name}</h5>
                             <hr>
                             <div class="d-flex justify-content-end">
                                 <a href='../edit_schemas/${schema.id}/' class="btn btn-light btn-sm border border-secondary mr-3  h-25">

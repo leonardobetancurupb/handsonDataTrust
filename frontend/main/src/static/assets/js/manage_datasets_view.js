@@ -1,5 +1,5 @@
  // Función para filtrar categorías
- function filterPolicies() {
+ function filterDatasets() {
     const searchInput = document.getElementById('searchInput').value.toLowerCase();
     const startDate = document.getElementById('startDate').value;
     const endDate = document.getElementById('endDate').value;
@@ -38,9 +38,9 @@
 
 let urlToDelete; // Variable para almacenar la URL de eliminación
 
-        function deletePolicy(event) {
+        function deleteDataset(event) {
             event.preventDefault(); // Evita el comportamiento predeterminado del enlace
-            console.log("Se ha metido en la funcion deletepolicy");
+            console.log("Se ha metido en la funcion deletedataset");
             urlToDelete = event.currentTarget.getAttribute('data-url'); // Obtiene la URL del enlace
 
             // Mostrar el modal de confirmación
@@ -61,19 +61,19 @@ let urlToDelete; // Variable para almacenar la URL de eliminación
             fetch(urlToDelete, requestOptions)
                 .then(response => {
                     if (response.ok) {
-                        console.log("Policy deleted successfully.");
+                        console.log("Dataset deleted successfully.");
                         // Navegar a otra página o recargar la lista de categorías
                         $('#confirmDeleteModal').modal('hide'); // Ocultar el modal de confirmación
-                        loadPolicies(); // Recargar las categorías después de eliminar una
+                        loadDatasets(); // Recargar las categorías después de eliminar una
                     } else {
-                        console.error("Failed to delete policy.");
+                        console.error("Failed to delete dataset.");
                     }
                 })
                 .catch(error => console.error('Error:', error));
         });
 
 // Función para cargar las categorías desde el servidor y mostrarlas en tarjetas
-const loadPolicies = async () => {
+const loadDatasets = async () => {
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
@@ -84,72 +84,67 @@ const loadPolicies = async () => {
 
     try {
         // Hacer la solicitud GET al servidor para obtener las políticas
-        const policyResponse = await fetch('http://54.197.173.166:8000/policy/', requestOptions);
-        const policies = await policyResponse.json();
-        console.log(policies);
+        const datasetResponse = await fetch('http://54.197.173.166:8000/data/', requestOptions);
+        const datasets = await datasetResponse.json();
+        console.log(datasets);
 
         // Limpiar el contenedor antes de agregar nuevas tarjetas
-        const cardContainer = document.getElementById('cardContainerPolicies');
+        const cardContainer = document.getElementById('cardContainerDatasets');
         cardContainer.innerHTML = ''; // Asegúrate de que esto esté ejecutándose correctamente
 
         // Iterar sobre cada política y obtener la categoría correspondiente
-        for (const policy of policies) {
+        for (const dataset of datasets) {
             // Obtener la categoría correspondiente
-            const categoryResponse = await fetch(`http://54.197.173.166:8000/category/${policy.idCategory}/`, requestOptions);
-            const category = await categoryResponse.json();
+            const policyResponse = await fetch(`http://54.197.173.166:8000/policy/${dataset.idPolicy}/`, requestOptions);
+            const policy = await policyResponse.json();
+            const schemaResponse = await fetch(`http://54.197.173.166:8000/schema/${dataset.idSchema}/`, requestOptions);
+            const schema = await schemaResponse.json();
 
             // Construir el HTML de la tarjeta con la data
             const cardHtml = `
-                <div class="col-md-6 mb-4 card-wrapper">
-                    <div class="card border border-secondary">
-                        <div class="card-body">
-                            <h5 class="card-title"><strong class="btn btn-secondary mr-3" disabled>${policy.id}</strong>${policy.name}</h5>
-                            <h6 class="card-subtitle mb-2 text-muted"> ${category.category}</h6> 
-                            <p class="card-text">
-                                <ul>
-                                    <li>
-                                        <strong>Expiration:</strong> <span class="expiration-date">${policy.estimatedTime}</span>
-                                    </li>
-                                    <li>
-                                        <strong>Value:</strong> $${policy.Value}
-                                    </li>
-                                </ul>
-                            </p>
-                            <div class="d-flex justify-content-end">
-                                <a href='../edit_policy/${policy.id}/' class="btn btn-light btn-sm border border-secondary mr-3  h-25">
-                                    <img src='/static/assets/img/edit.png' class="table-icon" alt="">
-                                    Edit
-                                </a>
-                                <a href="#" data-url="http://54.197.173.166:8000/policy/${policy.id}/" class="btn btn-light btn-sm border border-secondary mr-3 h-25 delete-policy">
-                                    <img src='/static/assets/img/delete.png' class="table-icon" alt="">
-                                    Delete
-                                </a>                                    
-                            </div>
+            <div class="col-md-6 mb-4 card-wrapper">
+                <div class="card">
+                    <div class="w-100 h-25 bg-secondary rounded-top d-flex justify-content-center text-light">
+                        ${dataset.id}
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">${schema.name}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted btn">Clustering</h6>
+                        <p class="card-text">Date: 06/07/2024 10:30:234</p>
+                        <div class="d-flex justify-content-between">
+                        <a href="{% url 'holder:dataset_selected' %}" class="btn btn-success">Select</a>
+                        <div>
+                            <a href='../edit_policy/${dataset.id}/' class="mr-1"><img src='/static/assets/img/edit.png' alt=""></a>
+                            <a href="#" data-url="http://54.197.173.166:8000/data/${dataset.id}/" data-toggle="modal" class="mr-1 delete-dataset" data-target="#staticBackdrop">
+                            <img src='/static/assets/img/delete.png'  alt="">
+                            </a>
+                        </div>
                         </div>
                     </div>
                 </div>
+            </div>
             `;
             cardContainer.innerHTML += cardHtml; // Agregar la tarjeta al contenedor
         }
 
         // Event listeners a los nuevos enlaces de eliminación
-        document.querySelectorAll('.delete-policy').forEach(link => {
-            link.addEventListener('click', deletePolicy);
+        document.querySelectorAll('.delete-dataset').forEach(link => {
+            link.addEventListener('click', deleteDataset);
         });
 
         // Event listener para el campo de búsqueda y los campos de fecha
-        document.getElementById('searchInput').addEventListener('input', filterPolicies);
-        document.getElementById('startDate').addEventListener('input', filterPolicies);
-        document.getElementById('endDate').addEventListener('input', filterPolicies);
+        document.getElementById('searchInput').addEventListener('input', filterDatasets);
+        document.getElementById('startDate').addEventListener('input', filterDatasets);
+        document.getElementById('endDate').addEventListener('input', filterDatasets);
 
 
     } catch (error) {
-        console.error('Error fetching policies:', error);
+        console.error('Error fetching datasets:', error);
     }
 };
 
 
 // Llamar a la función para cargar las categorías cuando la página se cargue
 window.addEventListener("load", async () => {
-    await loadPolicies();
+    await loadDatasets();
 });

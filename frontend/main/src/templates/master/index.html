@@ -4,15 +4,12 @@
 
 {% block content %}
 
-    {% if request.user.is_authenticated %}
+    {% if token != "Variable not found" %}
 
     {% load static %}
 
     
-    {% comment %} <a href={% url 'consumer:info' %}>Home</a>
-    <a href={% url 'consumer:view_datasets' %}>Datasets</a>
-    <a href={% url 'consumer:consumer_history' %}>Projects</a>
-    <a href={% url 'accounts:settings' %}>Settings</a> {% endcomment %}
+  
 
     <div class="row w-100 ml-4 mt-3 justify-content-between">
         <div class="col-sm-2 shadow-sm p-1 border border-1">

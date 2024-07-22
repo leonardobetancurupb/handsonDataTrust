@@ -4,7 +4,7 @@
 
 {% block content %}
 
-    {% if request.user.is_authenticated %}
+    {% if token != "Variable not found" %}
 
     {% load static %}
 

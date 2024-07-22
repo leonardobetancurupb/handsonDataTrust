@@ -3,7 +3,7 @@
 {% load i18n %}
 
 {% block content %}
-  {% if request.user.is_authenticated %}
+{% if token != "Variable not found" %}
     {% load static %}
 
     <div class="row w-100 ml-4 mt-2 justify-content-between">
@@ -33,7 +33,7 @@
                   Create New Dataset
                 </h3>
                 <div class="container mt-5">
-                  <form action="" method="POST" enctype="multipart/form-data">
+                  <form  id="datasetForm">
                     {% csrf_token %}
                     <div class="mb-3">
                       <label for="idCategory" class="form-label">Category</label>
@@ -43,10 +43,6 @@
                         <!-- Opción por defecto -->
                         <option value="" disabled selected>Select a Category</option>
                       </select>
-                    </div>
-                    <div class="mb-3">
-                      <label for="DescriptionInput" class="form-label">Description</label>
-                      <textarea class="form-control" id="DescriptionInput" rows="3" placeholder="Give a description to your dataset"></textarea>
                     </div>
                     <div class="mb-3">
                       <label for="idPolicy" class="form-label">Policy</label>
@@ -76,16 +72,24 @@
                         <button class="btn btn-success" onclick="exportToExcel()" id="exportToExcelBtn" disabled>Export template</button>
                       </div>
                       <div class="col-md-6 ">
-                        <div class="custom-file-input ml-2">
+                        {% comment %} <div class="custom-file-input ml-2">
                           <input type="file" name="archivo" id="fileInput" onchange="updateFileName()">
                           <label for="fileInput" class="custom-file-label ">Choose File</label>
-                      </div>
+                        </div> {% endcomment %}
                       </div>
                     </div>
                     <div class="d-flex justify-content-end">
                       <button type="submit" class="btn btn-success">Submit</button>
                     </div>
                   </form>
+                  <form id="filedataset">
+                    {% csrf_token %}
+                    <div class="custom-file-input ml-2 mb-2">
+                        <input type="file" name="archivo" id="fileInput" onchange="updateFileName()">
+                        <label for="fileInput" class="custom-file-label ">Choose File</label>
+                    </div>
+                    <button type="submit" class="btn btn-success btn-sm">Load file</button>
+                </form>
                   
                 </div>
               </div>
@@ -105,8 +109,8 @@
       }
   </script>
   <script>
-    document.getElementById('SchemaInput').addEventListener('change', function() {
-        var select = document.getElementById('SchemaInput');
+    document.getElementById('idSchema').addEventListener('change', function() {
+        var select = document.getElementById('idSchema');
         var button = document.getElementById('viewSchemaBtn');
         var buttonExport = document.getElementById('exportToExcelBtn');
         if (select.value) {
@@ -117,8 +121,8 @@
             buttonExport.disabled = true;
         }
     });
-    document.getElementById('PolicyInput').addEventListener('change', function() {
-      var select = document.getElementById('PolicyInput');
+    document.getElementById('idPolicy').addEventListener('change', function() {
+      var select = document.getElementById('idPolicy');
       var button = document.getElementById('viewPolicyBtn');
       if (select.value) {
           button.disabled = false; // Habilita el botón si se selecciona una opción

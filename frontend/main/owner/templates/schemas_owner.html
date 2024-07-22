@@ -4,7 +4,7 @@
 
 {% block content %}
 
-    {% if request.user.is_authenticated %}
+{% if token != "Variable not found" %}
 
     {% load static %}
 
@@ -44,111 +44,7 @@
               </div>
             <div class="container mt-1 sensor-table">
               <div class="row" id="cardContainer">
-                <div class="col-md-6 mb-4 card-wrapper">
-                  <div class="card">
-                    <div class="w-100 h-25 bg-secondary rounded-top d-flex justify-content-center text-light">
-                      21
-                    </div>
-                    <div class="card-body">
-                      <h5 class="card-title">Medical Cost Personal Data</h5>
-                      <h6 class="card-subtitle mb-2 text-muted btn">Clustering</h6>
-                      <p class="card-text">Date: 06/07/2024 10:30:234</p>
-                      <div class="d-flex justify-content-between">
-                        <a href="{% url 'holder:dataset_selected' %}" class="btn btn-success">Select</a>
-                        <div>
-                          <a href="{% url 'holder:edit_datasets' %}" class="mr-1"><img src={% static "assets/img/edit.png" %} alt=""></a>
-                          <a href="#" data-toggle="modal" class="mr-1" data-target="#staticBackdrop">
-                            <img src={% static "assets/img/delete.png" %}  alt="">
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-6 mb-4 card-wrapper">
-                  <div class="card">
-                    <div class="w-100 h-25 bg-secondary rounded-top d-flex justify-content-center text-light">
-                      22
-                    </div>
-                    <div class="card-body">
-                      <h5 class="card-title">Medical Cost Personal Data</h5>
-                      <h6 class="card-subtitle mb-2 text-muted btn">Clustering</h6>
-                      <p class="card-text">Date: 06/07/2024 10:30:234</p>
-                      <div class="d-flex justify-content-between">
-                        <a href="{% url 'holder:dataset_selected' %}" class="btn btn-success">Select</a>
-                        <div>
-                          <a href="{% url 'holder:edit_datasets' %}" class="mr-1"><img src={% static "assets/img/edit.png" %} alt=""></a>
-                          <a href="#" data-toggle="modal" class="mr-1" data-target="#staticBackdrop">
-                            <img src={% static "assets/img/delete.png" %}  alt="">
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-6 mb-4 card-wrapper">
-                  <div class="card">
-                    <div class="w-100 h-25 bg-secondary rounded-top d-flex justify-content-center text-light">
-                      23
-                    </div>
-                    <div class="card-body">
-                      <h5 class="card-title">Medical Cost Personal Data</h5>
-                      <h6 class="card-subtitle mb-2 text-muted btn">Clustering</h6>
-                      <p class="card-text">Date: 06/07/2024 10:30:234</p>
-                      <div class="d-flex justify-content-between">
-                        <a href="{% url 'holder:dataset_selected' %}" class="btn btn-success">Select</a>
-                        <div>
-                          <a href="{% url 'holder:edit_datasets' %}" class="mr-1"><img src={% static "assets/img/edit.png" %} alt=""></a>
-                          <a href="#" data-toggle="modal" class="mr-1" data-target="#staticBackdrop">
-                            <img src={% static "assets/img/delete.png" %}  alt="">
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-6 mb-4 card-wrapper">
-                  <div class="card">
-                    <div class="w-100 h-25 bg-secondary rounded-top d-flex justify-content-center text-light">
-                      24
-                    </div>
-                    <div class="card-body">
-                      <h5 class="card-title">Medical Cost Personal Data</h5>
-                      <h6 class="card-subtitle mb-2 text-muted btn">Clustering</h6>
-                      <p class="card-text">Date: 06/07/2024 10:30:234</p>
-                      <div class="d-flex justify-content-between">
-                        <a href="{% url 'holder:dataset_selected' %}" class="btn btn-success">Select</a>
-                        <div>
-                          <a href="{% url 'holder:edit_datasets' %}" class="mr-1"><img src={% static "assets/img/edit.png" %} alt=""></a>
-                          <a href="#" data-toggle="modal" class="mr-1" data-target="#staticBackdrop">
-                            <img src={% static "assets/img/delete.png" %}  alt="">
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-6 mb-4 card-wrapper">
-                  <div class="card">
-                    <div class="w-100 h-25 bg-secondary rounded-top d-flex justify-content-center text-light">
-                      25
-                    </div>
-                    <div class="card-body">
-                      <h5 class="card-title">Medical Cost Personal Data</h5>
-                      <h6 class="card-subtitle mb-2 text-muted btn">Clustering</h6>
-                      <p class="card-text">Date: 06/07/2024 10:30:234</p>
-                      <div class="d-flex justify-content-between">
-                        <a href="{% url 'holder:dataset_selected' %}" class="btn btn-success">Select</a>
-                        <div>
-                          <a href="{% url 'holder:edit_datasets' %}" class="mr-1"><img src={% static "assets/img/edit.png" %} alt=""></a>
-                          <a href="#" data-toggle="modal" class="mr-1" data-target="#staticBackdrop">
-                            <img src={% static "assets/img/delete.png" %}  alt="">
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                
               </div>
             </div>
           </div>

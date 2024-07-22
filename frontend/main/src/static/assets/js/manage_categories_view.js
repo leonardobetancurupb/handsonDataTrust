@@ -1,4 +1,24 @@
- // Función para filtrar categorías
+ 
+function getCacheVariable(key) {
+    const variableName = key;
+
+    fetch(`/accounts/get_cache/?access=${variableName}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        return data.value;
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+
+ // filter
 function filterCategories() {
     const searchInput = document.getElementById('searchInput').value.toLowerCase();
     const cards = document.querySelectorAll('.card-wrapper');
@@ -34,7 +54,8 @@ let urlToDelete; // Variable para almacenar la URL de eliminación
         document.getElementById('confirmDeleteButton').addEventListener('click', function() {
             const myHeaders = new Headers();
             myHeaders.append("Content-Type", "application/json");
-
+            myHeaders.append("Authorization", "Bearer "+getCacheVariable('access'));
+    
             const requestOptions = {
                 method: "DELETE",
                 headers: myHeaders,

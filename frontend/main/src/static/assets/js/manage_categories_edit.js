@@ -1,5 +1,5 @@
 
-// Función para obtener el ID de la URL
+// function to get id category
 function getIdFromUrl() {
     var urlActual = window.location.href;
     var partesUrl = urlActual.split('/');
@@ -7,16 +7,8 @@ function getIdFromUrl() {
     console.log(ultimoSegmento);
     return ultimoSegmento
 }
-    
 
-
-
-        
-
-
-
-
-// Función para cargar los datos del registro y rellenar el formulario
+// function to load and set data form to update
 function loadCategoryData() {
     const id = getIdFromUrl();
     console.log(id);
@@ -28,79 +20,120 @@ function loadCategoryData() {
         method: "GET",
         headers: myHeaders2,
     };
-    fetch(`http://54.197.173.166:8000/category/${id}/`, requestOptions2)
+    fetch(`http://54.197.173.166:8000/api/category/${id}/`, requestOptions2)
         .then(response => response.json())
         .then(data => {
-            document.getElementById('id').value = data.id;
             document.getElementById('name').value = data.category;
         })
         .catch(error => console.error('Error loading category data:', error));
 }
 
+
 function submitCategoryForm(event) {
-    event.preventDefault(); // Evita el envío tradicional del formulario
+    event.preventDefault(); // prevent default actions
+    const id = getIdFromUrl();
+    console.log(id);
+    if (!id) return;
+    const form = event.target; // get form
+    const formData = new FormData(form); // create new form with data
     
-    const form = event.target; // Obtiene el formulario
-    const formData = new FormData(form); // Crea un objeto FormData con los datos del formulario
-    
-    // Convierte FormData a un objeto JSON
+    // FormData to Json format
     const formDataObj = {};
     formData.forEach((value, key) => {
         formDataObj[key] = value;
     });
     
-    const id = formDataObj.id; // Obtener el ID del registro a actualizar
     
-    const myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
+
+    fetch(`/accounts/get_cache/?key=access`, {
+        method: 'GET'
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.value) {
+            console.log(data);
+            console.log(data.value);
+
+
+        const myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+        myHeaders.append("Authorization", "Bearer "+data.value);
+        
+        const requestOptions = {
+            method: "PATCH",
+            headers: myHeaders,
+            body: JSON.stringify(formDataObj),
+        };
     
-    const requestOptions = {
-        method: "PATCH",
-        headers: myHeaders,
-        body: JSON.stringify(formDataObj),
-    };
-    
-    // Hacer la solicitud PATCH al servidor
+    // request patch
     fetch(`http://54.197.173.166:8000/category/${id}/`, requestOptions)
         .then(response => response.text())
         .then(result => {
-            console.log(result); // Manejar la respuesta del servidor, si es necesario
-            // Llamar a la función para recargar las categorías después de enviar el formulario
+            console.log(result); 
+            // reload categories
             loadCategoryData();
             window.location.href = '/administrator/category';
         })
         .catch(error => console.error(error));
+    } else {
+        console.error('Token not found in response.');
+    }
+})
+.catch(error => {
+    console.error('PATCH Error:', error);
+});
 }
 
-// Event listener para el envío del formulario
+// Event listener to send form
 document.getElementById('categoryForm').addEventListener('submit', submitCategoryForm);
 
-// Función para confirmar la eliminación
+// delete validation function
 document.getElementById('confirmDeleteButton').addEventListener('click', function() {
     const id = getIdFromUrl();
     console.log(id);
     if (!id) return;
 
-    const myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-    const requestOptions = {
-        method: "DELETE",
-        headers: myHeaders,
-    };
+    fetch(`/accounts/get_cache/?key=access`, {
+        method: 'GET'
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.value) {
+                console.log(data);
+                console.log(data.value);
 
-    // Hacer la solicitud DELETE al servidor
-    fetch(`http://54.197.173.166:8000/category/${id}/`, requestOptions)
-        .then(response => {
-            if (response.ok) {
-                console.log("Category deleted successfully.");
-                // Navegar a otra página o recargar la lista de categorías
-                $('#confirmDeleteModal').modal('hide'); // Ocultar el modal de confirmación
-                window.location.href = '/administrator/category'; // Recargar las categorías después de eliminar una
+
+                const myHeaders = new Headers();
+                myHeaders.append("Content-Type", "application/json");
+                myHeaders.append("Authorization", "Bearer "+data.value);
+                
+                const requestOptions = {
+                    method: "DELETE",
+                    headers: myHeaders,
+                    body: JSON.stringify(formDataObj),
+                };
+    
+                // delete request
+                fetch(`http://54.197.173.166:8000/category/${id}/`, requestOptions)
+                    .then(response => response.text())
+                    .then(result => {
+                        if (response.ok) {
+                            console.log("Category deleted successfully.");
+                            $('#confirmDeleteModal').modal('hide'); // modal
+                            window.location.href = '/administrator/category'; // reload window
+                        } else {
+                            console.error("Failed to delete category.");
+                        }
+                    })
+                    .catch(error => console.error(error));
             } else {
-                console.error("Failed to delete category.");
+                console.error('Token not found in response.');
             }
         })
-        .catch(error => console.error('Error:', error));
+    .catch(error => {
+        console.error('DELETE Error:', error);
+    }); 
 });
-// Cargar los datos del registro al cargar la página
+
+// LOAD DATA ON WINDOWS RELOAD
 document.addEventListener('DOMContentLoaded', loadCategoryData);

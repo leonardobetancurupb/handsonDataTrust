@@ -28,12 +28,12 @@ async function loadSchemaOptions(selectedSchemaId) {
         schemas.forEach(schema => {
             const option = document.createElement('option');
             option.value = schema.id;
-            option.textContent = schema.schema;
+            option.textContent = schema.name;
             schemaSelect.appendChild(option);
             // Establecer la categoría seleccionada por defecto
             if (selectedSchemaId == schema.id) {
                 schemaSelect.value = selectedSchemaId;
-                schemaSelect.textContent = schema.schema
+                schemaSelect.textContent = schema.name
             }
         });
 
@@ -42,6 +42,73 @@ async function loadSchemaOptions(selectedSchemaId) {
         console.error('Error loading schemas:', error);
     }
 }
+
+async function loadPolicyOptions(selectedPolicyId) {
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    const requestOptions = {
+        method: "GET",
+        headers: myHeaders,
+    };
+
+    try {
+        const response = await fetch('http://54.197.173.166:8000/policy/', requestOptions);
+        const policies = await response.json();
+        const policySelect = document.getElementById('IdPolicy');
+        policySelect.innerHTML = ''; // Limpiar las opciones actuales
+
+        policies.forEach(policy => {
+            const option = document.createElement('option');
+            option.value = policy.id;
+            option.textContent = policy.name;
+            policySelect.appendChild(option);
+            // Establecer la categoría seleccionada por defecto
+            if (selectedPolicyId == policy.id) {
+                policySelect.value = selectedPolicyId;
+                policySelect.textContent = policy.name
+            }
+        });
+
+        console.log(schemaSelect)
+    } catch (error) {
+        console.error('Error loading policies:', error);
+    }
+}
+
+async function loadCategoryOptions(selectedCategoryId) {
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    const requestOptions = {
+        method: "GET",
+        headers: myHeaders,
+    };
+
+    try {
+        const response = await fetch('http://54.197.173.166:8000/category/', requestOptions);
+        const categories = await response.json();
+        const categorySelect = document.getElementById('IdCategory');
+        categorySelect.innerHTML = ''; // Limpiar las opciones actuales
+
+        categories.forEach(category => {
+            const option = document.createElement('option');
+            option.value = category.id;
+            option.textContent = category.category;
+            categorySelect.appendChild(option);
+            // Establecer la categoría seleccionada por defecto
+            if (selectedCategoryId == category.id) {
+                categorySelect.value = selectedCategoryId;
+                categorySelect.textContent = category.category
+            }
+        });
+
+        console.log(categorySelect)
+    } catch (error) {
+        console.error('Error loading categories:', error);
+    }
+}
+
 
 // Función para cargar los datos del registro y rellenar el formulario
 async function loadDatasetData() {
@@ -62,14 +129,12 @@ async function loadDatasetData() {
         const data = await response.json();
 
         // Rellenar el formulario con los datos de la política
-        document.getElementById('id').value = data.id;
-        document.getElementById('name').value = data.name;
-        document.getElementById('description').value = data.description;
-        document.getElementById('estimatedTime').value = data.estimatedTime;
-        document.getElementById('Value').value = data.Value;
-
+        document.getElementById('format').value = "Excel";
+        
         // Cargar las opciones de categorías y establecer la categoría seleccionada
         await loadSchemaOptions(data.IdSchema);
+        await loadPolicyOptions(data.IdPolicy);
+        await loadCategoryOptions(data.IdCategory);
 
     } catch (error) {
         console.error('Error loading dataset data:', error);
@@ -137,7 +202,7 @@ document.getElementById('confirmDeleteButton').addEventListener('click', functio
                 console.log("Dataset deleted successfully.");
                 // Navegar a otra página o recargar la lista de categorías
                 $('#confirmDeleteModal').modal('hide'); // Ocultar el modal de confirmación
-                window.location.href = '/administrator/dataset'; // Recargar las categorías después de eliminar una
+                window.location.href = '/holder/schemas_owner'; // Recargar las categorías después de eliminar una
             } else {
                 console.error("Failed to delete dataset.");
             }

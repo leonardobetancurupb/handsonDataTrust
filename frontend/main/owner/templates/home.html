@@ -4,7 +4,7 @@
 
 {% block content %}
 
-  {% if request.user.is_authenticated %}
+{% if token != "Variable not found" %}
 
     {% load static %}
 
@@ -50,6 +50,7 @@
                         <th>#</th>
                         <th>Consumidor</th>
                         <th>Dataset</th>
+                        <th>Policy</th>
                         <th>Since</th>
                         <th>Actions</th>
                       </tr>
@@ -59,43 +60,49 @@
                         <td>1</td>
                         <td>John Doe</td>
                         <td>21</td>
+                        <td>Only for studies</td>
                         <td>06/07/2024 10:54:234</td>
-                        <td> <a href="{% url 'holder:dataset_selected' %}"><img class="img-fluid table-icon" src={% static "assets/img/right.png" %} alt=""></a></td>
+                        <td> <a href="#"><img class="img-fluid table-icon" src={% static "assets/img/right.png" %} alt=""></a></td>
                       </tr>
                       <tr>
                         <td>2</td>
                         <td>Mary Smith</td>
                         <td>22</td>
+                        <td>Only for studies</td>
                         <td>06/07/2024 10:58:234</td>
-                        <td> <a href="{% url 'holder:dataset_selected' %}"><img class="img-fluid table-icon" src={% static "assets/img/right.png" %} alt=""></a></td>
+                        <td> <a href="#"><img class="img-fluid table-icon" src={% static "assets/img/right.png" %} alt=""></a></td>
                       </tr>
                       <tr>
                         <td>3</td>
                         <td>July Dooley</td>
                         <td>23</td>
+                        <td>Only for studies</td>
                         <td>06/07/2024 11:11:154</td>
-                        <td> <a href="{% url 'holder:dataset_selected' %}"><img class="img-fluid table-icon" src={% static "assets/img/right.png" %} alt=""></a></td>
+                        <td> <a href="#"><img class="img-fluid table-icon" src={% static "assets/img/right.png" %} alt=""></a></td>
                       </tr>
                       <tr>
                         <td>3</td>
                         <td>July Dooley</td>
                         <td>23</td>
+                        <td>Only for studies</td>
                         <td>06/07/2024 11:11:154</td>
-                        <td> <a href="{% url 'holder:dataset_selected' %}"><img class="img-fluid table-icon" src={% static "assets/img/right.png" %} alt=""></a></td>
+                        <td> <a href="#"><img class="img-fluid table-icon" src={% static "assets/img/right.png" %} alt=""></a></td>
                       </tr>
                       <tr>
                         <td>3</td>
                         <td>July Dooley</td>
                         <td>23</td>
+                        <td>Only for studies</td>
                         <td>06/07/2024 11:11:154</td>
-                        <td> <a href="{% url 'holder:dataset_selected' %}"><img class="img-fluid table-icon" src={% static "assets/img/right.png" %} alt=""></a></td>
+                        <td> <a href="#"><img class="img-fluid table-icon" src={% static "assets/img/right.png" %} alt=""></a></td>
                       </tr>
                       <tr>
                         <td>3</td>
                         <td>July Dooley</td>
                         <td>23</td>
+                        <td>Only for studies</td>
                         <td>06/07/2024 11:11:154</td>
-                        <td> <a href="{% url 'holder:dataset_selected' %}"><img class="img-fluid table-icon" src={% static "assets/img/right.png" %} alt=""></a></td>
+                        <td> <a href="#"><img class="img-fluid table-icon" src={% static "assets/img/right.png" %} alt=""></a></td>
                       </tr>
                     </tbody>
                   </table>

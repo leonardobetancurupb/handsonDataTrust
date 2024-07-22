@@ -1,19 +1,29 @@
 from django.shortcuts import render
-
+from django.core.cache import cache
 
 
 # Create your views here.
 def menu(request):
-    return render(request, 'home.html')
+    template_name = 'home.html'
+    variable_value = cache.get('access', 'Variable not found')
+    return render(request, template_name, {'token':variable_value})
 
 def register_datasets(request):
-    return render(request, 'register_datasets.html')
+    template_name = 'register_datasets.html'
+    variable_value = cache.get('access', 'Variable not found')
+    return render(request, template_name, {'token':variable_value})
 
-def dataset_selected(request):
-    return render(request, 'dataset_selected.html')
+def dataset_selected(request,id):
+    template_name = 'dataset_selected.html'
+    variable_value = cache.get('access', 'Variable not found')
+    return render(request, template_name, {'token':variable_value})
 
-def edit_datasets(request):
-    return render(request, 'edit_datasets.html')
+def edit_datasets(request,id):
+    template_name = 'edit_datasets.html'
+    variable_value = cache.get('access', 'Variable not found')
+    return render(request, template_name, {'token':variable_value})
 
 def schemas_owner(request):
-    return render(request, 'schemas_owner.html')
+    template_name = 'schemas_owner.html'
+    variable_value = cache.get('access', 'Variable not found')
+    return render(request, template_name, {'token':variable_value})

@@ -21,6 +21,7 @@ urlpatterns = [
     path('edit_category/<id>/', views.edit_category, name='edit_category'),
     path('category/', views.category, name='category'),
     path('logs/', views.logs, name='logs'),
+    path('logs_example/', views.logs_example, name='logs_example'),
 ]
 
 

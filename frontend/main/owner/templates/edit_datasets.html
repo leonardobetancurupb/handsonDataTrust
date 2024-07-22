@@ -3,7 +3,7 @@
 {% load i18n %}
 
 {% block content %}
-  {% if request.user.is_authenticated %}
+{% if token != "Variable not found" %}
     {% load static %}
 
     <div class="row w-100 ml-4 mt-2 justify-content-between">
@@ -30,74 +30,67 @@
             <div class="lap-home  p-2 border border-1">
               <div class="form-group ">
                 <h3>
-                  Edit Dataset
+                  Create New Dataset
                 </h3>
-                <div class="d-flex justify-content-between h-5">
-                  <p class="mb-0">
-                    ID: 21&nbsp;&nbsp;&nbsp;Since 06/07/2024 
-                  </p>
-                  <div class=" d-flex w-25">
-                    <div class="d-block ml-5">
-                      <a href="#" class=" " data-toggle="modal" data-target="#staticBackdrop">
-                        <img src={% static "assets/img/delete.png" %}  alt="">
-                        <p class="">Delete</p>
-                      </a>
-                    </div>  
-                  </div>
-                </div>
-                <div class="container">
-                  <form action="" method="POST" enctype="multipart/form-data">
+                <div class="container mt-5">
+                  <form  id="datasetForm">
                     {% csrf_token %}
                     <div class="mb-3">
-                      <label for="CategoryInput" class="form-label">Category</label>
-                      <input type="text" class="form-control" id="CategoryInput" placeholder="Propiety">
-                    </div>
-                    <div class="mb-3">
-                      <label for="DescriptionInput" class="form-label">Description</label>
-                      <textarea class="form-control" id="DescriptionInput" rows="3" placeholder="Give a description to your dataset"></textarea>
-                    </div>
-                    <div class="mb-3">
-                      <label for="PolicyInput" class="form-label">Policy</label>
+                      <label for="idCategory" class="form-label">Category</label>
                       <br>
-                      <select name="PolicyInput" id="PolicyInput" class="form-select">
+                      {% comment %} <input type="text" class="form-control" id="CategoryInput" placeholder="Propiety"> {% endcomment %}
+                      <select name="idCategory" id="idCategory" class="form-select">
+                        <!-- Opción por defecto -->
+                        <option value="" disabled selected>Select a Category</option>
+                      </select>
+                    </div>
+                    <div class="mb-3">
+                      <label for="idPolicy" class="form-label">Policy</label>
+                      <br>
+                      <select name="idPolicy" id="idPolicy" class="form-select">
                         <!-- Opción por defecto -->
                         <option value="" disabled selected>Select a Policy</option>
-                          <option value="Only for studies">Only for studies</option>
-                          <option value="Only for developments">Only for developments</option>
                       </select>
-                      <button type="button" class="btn btn-sm btn-outline-success ml-3" data-toggle="modal" data-target="#ModalPolicy">View policy selected</button>
+                      <button class="btn btn-sm btn-outline-success ml-3" id="viewPolicyBtn"  disabled>View policy selected</button>
                     </div>
                     <div class="mb-3">
-                      <label for="SchemaInput" class="form-label">Schema</label>
+                      <label for="idSchema" class="form-label">Schema</label>
                       <br>
-                      <select name="SchemaInput" id="SchemaInput" class="form-select">
+                      <select name="idSchema" id="idSchema" class="form-select">
                         <!-- Opción por defecto -->
                         <option value="" disabled selected>Select a Schema</option>
-                          <option value="Medical Cost Personal">Medical Cost Personal</option>
-                          <option value="Bank Personal Loan">Bank Personal Loan</option>
                       </select>
-                      <button type="button" class="btn btn-sm btn-outline-success ml-3" data-toggle="modal" data-target="#myModal">View schema selected</button>
+                      <button class="btn btn-sm btn-outline-success ml-3" id="viewSchemaBtn"  id="view_schema" disabled>View schema selected</button>
                       
                     </div>
                     <div class="mb-3">
                       <label for="FormatInput" class="form-label">Format</label>
-                      <input class="form-control" type="text" id="FormatInput" value="Excel" aria-label="Excel" disabled readonly>
+                      <input class="form-control" type="text" id="FormatInput" value="Excel" id="export_excel" aria-label="Excel" disabled readonly>
                     </div>
                     <div class="row mb-3 mt-1">
                       <div class="col-md-6 ">
-                        <button class="btn btn-success" onclick="exportToExcel()">Export template</button>
+                        <button class="btn btn-success" onclick="exportToExcel()" id="exportToExcelBtn" disabled>Export template</button>
                       </div>
                       <div class="col-md-6 ">
-                        <div class="custom-file-input ml-2">
+                        {% comment %} <div class="custom-file-input ml-2">
                           <input type="file" name="archivo" id="fileInput" onchange="updateFileName()">
                           <label for="fileInput" class="custom-file-label ">Choose File</label>
-                      </div>
+                        </div> {% endcomment %}
                       </div>
                     </div>
                     <div class="d-flex justify-content-end">
                       <button type="submit" class="btn btn-success">Submit</button>
                     </div>
                   </form>
+                  <form id="filedataset">
+                    {% csrf_token %}
+                    <div class="custom-file-input ml-2 mb-2">
+                        <input type="file" name="archivo" id="fileInput" onchange="updateFileName()">
+                        <label for="fileInput" class="custom-file-label ">Choose File</label>
+                    </div>
+                    <button type="submit" class="btn btn-success btn-sm">Load file</button>
+                </form>
+                  
                 </div>
               </div>
             </div>
@@ -257,6 +250,18 @@
     <script src="{% static 'assets/js/manage_datasets.js' %}"></script>
     <script src="{% static 'assets/js/manage_files.js' %}"></script>
     <script>
+      document.getElementById('viewPolicyBtn').addEventListener('click', function(){
+        event.preventDefault();
+        console.log("pasó al model view policy");
+        $('#ModalPolicy').modal('show');
+      });
+      document.getElementById('viewSchemaBtn').addEventListener('click', function(){
+        event.preventDefault();
+        console.log("pasó al model view policy");
+        $('#myModal').modal('show');
+      });
+    </script>
+    <script>
       document.getElementById('showJsonBtn').addEventListener('click', function() {
         var json = {
           "type": "object",
@@ -303,13 +308,38 @@
           jsonOutput.style.display = 'block'; // Muestra el div que contiene el JSON formateado
       });
   </script>
-    <script>
-      function updateFileName() {
-          var input = document.getElementById('fileInput');
-          var label = input.nextElementSibling; // El elemento <label> sigue al <input> en el DOM
-          var fileName = input.files.length > 0 ? input.files[0].name : 'Choose File';
-          label.textContent = fileName;
+  <script>
+    function updateFileName() {
+        var input = document.getElementById('fileInput');
+        var label = input.nextElementSibling; // El elemento <label> sigue al <input> en el DOM
+        var fileName = input.files.length > 0 ? input.files[0].name : 'Choose File';
+        label.textContent = fileName;
+    }
+  </script>
+  <script>
+    document.getElementById('idSchema').addEventListener('change', function() {
+        event.preventDefault();  
+        var select = document.getElementById('idSchema');
+        var button = document.getElementById('viewSchemaBtn');
+        var buttonExport = document.getElementById('exportToExcelBtn');
+        if (select.value) {
+            button.disabled = false;
+            buttonExport.disabled = false; // Habilita el botón si se selecciona una opción
+        } else {
+            button.disabled = true; // Deshabilita el botón si no hay ninguna opción seleccionada
+            buttonExport.disabled = true;
+        }
+    });
+    document.getElementById('idPolicy').addEventListener('change', function() {
+      event.preventDefault();
+      var select = document.getElementById('idPolicy');
+      var button = document.getElementById('viewPolicyBtn');
+      if (select.value) {
+          button.disabled = false; // Habilita el botón si se selecciona una opción
+      } else {
+          button.disabled = true; // Deshabilita el botón si no hay ninguna opción seleccionada
       }
+  });
   </script>
   {% else %}
     <script>

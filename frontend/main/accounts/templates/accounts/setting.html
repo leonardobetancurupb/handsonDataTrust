@@ -24,21 +24,13 @@
           <br>
           <div class="container mt-2  w-50 text-center">
             <ul class="w-100 h-100 mt-3">
-              {% if request.user.is_authenticated %}
-                {% if request.user.is_superuser %}
-                    <li class="p-3  bg-secondary mb-2 text-white rounded">
+
+              {% if token != "Variable not found" %}
+                    {% comment %} <li class="p-3  bg-secondary mb-2 text-white rounded">
                         <a class="text-white" href={% url 'admin:login' %}>{% trans 'Django administration' %}</a>
-                    </li>
-                {% endif %}
-                <li class="p-3  bg-secondary mb-2 text-white rounded">
-                    <a class="text-white" href={% url 'accounts:change_password' %}>{% trans 'Change password' %}</a>
-                </li>
-                <li class="p-3  bg-secondary mb-2 text-white rounded">
-                    <a class="text-white" href={% url 'accounts:change_profile' %}>{% trans 'Change profile' %}</a>
-                </li>
-                <li class="p-3  bg-secondary mb-2 text-white rounded">
-                    <a class="text-white" href={% url 'accounts:change_email' %}>{% trans 'Change email' %}</a>
-                </li>
+                    </li> {% endcomment %}
+
+
                 <li class="p-3  bg-secondary mb-2 text-white rounded">
                     <a class="text-white" href={% url 'accounts:log_out_confirm' %}>{% trans 'Log out' %}</a>
                   </li>

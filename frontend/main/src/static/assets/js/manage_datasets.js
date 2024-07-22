@@ -1,7 +1,4 @@
 
-document.addEventListener("DOMContentLoaded", function() {
-    fetchDatasets();
-});
 function fetchDatasets() {
     const myHeaders2 = new Headers();
     myHeaders2.append("Content-Type", "application/json");
@@ -47,12 +44,13 @@ function fetchDatasets() {
         })
         .catch(error => console.error('Error fetching categories:', error));
 }
+
+
 function submitDatasetForm(event) {
-    event.preventDefault(); // Evita el envío tradicional del formulario
     
     const form = event.target; // Obtiene el formulario
     const formData = new FormData(form); // Crea un objeto FormData con los datos del formulario
-    
+    console.log(formData)
     // Convierte FormData a un objeto JSON
     const formDataObj = {};
     formData.forEach((value, key) => {
@@ -61,24 +59,58 @@ function submitDatasetForm(event) {
     
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
-    console.log(JSON.stringify(formDataObj))
-    const requestOptions = {
+    console.log(JSON.stringify(formDataObj['archivo']))
+
+
+    
+    const requestOptions2 = {
         method: "POST",
         headers: myHeaders,
-        body: JSON.stringify(formDataObj),
+        body: JSON.stringify(formDataObj['archivo']),
     };
-    formDataObj["url"] = "nuevoValor"; 
-
     // Hacer la solicitud POST al servidor
-    fetch("http://54.197.173.166:8000/dataset/", requestOptions)
-        .then(response => response.text())
-        .then(result => {
-            console.log(result)
-            window.location.href = '/administrator/dataset';
-        })
-        .catch(error => console.error(error));
+    console.log("hola");
+            fetch("http://54.197.173.166:8000/data/", requestOptions)
+                .then(response => response.text())
+                .then(result => {
+                    console.log(result);
+                    // window.location.href = '/administrator/shcemas_owner';
+                })
+                .catch(error => console.error(error));
+            // window.location.href = '/administrator/shcemas_owner';
+        
+    
 }
 
+document.getElementById('filedataset').addEventListener('submit', function(event) {
+    event.preventDefault(); 
+    const form = event.target;
+    const formData = new FormData(form); // Crea un objeto FormData con los datos del formulario
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    const requestOptions = {
+        method: 'POST',
+        body: formData,
+        headers: myHeaders
+    };
+
+    fetch("http://54.197.173.166:8000/api/saveData/holder/2/", requestOptions)
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+            // Maneja la respuesta exitosa aquí (por ejemplo, mostrar un mensaje de éxito)
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            // Maneja los errores aquí (por ejemplo, mostrar un mensaje de error)
+        });
+});
+
 // Event listener para el envío del formulario
-document.getElementById('datasetForm').addEventListener('submit', submitDatasetForm);
+// document.getElementById('datasetForm').addEventListener('submit', submitDatasetForm);
+
+
+document.addEventListener("DOMContentLoaded", function() {
+    fetchDatasets();
+});
 

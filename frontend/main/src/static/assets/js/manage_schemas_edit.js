@@ -29,8 +29,7 @@ async function loadSchemaData() {
         const data = await response.json();
 
         // Rellenar el formulario con los datos de la política
-        document.getElementById('id').value = data.id;
-        // document.getElementById('name').value = data.name;
+        document.getElementById('name').value = data.name;
         document.getElementById('description').value = data.description;
         document.getElementById('structure').value = data.structure;
 
