@@ -165,7 +165,14 @@ def search_logs(file, key, value):
     x = result.to_json(orient='records', date_format='iso')
     return x
 
-<<<<<<< HEAD
+def get_logs_by_user(user):
+    
+  df = pd.read_json("src/audit.txt", lines=True)
+  result = df[df['source']==user]
+
+  x = result.to_json(orient='records', date_format='iso')
+  return x
+
 def search_logs_by_struct(file, struct):
 
     df = pd.read_json(file, lines=True)
@@ -179,8 +186,6 @@ def search_logs_by_struct(file, struct):
     x = result.to_json(orient='records', date_format='iso')
     return x
 
-=======
->>>>>>> fde9d6a536b4605f76fb07b672a5caffb99744d6
 def search_logs_by_date(file, initial_date, final_date):
 
     if isinstance(initial_date, str):
@@ -219,16 +224,91 @@ def gest_last_logs(count):
                 break
     
     return returning_logs
-    
+
+def get_all_logs():
+
+    returning_logs = {}
+
+    with open(file, 'r') as f:
+
+        logs = f.readlines()
+
+        if not logs:
+            print("Empty file.")
+            return None
+
+        for registry in reversed(logs):
+            log = json.loads(registry)
+            returning_logs[log['log_id']] = log
+
+    return returning_logs
+
+def get_consumers(user):
+
+
+  df = pd.read_json("src/audit.txt", lines=True)
+  df = df[df['source']==user]
+  result = df[df['type']=="UPDATE CONSUMPTION"]
+
+  x = result.to_json(orient='records', date_format='iso')
+  return x
+
+
+
+print(get_consumers("user_1"))
+
+# Redux functions
+
+def get_all_types():
+  
+  df = pd.read_json("src/audit.txt", lines=True)
+
+  create = (df['type'] == "CREATE").sum()
+  get = (df['type'] == "GET").sum()
+  get_id = (df['type'] == "GET_ID").sum()
+  update = (df['type'] == "UPDATE").sum()
+  delete = (df['type'] == "DELETE").sum()
+
+  result = {
+    "CREATE" : str(create),
+    "GET" : str(get),
+    "GET_ID" : str(get_id),
+    "UPDATE" : str(update),
+    "DELETE" : str(delete)
+  }
+  
+  return result
+
+# Echart Function
+
+def get_logs_date_user(user):
+
+
+  df = pd.read_json("src/audit.txt", lines=True)
+  user_logs = df[df['source']==user]
+  user_logs['timestamp'] = pd.to_datetime(user_logs['timestamp'])
+  registers_per_day = user_logs.groupby(user_logs['timestamp'].dt.date).size()
+  registers_per_day = registers_per_day.reset_index(name='actions')
+
+  x = registers_per_day.to_json(orient='records', date_format='iso')
+  return x
+
+def get_logs_date():
+
+  df = pd.read_json("src/audit.txt", lines=True)
+  user_logs = df
+  user_logs['timestamp'] = pd.to_datetime(user_logs['timestamp'])
+  registers_per_day = user_logs.groupby(user_logs['timestamp'].dt.date).size()
+  registers_per_day = registers_per_day.reset_index(name='actions')
+
+  x = registers_per_day.to_json(orient='records', date_format='iso')
+  return x
+
 
 app = Flask(__name__)
 
 # Log file path
-<<<<<<< HEAD
 file = "src/audit.txt"
-=======
-file = "audit.txt"
->>>>>>> fde9d6a536b4605f76fb07b672a5caffb99744d6
 
 @app.route('/response', methods=['POST'])
 def log_reply():
@@ -321,7 +401,6 @@ def search_key_reply():
 
     return Response(logs, mimetype='application/json'), 201
 
-<<<<<<< HEAD
 @app.route('/search/struct', methods=['GET'])
 def search_struct_reply():
 
@@ -338,8 +417,6 @@ def search_struct_reply():
 
     return Response(logs, mimetype='application/json'), 201
 
-=======
->>>>>>> fde9d6a536b4605f76fb07b672a5caffb99744d6
 @app.route('/search/date', methods=['GET'])
 def search_date_reply():
 
@@ -358,10 +435,6 @@ def search_date_reply():
 
     return Response(logs, mimetype='application/json'), 201
 
-<<<<<<< HEAD
-
-=======
->>>>>>> fde9d6a536b4605f76fb07b672a5caffb99744d6
 @app.route('/recent', methods=['GET'])
 def get_recent_logs():
 
@@ -380,7 +453,108 @@ def get_recent_logs():
 
     return jsonify(response), 201
 
+@app.route('/all', methods=['GET'])
+def all_logs():
 
+    payload = request.get_data(as_text=True)
+    
+    if validate_token(payload):
+        
+        logs = get_all_logs()
+
+        response = logs
+
+    else: 
+        response = {'auth' : 'Invalid token :(', 'response' : " null "}
+        return response
+
+    return jsonify(response), 201
+
+@app.route('/all/user', methods=['GET'])
+def get_user_logs():
+
+    payload = request.get_data(as_text=True)
+    
+    if validate_token(payload):
+        
+        content = json.loads(payload)
+        logs = get_logs_by_user(content['user'])
+
+        response = logs
+
+    else: 
+        response = {'auth' : 'Invalid token :(', 'response' : " null "}
+        return response
+
+    return jsonify(response), 201
+
+@app.route('/types', methods=['GET'])
+def get_log_types():
+
+    
+    payload = request.get_data(as_text=True)
+    
+    if validate_token(payload):
+        
+        response = get_all_types()
+
+    else: 
+        response = {'auth' : 'Invalid token :(', 'response' : " null "}
+        return response
+
+    return jsonify(response), 201
+    
+@app.route('/chart/user', methods=['GET'])
+def get_logs_user_chart():
+
+    payload = request.get_data(as_text=True)
+    
+    if validate_token(payload):
+        
+        content = json.loads(payload)
+        logs = get_logs_date_user(content['user'])
+
+        response = logs
+
+    else: 
+        response = {'auth' : 'Invalid token :(', 'response' : " null "}
+        return response
+
+    return jsonify(response), 201
+
+@app.route('/chart/all', methods=['GET'])
+def get_logs__chart():
+
+    payload = request.get_data(as_text=True)
+    
+    if validate_token(payload):
+        
+        logs = get_logs_date()
+        response = logs
+
+    else: 
+        response = {'auth' : 'Invalid token :(', 'response' : " null "}
+        return response
+
+    return jsonify(response), 201
+
+@app.route('/consumers/user', methods=['GET'])
+def get_logs_user_consumers():
+
+    payload = request.get_data(as_text=True)
+    
+    if validate_token(payload):
+        
+        content = json.loads(payload)
+        logs = get_consumers(content['user'])
+
+        response = logs
+
+    else: 
+        response = {'auth' : 'Invalid token :(', 'response' : " null "}
+        return response
+
+    return jsonify(response), 201
 
 ##PARAM 
 
