@@ -37,13 +37,28 @@
                   Datasets
                 </h3>
                 Filters
-                <div class="d-flex justify-content-between">
-                  <input type="text" id="searchInput" class="form-control" placeholder="Search...">
-                  <input type="date" id="searchDate" class="form-control" placeholder="Search...">
-                </div>
+                <div class="row form-group">
+                  <div class="col w-25">
+                      <label for="searchInput">Name:</label>
+                      <input type="text" id="searchInput" class="form-control w-100" placeholder="Search...">
+                  </div>
+                  <div class="col w-75">
+                      Range Date
+                      <div class="d-flex w-100">
+                          <div class="col w-50">
+                              <label for="startDate">From:</label>
+                              <input type="date" id="startDate" class="form-control w-100" placeholder="Start Date">
+                          </div>
+                          <div class="col w-50">
+                              <label for="endDate">To:</label>
+                              <input type="date" id="endDate" class="form-control w-100" placeholder="End Date">
+                          </div>
+                      </div>
+                  </div>
+              </div>
               </div>
             <div class="container mt-1 sensor-table">
-              <div class="row" id="cardContainer">
+              <div class="row" id="cardContainerDatasets">
                 
               </div>
             </div>
@@ -52,25 +67,26 @@
       </div>
 
       <!-- Modal -->
-      <div class="modal" id="staticBackdrop" >
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title">Delete</h5>
-              <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-            <div class="modal-body">
-              Are you sure to delete that datatset?
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-danger">Accept</button>
+        <div class="modal" id="confirmDeleteModal" >
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Delete</h5>
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                  Are you sure to delete it?
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-danger " id="confirmDeleteButton">Accept</button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
     </div>
-
+    <script src={% static 'assets/js/manage_datasets_view.js' %}></script>
       {% else %}
       <script>
         window.onload=function() {

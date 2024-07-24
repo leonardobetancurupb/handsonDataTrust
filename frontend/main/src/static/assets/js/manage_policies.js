@@ -35,7 +35,6 @@ function submitPolicyForm(event) {
         formDataObj[key] = value;
     });
 
-    // Solicitud GET para obtener el token
     fetch(`/accounts/get_cache/?key=access`, {
         method: 'GET'
     })

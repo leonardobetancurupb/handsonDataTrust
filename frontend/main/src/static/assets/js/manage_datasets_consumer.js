@@ -95,13 +95,41 @@ const loadDatasets = async () => {
         const datasetResponse = await fetch('http://54.197.173.166:8000/api/data/', requestOptions);
         const datasets = await datasetResponse.json();
         console.log(datasets);
-
+        
         // Limpiar el contenedor antes de agregar nuevas tarjetas
         const cardContainer = document.getElementById('cardContainerDatasets');
         cardContainer.innerHTML = ''; // Asegúrate de que esto esté ejecutándose correctamente
 
+        const groupedData = {};
+        for (const item of datasets) {
+            const key = `${item.idSchema}-${item.idPolicy}`;
+            if (!groupedData[key]) {
+            groupedData[key] = [];
+            }
+            groupedData[key].push(item);
+        }
+
+        const outputData = [];
+        for (const key in groupedData) {
+            const [idSchema, idPolicy] = key.split('-');
+            const count = groupedData[key].length;
+            const dataId = groupedData[key][0].id;  // Assuming data.id is always present in the first element
+            outputData.push({
+            count,
+            data: {
+                id: dataId,
+                idPolicy: groupedData[key][0].idPolicy,
+                idSchema: groupedData[key][0].idSchema,
+                idCategory: groupedData[key][0].idCategory,
+            }
+            });
+        }
+
         // Iterar sobre cada política y obtener la categoría correspondiente
-        for (const dataset of datasets) {
+        for (const item of outputData) {
+            const count = item.count;
+            const dataset = item.data;
+            console.log(`Count: ${count}, Data ID: ${dataset.id}`);
             // Obtener la categoría correspondiente
             const policyResponse = await fetch(`http://54.197.173.166:8000/api/policy/${dataset.idPolicy}/`, requestOptions);
             const policy = await policyResponse.json();
@@ -121,15 +149,9 @@ const loadDatasets = async () => {
                     <div class="card-body">
                         <h5 class="card-title">${new_name}</h5>
                         <h6 class="card-subtitle mb-2 text-muted btn">${category.category}</h6>
-                        <p class="card-text">Expiration: ${policy.estimatedTime}</p>
+                        <p class="card-text">Expiration: ${policy.estimatedTime} <br> Count: ${count}</p>
                         <div class="d-flex justify-content-between">
-                        <a href="/dataset_selected/${dataset.id}" class="btn btn-success">Select</a>
-                        <div>
-                            <a href='../edit_datasets/${dataset.id}' class="mr-1"><img src='/static/assets/img/edit.png' alt=""></a>
-                            <a href="#" data-url="http://54.197.173.166:8000/deleteData/${dataset.id}/" class="mr-1 delete-dataset">
-                            <img src='/static/assets/img/delete.png'  alt="">
-                            </a>
-                        </div>
+                        <a href="/consumer/select_dataset/${dataset.id}" class="btn btn-danger">Select</a>
                         </div>
                     </div>
                 </div>

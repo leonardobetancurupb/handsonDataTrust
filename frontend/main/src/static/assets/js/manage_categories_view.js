@@ -33,67 +33,79 @@ function filterCategories() {
     });
 }
 
-// Llamar a la función para cargar las categorías cuando la página se cargue
-window.addEventListener("load", async () => {
-    await loadCategories();
-});
 
 
-let urlToDelete; // Variable para almacenar la URL de eliminación
+let urlToDelete; 
 
         function deleteCategory(event) {
-            event.preventDefault(); // Evita el comportamiento predeterminado del enlace
+            event.preventDefault(); // prevent default actions
             console.log("Se ha metido en la funcion deletecategory");
-            urlToDelete = event.currentTarget.getAttribute('data-url'); // Obtiene la URL del enlace
+            urlToDelete = event.currentTarget.getAttribute('data-url'); // get url to request
 
-            // Mostrar el modal de confirmación
+            // view modal
             $('#confirmDeleteModal').modal('show');
         }
 
-        // Función para confirmar la eliminación
-        document.getElementById('confirmDeleteButton').addEventListener('click', function() {
-            const myHeaders = new Headers();
-            myHeaders.append("Content-Type", "application/json");
-            myHeaders.append("Authorization", "Bearer "+getCacheVariable('access'));
+// delete validation function
+document.getElementById('confirmDeleteButton').addEventListener('click', function() {
+
+
+    fetch(`/accounts/get_cache/?key=access`, {
+        method: 'GET'
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.value) {
+                console.log(data);
+                console.log(data.value);
+
+
+                const myHeaders = new Headers();
+                myHeaders.append("Content-Type", "application/json");
+                myHeaders.append("Authorization", "Bearer "+data.value);
+                
+                const requestOptions = {
+                    method: "DELETE",
+                    headers: myHeaders,
+                };
     
-            const requestOptions = {
-                method: "DELETE",
-                headers: myHeaders,
-            };
-
-            // Hacer la solicitud DELETE al servidor
-            fetch(urlToDelete, requestOptions)
-                .then(response => {
-                    if (response.ok) {
+                // delete request
+                fetch(urlToDelete, requestOptions)
+                    .then(response => response.text())
+                    .then(result => {
                         console.log("Category deleted successfully.");
-                        // Navegar a otra página o recargar la lista de categorías
-                        $('#confirmDeleteModal').modal('hide'); // Ocultar el modal de confirmación
-                        loadCategories(); // Recargar las categorías después de eliminar una
-                    } else {
-                        console.error("Failed to delete category.");
-                    }
-                })
-                .catch(error => console.error('Error:', error));
-        });
+                        $('#confirmDeleteModal').modal('hide'); // hide modal
+                        loadCategories(); // reload category
+                    })
+                    .catch(error => console.error(error));
+            } else {
+                console.error('Token not found in response.');
+            }
+        })
+    .catch(error => {
+        console.error('DELETE Error:', error);
+    }); 
+});
 
-// Función para cargar las categorías desde el servidor y mostrarlas en tarjetas
+
+// get categories
 const loadCategories = async () => {
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
     const requestOptions = {
-        method: "GET", // Cambiado a GET para obtener las categorías
+        method: "GET", 
         headers: myHeaders,
     };
 
-    // Hacer la solicitud GET al servidor para obtener las categorías
-    fetch('http://54.197.173.166:8000/category/', requestOptions)
+    // send request
+    fetch('http://54.197.173.166:8000/api/category/', requestOptions)
         .then(response => response.json())
         .then(data => {
             const cardContainer = document.getElementById('cardContainerCategories');
             cardContainer.innerHTML = ''; // Limpiar el contenedor antes de agregar nuevas tarjetas
 
-            // Iterar sobre cada categoría recibida y crear la tarjeta correspondiente
+            
             data.forEach(category => {
                 const cardHtml = `
                     <div class="col-md-4 mb-4 card-wrapper">
@@ -104,11 +116,11 @@ const loadCategories = async () => {
                                 </h6>
                                 <hr>
                                 <div class="d-flex justify-content-end">
-                                    <a href='../edit_category/${category.id}/' class="btn btn-light btn-sm border border-secondary mr-3 h-25'>
+                                    <a href='../edit_category/${category.id}/' class="btn btn-light btn-sm border border-secondary mr-3 h-25">
                                         <img src='/static/assets/img/edit.png' class="table-icon" alt="">
                                         Edit
                                     </a>
-                                    <a href="#" data-url="http://54.197.173.166:8000/category/${category.id}/" class="btn btn-light btn-sm border border-secondary mr-3 h-25 delete-category">
+                                    <a href="#" data-url="http://54.197.173.166:8000/api/category/${category.id}/" class="btn btn-light btn-sm border border-secondary mr-3 h-25 delete-category">
                                         <img src='/static/assets/img/delete.png' class="table-icon" alt="">
                                         Delete
                                     </a>
@@ -120,20 +132,18 @@ const loadCategories = async () => {
                 cardContainer.innerHTML += cardHtml; // Agregar la tarjeta al contenedor
             });
 
-            // Event listeners a los nuevos enlaces de eliminación
+            // Event listeners to delete
             document.querySelectorAll('.delete-category').forEach(link => {
                 link.addEventListener('click', deleteCategory);
             });
-            // Event listener para el filtro de búsqueda
+            // Event listener to filter
             document.getElementById('searchInput').addEventListener('input', filterCategories);
         })
         .catch(error => {
             console.error('Error fetching categories:', error);
-            // Aquí podrías manejar errores de forma adecuada, por ejemplo, mostrando un mensaje de error en el frontend
         });
 }
 
-// Llamar a la función para cargar las categorías cuando la página se cargue
 window.addEventListener("load", async () => {
     await loadCategories();
 });

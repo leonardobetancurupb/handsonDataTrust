@@ -1,4 +1,4 @@
- // Función para filtrar categorías
+ // filter
 function filterSchemas() {
     const searchInput = document.getElementById('searchInput').value.toLowerCase();
     const cards = document.querySelectorAll('.card-wrapper');
@@ -15,67 +15,75 @@ function filterSchemas() {
 
 
 
-let urlToDelete; // Variable para almacenar la URL de eliminación
+let urlToDelete; 
 
-        function deleteSchema(event) {
-            event.preventDefault(); // Evita el comportamiento predeterminado del enlace
-            console.log("Se ha metido en la funcion deleteschema");
-            urlToDelete = event.currentTarget.getAttribute('data-url'); // Obtiene la URL del enlace
-
-            // Mostrar el modal de confirmación
-            $('#confirmDeleteModal').modal('show');
-        }
-
-        // Función para confirmar la eliminación
-        document.getElementById('confirmDeleteButton').addEventListener('click', function() {
-            const myHeaders = new Headers();
-            myHeaders.append("Content-Type", "application/json");
-
-            const requestOptions = {
-                method: "DELETE",
-                headers: myHeaders,
-            };
-
-            // Hacer la solicitud DELETE al servidor
-            fetch(urlToDelete, requestOptions)
-                .then(response => {
-                    if (response.ok) {
+function deleteSchema(event) {
+    event.preventDefault(); // prevent default actions
+    console.log("Se ha metido en la funcion deleteschema");
+    urlToDelete = event.currentTarget.getAttribute('data-url'); // Obtiene la URL del enlace
+    // view modal
+    $('#confirmDeleteModal').modal('show');
+}
+// delete validation function
+document.getElementById('confirmDeleteButton').addEventListener('click', function() {
+    fetch(`/accounts/get_cache/?key=access`, {
+        method: 'GET'
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.value) {
+                console.log(data);
+                console.log(data.value);
+                const myHeaders = new Headers();
+                myHeaders.append("Content-Type", "application/json");
+                myHeaders.append("Authorization", "Bearer "+data.value);
+                
+                const requestOptions = {
+                    method: "DELETE",
+                    headers: myHeaders,
+                };
+                // delete request
+                fetch(urlToDelete, requestOptions)
+                    .then(response => response.text())
+                    .then(result => {
                         console.log("Schema deleted successfully.");
-                        // Navegar a otra página o recargar la lista de categorías
-                        $('#confirmDeleteModal').modal('hide'); // Ocultar el modal de confirmación
-                        loadSchemas(); // Recargar las categorías después de eliminar una
-                    } else {
-                        console.error("Failed to delete schema.");
-                    }
-                })
-                .catch(error => console.error('Error:', error));
-        });
+                        $('#confirmDeleteModal').modal('hide'); // hide modal
+                        loadSchemas(); // reload schemas
+                    })
+                    .catch(error => console.error(error));
+            } else {
+                console.error('Token not found in response.');
+            }
+        })
+    .catch(error => {
+        console.error('DELETE Error:', error);
+    }); 
+});
 
-// Función para cargar las categorías desde el servidor y mostrarlas en tarjetas
 const loadSchemas = async () => {
     console.log("Executing loadschemas");
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
     const requestOptions = {
-        method: "GET", // Cambiado a GET para obtener las categorías
+        method: "GET", 
         headers: myHeaders,
     };
 
-    // Hacer la solicitud GET al servidor para obtener las categorías
-    fetch('http://54.197.173.166:8000/schema/', requestOptions)
+    fetch('http://54.197.173.166:8000/api/schema/', requestOptions)
         .then(response => response.json())
         .then(data => {
             const cardContainer = document.getElementById('cardContainerSchemas');
             cardContainer.innerHTML = ''; // Limpiar el contenedor antes de agregar nuevas tarjetas
-
-            // Iterar sobre cada categoría recibida y crear la tarjeta correspondiente
+            console.log(data)
             data.forEach(schema => {
+                name_schema = schema.name
+                const new_name = name_schema.replace(/_/g, " ");
                 const cardHtml = `
                 <div class="col-md-4 mb-4 card-wrapper">
                     <div class="card border border-secondary">
                         <div class="card-body">
-                            <h5 class="card-title"><strong class="btn btn-secondary mr-3" disabled>${schema.id}</strong>${schema.name}</h5>
+                            <h5 class="card-title"><strong class="btn btn-secondary mr-3" disabled>${schema.id}</strong>${new_name}</h5>
                             <hr>
                             <div class="d-flex justify-content-end">
                                 <a href='../edit_schemas/${schema.id}/' class="btn btn-light btn-sm border border-secondary mr-3  h-25">
@@ -94,11 +102,9 @@ const loadSchemas = async () => {
                 cardContainer.innerHTML += cardHtml; // Agregar la tarjeta al contenedor
             });
 
-            // Event listeners a los nuevos enlaces de eliminación
             document.querySelectorAll('.delete-schema').forEach(link => {
                 link.addEventListener('click', deleteSchema);
             });
-            // Event listener para el filtro de búsqueda
             document.getElementById('searchInput').addEventListener('input', filterSchemas);
         })
         .catch(error => {
@@ -106,7 +112,6 @@ const loadSchemas = async () => {
         });
 }
 
-// Llamar a la función para cargar las categorías cuando la página se cargue
 window.addEventListener("load", async () => {
     await loadSchemas();
 });

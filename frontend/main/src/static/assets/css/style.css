@@ -1084,7 +1084,6 @@ body{
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 300px; /* Ajusta el tamaño según tus necesidades */
 }
 
 .h-5{
@@ -1101,6 +1100,10 @@ body{
 
 .w-90{
     width: 90% !important;
+}
+
+.mt-6 {
+    margin-top: 13rem !important;
 }
 
 .formatted-json {

@@ -45,9 +45,9 @@ def edit_schema(request, id):
     return render(request, template_name, {'token':variable_value})
 
 def view_users(request):
-    User = get_user_model()
-    users = User.objects.all()  # Obtén todos los usuarios
-    return render(request, 'view_users.html', {'users': users})
+    template_name = 'view_users.html'
+    variable_value = cache.get('access', 'Variable not found')
+    return render(request, template_name, {'token':variable_value})
 
 def history_user(request):
     template_name = 'history_user.html'

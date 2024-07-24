@@ -21,7 +21,6 @@ function setCacheVariable(key_input, value_input) {
     });
 }
 
-
 // Función para obtener el token CSRF
 function getCookie(name) {
     let cookieValue = null;
@@ -49,8 +48,6 @@ function AdminFormSubmit(person) {
 
     console.log(JSON.stringify(data));
 
-    // Aquí puedes enviar los datos al servidor usando fetch o alguna otra técnica
-    // Ejemplo de uso de fetch para enviar los datos
     fetch('http://54.197.173.166:8000/api/admin/', {
         method: 'POST',
         headers: {
@@ -126,8 +123,7 @@ function handleAdditionalFormSubmit(event, person) {
     .then(response => response.json())
     .then(result => {
         console.log(result);
-        window.location.href = '/index';
-        // Aquí puedes manejar la respuesta del servidor
+        window.location.href = '/accounts/log-in'
     })
     .catch(error => console.error('Error:', error));
 }
@@ -164,14 +160,15 @@ function submitRegisterPersonForm(event) {
                 document.getElementById('additionalForm').addEventListener('submit', function(event) {
                     handleAdditionalFormSubmit(event, result.id);
                 });
-            } 
+            }
             if (formDataObj['role'] === 'holder') {
                     HolderFormSubmit(result.id);
-            } 
+                    window.location.href = '/accounts/log-in'
+                } 
             if (formDataObj['role'] === 'admin') {
                     AdminFormSubmit(result.id);
+                    window.location.href = '/accounts/log-in'
             } 
-            window.location.href = '/accounts/log-in'
         })
         .catch(error => console.error(error));
 }

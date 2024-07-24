@@ -1,4 +1,4 @@
- // Función para filtrar categorías
+ // filter
  function filterPolicies() {
     const searchInput = document.getElementById('searchInput').value.toLowerCase();
     const startDate = document.getElementById('startDate').value;
@@ -7,8 +7,7 @@
 
     cards.forEach(card => {
         const cardTitle = card.querySelector('.card-title').innerText.toLowerCase();
-        const expirationDate = card.querySelector('.expiration-date').innerText; // Asegúrate de que esta clase exista en tu HTML
-
+        const expirationDate = card.querySelector('.expiration-date').innerText;
         let isTitleMatch = cardTitle.includes(searchInput);
         let isDateInRange = true;
 
@@ -16,7 +15,6 @@
             const expirationTime = new Date(expirationDate).getTime();
             const start = startDate ? new Date(startDate).getTime() : null;
             const end = endDate ? new Date(endDate).getTime() : null;
-
             if (start && end) {
                 isDateInRange = expirationTime >= start && expirationTime <= end;
             } else if (start) {
@@ -25,7 +23,6 @@
                 isDateInRange = expirationTime <= end;
             }
         }
-
         if (isTitleMatch && isDateInRange) {
             card.style.display = '';
         } else {
@@ -34,43 +31,54 @@
     });
 }
 
-
-
-let urlToDelete; // Variable para almacenar la URL de eliminación
+let urlToDelete; 
 
         function deletePolicy(event) {
-            event.preventDefault(); // Evita el comportamiento predeterminado del enlace
+            event.preventDefault(); // prevent default actions
             console.log("Se ha metido en la funcion deletepolicy");
-            urlToDelete = event.currentTarget.getAttribute('data-url'); // Obtiene la URL del enlace
-
+            urlToDelete = event.currentTarget.getAttribute('data-url'); // get url to delete
             // Mostrar el modal de confirmación
             $('#confirmDeleteModal').modal('show');
         }
 
-        // Función para confirmar la eliminación
-        document.getElementById('confirmDeleteButton').addEventListener('click', function() {
-            const myHeaders = new Headers();
-            myHeaders.append("Content-Type", "application/json");
-
-            const requestOptions = {
-                method: "DELETE",
-                headers: myHeaders,
-            };
-
-            // Hacer la solicitud DELETE al servidor
-            fetch(urlToDelete, requestOptions)
-                .then(response => {
-                    if (response.ok) {
+// delete validation function
+document.getElementById('confirmDeleteButton').addEventListener('click', function() {
+    fetch(`/accounts/get_cache/?key=access`, {
+        method: 'GET'
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.value) {
+                console.log(data);
+                console.log(data.value);
+                const myHeaders = new Headers();
+                myHeaders.append("Content-Type", "application/json");
+                myHeaders.append("Authorization", "Bearer "+data.value);
+                
+                const requestOptions = {
+                    method: "DELETE",
+                    headers: myHeaders,
+                };
+                // delete request
+                fetch(urlToDelete, requestOptions)
+                    .then(response => response.text())
+                    .then(result => {
                         console.log("Policy deleted successfully.");
-                        // Navegar a otra página o recargar la lista de categorías
-                        $('#confirmDeleteModal').modal('hide'); // Ocultar el modal de confirmación
-                        loadPolicies(); // Recargar las categorías después de eliminar una
-                    } else {
-                        console.error("Failed to delete policy.");
-                    }
-                })
-                .catch(error => console.error('Error:', error));
-        });
+                        $('#confirmDeleteModal').modal('hide'); // hide modal
+                        loadPolicies(); // reload policies
+                    })
+                    .catch(error => {
+                        console.error(error);
+                        console.log(result);
+                    });
+            } else {
+                console.error('Token not found in response.');
+            }
+        })
+    .catch(error => {
+        console.error('DELETE Error:', error);
+    }); 
+});
 
 // Función para cargar las categorías desde el servidor y mostrarlas en tarjetas
 const loadPolicies = async () => {
@@ -84,7 +92,7 @@ const loadPolicies = async () => {
 
     try {
         // Hacer la solicitud GET al servidor para obtener las políticas
-        const policyResponse = await fetch('http://54.197.173.166:8000/policy/', requestOptions);
+        const policyResponse = await fetch('http://54.197.173.166:8000/api/policy/', requestOptions);
         const policies = await policyResponse.json();
         console.log(policies);
 
@@ -95,7 +103,7 @@ const loadPolicies = async () => {
         // Iterar sobre cada política y obtener la categoría correspondiente
         for (const policy of policies) {
             // Obtener la categoría correspondiente
-            const categoryResponse = await fetch(`http://54.197.173.166:8000/category/${policy.idCategory}/`, requestOptions);
+            const categoryResponse = await fetch(`http://54.197.173.166:8000/api/category/${policy.idCategory}/`, requestOptions);
             const category = await categoryResponse.json();
 
             // Construir el HTML de la tarjeta con la data
@@ -120,7 +128,7 @@ const loadPolicies = async () => {
                                     <img src='/static/assets/img/edit.png' class="table-icon" alt="">
                                     Edit
                                 </a>
-                                <a href="#" data-url="http://54.197.173.166:8000/policy/${policy.id}/" class="btn btn-light btn-sm border border-secondary mr-3 h-25 delete-policy">
+                                <a href="#" data-url="http://54.197.173.166:8000/api/policy/${policy.id}/" class="btn btn-light btn-sm border border-secondary mr-3 h-25 delete-policy">
                                     <img src='/static/assets/img/delete.png' class="table-icon" alt="">
                                     Delete
                                 </a>                                    

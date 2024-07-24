@@ -33,13 +33,14 @@
                   Create New Dataset
                 </h3>
                 <div class="container mt-5">
-                  <form  id="datasetForm">
+                  
+                  <form  id="datasetForm" action="http://54.197.173.166:8000/saveData/holder/{{id_holder}}/" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
-                    <div class="mb-3">
+                    <div class="mb-3 ">
                       <label for="idCategory" class="form-label">Category</label>
                       <br>
                       {% comment %} <input type="text" class="form-control" id="CategoryInput" placeholder="Propiety"> {% endcomment %}
-                      <select name="idCategory" id="idCategory" class="form-select">
+                      <select name="idCategory" id="idCategory" class="form-select w-50">
                         <!-- Opción por defecto -->
                         <option value="" disabled selected>Select a Category</option>
                       </select>
@@ -47,7 +48,7 @@
                     <div class="mb-3">
                       <label for="idPolicy" class="form-label">Policy</label>
                       <br>
-                      <select name="idPolicy" id="idPolicy" class="form-select">
+                      <select name="idPolicy" id="idPolicy" class="form-select  w-50">
                         <!-- Opción por defecto -->
                         <option value="" disabled selected>Select a Policy</option>
                       </select>
@@ -56,7 +57,7 @@
                     <div class="mb-3">
                       <label for="idSchema" class="form-label">Schema</label>
                       <br>
-                      <select name="idSchema" id="idSchema" class="form-select">
+                      <select name="idSchema" id="idSchema" class="form-select  w-50">
                         <!-- Opción por defecto -->
                         <option value="" disabled selected>Select a Schema</option>
                       </select>
@@ -65,31 +66,23 @@
                     </div>
                     <div class="mb-3">
                       <label for="FormatInput" class="form-label">Format</label>
-                      <input class="form-control" type="text" id="FormatInput" value="Excel" aria-label="Excel" disabled readonly>
+                      <input class="form-control" type="text" id="FormatInput" name="format" value="xlsx" aria-label="xlsx" >
                     </div>
-                    <div class="row mb-3 mt-1">
-                      <div class="col-md-6 ">
-                        <button class="btn btn-success" onclick="exportToExcel()" id="exportToExcelBtn" disabled>Export template</button>
-                      </div>
-                      <div class="col-md-6 ">
-                        {% comment %} <div class="custom-file-input ml-2">
-                          <input type="file" name="archivo" id="fileInput" onchange="updateFileName()">
-                          <label for="fileInput" class="custom-file-label ">Choose File</label>
-                        </div> {% endcomment %}
-                      </div>
+                    <div>
+                        <label for="fileInput" class="form-label">File</label>
+                        <div class="custom-file-input  mb-2">
+                          <input type="file" name="archivo" id="fileInput"  class="" onchange="updateFileName()"> 
+                          <label for="fileInput" class="custom-file-label w-50">Choose File</label>
+                        </div>
                     </div>
-                    <div class="d-flex justify-content-end">
-                      <button type="submit" class="btn btn-success">Submit</button>
+                    <div class="d-flex justify-content-end ">
+                      <button type="submit" class="btn btn-success position-absolute mt-5" id="submitBtn" disabled>Submit</button>
                     </div>
                   </form>
-                  <form id="filedataset">
-                    {% csrf_token %}
-                    <div class="custom-file-input ml-2 mb-2">
-                        <input type="file" name="archivo" id="fileInput" onchange="updateFileName()">
-                        <label for="fileInput" class="custom-file-label ">Choose File</label>
-                    </div>
-                    <button type="submit" class="btn btn-success btn-sm">Load file</button>
-                </form>
+                  <form  class="h-15 d-flex justify-content-center" id="ExportFileform" action="http://54.197.173.166:8000/downloadSchema/{{id_schema}}/" method="post" enctype="multipart/form-data">
+                    <input id="ExportSchema" type="submit" class="btn btn-secondary h-50" value="Download Schema" disabled>
+                  </form>
+                  
                   
                 </div>
               </div>
@@ -99,7 +92,6 @@
       </div>
     </div>
     <script src="{% static 'assets/js/manage_datasets.js' %}"></script>
-    <script src="{% static 'assets/js/manage_files.js' %}"></script>
     <script>
       function updateFileName() {
           var input = document.getElementById('fileInput');
@@ -108,29 +100,7 @@
           label.textContent = fileName;
       }
   </script>
-  <script>
-    document.getElementById('idSchema').addEventListener('change', function() {
-        var select = document.getElementById('idSchema');
-        var button = document.getElementById('viewSchemaBtn');
-        var buttonExport = document.getElementById('exportToExcelBtn');
-        if (select.value) {
-            button.disabled = false;
-            buttonExport.disabled = false; // Habilita el botón si se selecciona una opción
-        } else {
-            button.disabled = true; // Deshabilita el botón si no hay ninguna opción seleccionada
-            buttonExport.disabled = true;
-        }
-    });
-    document.getElementById('idPolicy').addEventListener('change', function() {
-      var select = document.getElementById('idPolicy');
-      var button = document.getElementById('viewPolicyBtn');
-      if (select.value) {
-          button.disabled = false; // Habilita el botón si se selecciona una opción
-      } else {
-          button.disabled = true; // Deshabilita el botón si no hay ninguna opción seleccionada
-      }
-  });
-</script>
+
   {% else %}
     <script>
       window.onload = function () {

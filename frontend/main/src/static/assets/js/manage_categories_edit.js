@@ -66,7 +66,7 @@ function submitCategoryForm(event) {
         };
     
     // request patch
-    fetch(`http://54.197.173.166:8000/category/${id}/`, requestOptions)
+    fetch(`http://54.197.173.166:8000/api/category/${id}/`, requestOptions)
         .then(response => response.text())
         .then(result => {
             console.log(result); 
@@ -110,20 +110,17 @@ document.getElementById('confirmDeleteButton').addEventListener('click', functio
                 const requestOptions = {
                     method: "DELETE",
                     headers: myHeaders,
-                    body: JSON.stringify(formDataObj),
                 };
     
                 // delete request
                 fetch(`http://54.197.173.166:8000/category/${id}/`, requestOptions)
                     .then(response => response.text())
                     .then(result => {
-                        if (response.ok) {
+                        
                             console.log("Category deleted successfully.");
                             $('#confirmDeleteModal').modal('hide'); // modal
                             window.location.href = '/administrator/category'; // reload window
-                        } else {
-                            console.error("Failed to delete category.");
-                        }
+                       
                     })
                     .catch(error => console.error(error));
             } else {

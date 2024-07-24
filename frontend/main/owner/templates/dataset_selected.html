@@ -63,7 +63,7 @@
                   </div>
                 </div>
                 <div class="container mt-2">
-                  <div class="card">
+                  <div class="card" id="card_info">
                     <div class="card-header">
                       <h4 id="item-category">Category: Clustering </h4>
                     </div>
@@ -108,9 +108,8 @@
                         <thead>
                           <tr>
                             <th>#</th>
-                            <th>Consumidor</th>
-                            <th>Dataset</th>
-                            <th>Since</th>
+                            <th>Company</th>
+                            <th>NIT</th>
                             <th>Actions</th>
                           </tr>
                         </thead>
@@ -282,54 +281,55 @@
       </div>
 
     </div>
-    {% else %}
-    <script>
-      document.getElementById('showJsonBtn').addEventListener('click', function() {
-        var json = {
-          "type": "object",
-          "properties": {
-            "age": {
-              "type": "integer",
-              "description": "Age of success beneficiary"
+      <script src={% static 'assets/js/manage_datasets_view_selected_consumer.js' %}></script>
+      <script>
+        document.getElementById('showJsonBtn').addEventListener('click', function() {
+          var json = {
+            "type": "object",
+            "properties": {
+              "age": {
+                "type": "integer",
+                "description": "Age of success beneficiary"
+              },
+              "sex": {
+                "type": "string",
+                "description": "Insurance contractor gender, female, male",
+                "enum": ["female", "male"]
+              },
+              "bmi": {
+                "type": "number",
+                "description": "Body mass index, providing an understanding of body, weights that are relatively high or low relative to height, objective index of body weight (kg / m ^ 2) using the ratio of height to weight, ideally 18.5 to 24.9"
+              },
+              "children": {
+                "type": "integer",
+                "description": "Number of children covered by health insurance / Number of dependents"
+              },
+              "smoker": {
+                "type": "string",
+                "description": "Smoking",
+                "enum": ["yes", "no"]
+              },
+              "region": {
+                "type": "string",
+                "description": "The beneficiary's residential area in the US, northeast, southeast, southwest, northwest.",
+                "enum": ["northeast", "southeast", "southwest", "northwest"]
+              },
+              "charges": {
+                "type": "number",
+                "description": "Individual medical costs billed by health insurance"
+              }
             },
-            "sex": {
-              "type": "string",
-              "description": "Insurance contractor gender, female, male",
-              "enum": ["female", "male"]
-            },
-            "bmi": {
-              "type": "number",
-              "description": "Body mass index, providing an understanding of body, weights that are relatively high or low relative to height, objective index of body weight (kg / m ^ 2) using the ratio of height to weight, ideally 18.5 to 24.9"
-            },
-            "children": {
-              "type": "integer",
-              "description": "Number of children covered by health insurance / Number of dependents"
-            },
-            "smoker": {
-              "type": "string",
-              "description": "Smoking",
-              "enum": ["yes", "no"]
-            },
-            "region": {
-              "type": "string",
-              "description": "The beneficiary's residential area in the US, northeast, southeast, southwest, northwest.",
-              "enum": ["northeast", "southeast", "southwest", "northwest"]
-            },
-            "charges": {
-              "type": "number",
-              "description": "Individual medical costs billed by health insurance"
-            }
-          },
-          "required": ["age", "sex", "bmi", "children", "smoker", "region", "charges"]
-        };
-        
+            "required": ["age", "sex", "bmi", "children", "smoker", "region", "charges"]
+          };
+          
 
-          var formattedJson = JSON.stringify(json, null, 2); // Formatea el JSON con indentación de 2 espacios
-          var jsonOutput = document.getElementById('jsonOutput');
-          jsonOutput.textContent = formattedJson;
-          jsonOutput.style.display = 'block'; // Muestra el div que contiene el JSON formateado
-      });
-  </script>
+            var formattedJson = JSON.stringify(json, null, 2); // Formatea el JSON con indentación de 2 espacios
+            var jsonOutput = document.getElementById('jsonOutput');
+            jsonOutput.textContent = formattedJson;
+            jsonOutput.style.display = 'block'; // Muestra el div que contiene el JSON formateado
+        });
+    </script>
+    {% else %}
     <script>
       window.onload=function() {
         window.location.href = "{% url 'accounts:log_in' %}";

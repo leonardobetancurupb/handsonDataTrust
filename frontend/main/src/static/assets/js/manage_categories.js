@@ -24,7 +24,6 @@ function submitCategoryForm(event) {
             const myHeaders = new Headers();
             myHeaders.append("Content-Type", "application/json");
             myHeaders.append("Authorization", "Bearer " + data.value);
-            console.log(myHeaders.keys);
             const requestOptions = {
                 method: "POST",
                 headers: myHeaders,
