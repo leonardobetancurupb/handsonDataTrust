@@ -24,7 +24,7 @@ services:
     networks:
       - backend
     volumes:
-      - ./backend/src:/code
+      - ./backend/src/project:/code
     depends_on:
       db:
         condition: service_started
