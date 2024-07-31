@@ -24,7 +24,7 @@ services:
     networks:
       - backend
     volumes:
-      - ./backend/src:/code
+      - ./backend/src/project:/code
     depends_on:
       db:
         condition: service_started
@@ -65,6 +65,19 @@ services:
       - "5000:5000"
     expose:
       - "5000"
+
+  verify-date:
+    build: ./verify
+    hostname: verify
+    command: python app.py
+    networks:
+      - backend
+    volumes:
+      - ./verify:/code
+    ports:
+      - "6000:6000"
+    expose:
+      - "6000"
 
 networks:
   backend:
