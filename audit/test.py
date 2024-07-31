@@ -1,19 +1,23 @@
-import json
-import hashlib
-import time
 import requests
-import pandas as pd
+import time
 
-def get_consumers(user):
+def send_post_request():
+    
+    url = 'http://backend:8000/verifyDate'
+    
+    headers = {
+        'Content-Type': 'application/json'
+    }
+    
+    response = requests.post(url, headers=headers)
+    
+    if response.status_code == 200:
+        print('POST request successful')
+    else:
+        print(f'Failed to send POST request: {response.status_code}, {response.text}')
 
-
-  df = pd.read_json("src/audit.txt", lines=True)
-  df = df[df['source']==user]
-  result = df[df['type']=="UPDATE CONSUMPTION"]
-
-  x = result.to_json(orient='records', date_format='iso')
-  return x
-
-
-
-print(get_consumers("user_1"))
+if __name__ == "__main__":
+    while True:
+      time.sleep(60)
+      send_post_request()
+      time.sleep(24 * 60 * 60)
