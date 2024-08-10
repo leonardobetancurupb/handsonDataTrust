@@ -23,7 +23,6 @@ class Holder(models.Model):
     class Meta:
         app_label = 'app'
 
-
 class Consumer(models.Model):
     id=models.CharField(primary_key=True, unique=True, max_length=1000000000)
     idPerson = models.ForeignKey(CustomUser, on_delete=models.CASCADE)

@@ -1,5 +1,5 @@
 """
-    Decorator is a tag that you stablish above a function, indicating privileges or restrictions for execute it
+    Decorator is a tag that you establish above a function, indicating privileges or restrictions for execute it
     In this case, decorators indicate what type of role is allowed for execute a function. 
     This decorators you can tag with @admin_required, @holder_required, @consumer_required, above the functions.
 """

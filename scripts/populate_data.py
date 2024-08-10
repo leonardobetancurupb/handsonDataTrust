@@ -1,9 +1,3 @@
-#poblar esquemas
-#poblar categorias
-#poblar politicas
-
-#poblar de documentos a los holders
-#poblar de firmas de consumers a documentos de holders
 import requests
 import random
 from datetime import datetime
@@ -12,7 +6,6 @@ import string
 import os
 import pandas as pd
 import openpyxl
-import csv
 import sys
 
 

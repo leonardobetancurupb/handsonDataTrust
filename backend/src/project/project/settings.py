@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-la3xl=w&bhhf-1ke)!)rj11@r&q8h*h^9=*kl4fdadtm^*1+_s
 DEBUG = True
 
 # Hosts allowed to call endpoints
-ALLOWED_HOSTS = ['127.0.0.1','0.0.0.0','54.197.173.166','backend']
+ALLOWED_HOSTS = ['127.0.0.1','0.0.0.0','backend']
 
 
 # Application definition
