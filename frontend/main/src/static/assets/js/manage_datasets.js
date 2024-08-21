@@ -57,7 +57,7 @@ function fetchDatasets() {
     try{
 
     
-    fetch('http://54.197.173.166:8000/schema/', requestOptions2)
+    fetch('http://backend:8000/schema/', requestOptions2)
         .then(response => response.json())
         .then(data => {
             const select = document.getElementById('idSchema');
@@ -103,7 +103,7 @@ function fetchDatasets() {
 
         })
         .catch(error => console.error('Error fetching schemas:', error));
-        fetch('http://54.197.173.166:8000/policy/', requestOptions2)
+        fetch('http://backend:8000/policy/', requestOptions2)
         .then(response => response.json())
         .then(data => {
             const select = document.getElementById('idPolicy');
@@ -144,7 +144,7 @@ function fetchDatasets() {
             
         })
         .catch(error => console.error('Error fetching policies:', error));
-        fetch('http://54.197.173.166:8000/category/', requestOptions2)
+        fetch('http://backend:8000/category/', requestOptions2)
         .then(response => response.json())
         .then(data => {
             const select = document.getElementById('idCategory');

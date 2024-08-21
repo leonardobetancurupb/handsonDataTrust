@@ -4,6 +4,7 @@
 {% load i18n %}
 
 {% block content %}
+<div id="alertContainer" class="position-absolute position-alert"></div> 
 <div class="inicio-de-sesin d-flex flex-column ml-5">
     <div class="text-sesion-title mt-5">
       {% trans 'Log in' %}
@@ -25,17 +26,7 @@
   
     <hr/>
     <div class="">
-      {% comment %} <ul>
-        <li>
-          <a href="{% url 'accounts:restore_password' %}">{% trans 'Forgot your password?' %}</a>
-        </li>
-        <li>
-          <a href="{% url 'accounts:remind_username' %}">{% trans 'Forgot your username?' %}</a>
-        </li>
-        <li>
-          <a href="{% url 'accounts:resend_activation_code' %}">{% trans 'Resend an activation code' %}</a>
-        </li>
-      </ul> {% endcomment %}
+
       <div class="centrar">
         <a class="" href="{% url 'accounts:sign_up' %}">{% trans 'Create an account' %}</a>
       </div>

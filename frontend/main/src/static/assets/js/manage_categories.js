@@ -6,7 +6,7 @@ async function submitCategoryForm(event) {
     // Try validating the category and fetching the token
     try {
         // Fetches existing categories data using GET request
-        const postResponse = await fetch(`http://54.197.173.166:8000/api/category/`, { method: 'GET' });
+        const postResponse = await fetch(`http://backend:8000/api/category/`, { method: 'GET' });
         if (!postResponse.ok) {
             throw new Error(`Error fetching session data: ${postResponse.statusText}`);
         }
@@ -52,7 +52,7 @@ async function submitCategoryForm(event) {
             };
     
             // Sends the POST request to create the category
-            fetch("http://54.197.173.166:8000/api/category/", requestOptions)
+            fetch("http://backend:8000/api/category/", requestOptions)
                 .then(response => response.text())
                 .then(result => {
                 console.log(result);

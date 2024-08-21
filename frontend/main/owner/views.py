@@ -12,7 +12,7 @@ def menu(request):
     # Retrieves the user ID from the cache.
     id_user = cache.get('id_session')
     # Defines the URL to fetch holders.
-    url = "http://54.197.173.166:8000/api/holders/"
+    url = "http://backend:8000/api/holders/"
     payload = ""
     headers = {}
     # Makes a GET request to fetch holders.
@@ -38,7 +38,7 @@ def register_datasets(request):
     # Retrieves the user ID from the cache.
     id_user = cache.get('id_session')
     # Defines the URL to fetch holders.
-    url = "http://54.197.173.166:8000/api/holders/"
+    url = "http://backend:8000/api/holders/"
     payload = ""
     headers = {}
     # Makes a GET request to fetch holders.
@@ -52,7 +52,7 @@ def register_datasets(request):
         # Gets the file sent in the form.
         archivo = request.FILES['archivo']
         # Defines the URL to send the file.
-        url_file = f"http://54.197.173.166:8000/saveData/holder/{data['id']}/"
+        url_file = f"http://backend:8000/saveData/holder/{data['id']}/"
         files = {'archivo': archivo}
         # Makes a POST request to send the file.
         response = requests.request("POST", url_file, headers=headers, files=files)
@@ -85,8 +85,8 @@ def dataset_selected(request, id):
     # Retrieves the user ID from the cache.
     id_user = cache.get('id_session')
     # Defines the URLs to fetch holders and datasets.
-    url = "http://54.197.173.166:8000/api/holders/"
-    url_data = "http://54.197.173.166:8000/data/"
+    url = "http://backend:8000/api/holders/"
+    url_data = "http://backend:8000/data/"
     payload = ""
     headers = {}
     
@@ -120,8 +120,8 @@ def edit_datasets(request, id):
     # Retrieves the user ID from the cache.
     id_user = cache.get('id_session')
     # Defines the URLs to fetch holders and datasets.
-    url = "http://54.197.173.166:8000/api/holders/"
-    url_data = "http://54.197.173.166:8000/data/"
+    url = "http://backend:8000/api/holders/"
+    url_data = "http://backend:8000/data/"
     payload = ""
     headers = {}
     
@@ -143,7 +143,7 @@ def edit_datasets(request, id):
         # Gets the file sent in the form.
         archivo = request.FILES['archivo']
         # Defines the URL to send the updated file.
-        url_file = f"http://54.197.173.166:8000/updateData/{dataset['id']}/"
+        url_file = f"http://backend:8000/updateData/{dataset['id']}/"
         files = {'archivo': archivo}
         # Makes a POST request to send the updated file.
         response = requests.request("POST", url_file, headers=headers, files=files)

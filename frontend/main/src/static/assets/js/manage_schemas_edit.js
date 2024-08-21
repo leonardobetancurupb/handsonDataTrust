@@ -25,7 +25,7 @@ async function loadSchemaData() {
     };
 
     try {
-        const response = await fetch(`http://54.197.173.166:8000/schema/${id}/`, requestOptions);
+        const response = await fetch(`http://backend:8000/schema/${id}/`, requestOptions);
         const data = await response.json();
 
         // set form
@@ -107,7 +107,7 @@ async function submitSchemaForm(event) {
     try{
 
  // Fetch existing categories data using a GET request
-    const response = await fetch(`http://54.197.173.166:8000/api/schema/`, { method: 'GET' });
+    const response = await fetch(`http://backend:8000/api/schema/`, { method: 'GET' });
     if (!response.ok) {
         throw new Error(`Error fetching session data: ${response.statusText}`); // Better error message
     }
@@ -153,7 +153,7 @@ async function submitSchemaForm(event) {
         };
     
     // request patch
-    fetch(`http://54.197.173.166:8000/api/schema/${id}/`, requestOptions)
+    fetch(`http://backend:8000/api/schema/${id}/`, requestOptions)
         .then(response => response.text())
         .then(result => {
             console.log(result); 
@@ -213,7 +213,7 @@ document.getElementById('confirmDeleteButton').addEventListener('click', functio
                 };
     
                 // delete request
-                fetch(`http://54.197.173.166:8000/api/schema/${id}/`, requestOptions)
+                fetch(`http://backend:8000/api/schema/${id}/`, requestOptions)
                     .then(response => response.text())
                     .then(result => {
                             console.log("Category deleted successfully.");

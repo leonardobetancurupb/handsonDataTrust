@@ -70,7 +70,7 @@ const loadSchemas = async () => {
         headers: myHeaders,
     };
 
-    fetch('http://54.197.173.166:8000/api/schema/', requestOptions)
+    fetch('http://backend:8000/api/schema/', requestOptions)
         .then(response => response.json())
         .then(data => {
             const cardContainer = document.getElementById('cardContainerSchemas');
@@ -90,7 +90,7 @@ const loadSchemas = async () => {
                                     <img src='/static/assets/img/edit.png' class="table-icon" alt="">
                                     Edit
                                 </a>
-                                <a href="#" data-url="http://54.197.173.166:8000/schema/${schema.id}/" class="btn btn-light btn-sm border border-secondary mr-3 h-25 delete-schema">
+                                <a href="#" data-url="http://backend:8000/schema/${schema.id}/" class="btn btn-light btn-sm border border-secondary mr-3 h-25 delete-schema">
                                     <img src='/static/assets/img/delete.png'  class="table-icon" alt="">
                                     Delete
                                 </a>                                    
