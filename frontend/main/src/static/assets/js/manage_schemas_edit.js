@@ -1,16 +1,16 @@
 
-// Función para obtener el ID de la URL
+// module to get url
 function getIdFromUrl() {
     var urlActual = window.location.href;
     var partesUrl = urlActual.split('/');
-    var ultimoSegmento = partesUrl[partesUrl.length - 2];
-    console.log(ultimoSegmento);
-    return ultimoSegmento
+    var last = partesUrl[partesUrl.length - 2];
+    console.log(last);
+    return last
 }
     
 
 
-// Función para cargar los datos del registro y rellenar el formulario
+// module to load data
 async function loadSchemaData() {
     const id = getIdFromUrl();
     console.log(id);
@@ -38,10 +38,10 @@ async function loadSchemaData() {
         console.log(defaultSelectedValues);
         
         const input = document.getElementById('structure').value;
-        const words = input.trim().split(/\s+/); // Divide por cualquier cantidad de espacios en blanco
+        const words = input.trim().split(/\s+/); 
         const select = document.getElementById('fieldToEncrypt');
         select.innerHTML = '';
-            // Añadir nuevas opciones
+            // add new options
         words.forEach(word => {
             if (word) {
                 const option = document.createElement('option');
@@ -63,14 +63,14 @@ async function loadSchemaData() {
     }
 }
 
-// Llamar a la función para cargar los datos de la política cuando la página se cargue
+
 window.addEventListener("load", loadSchemaData);
 
 
 
 
 
-function submitSchemaForm(event) {
+async function submitSchemaForm(event) {
     event.preventDefault(); // prevent default actions
     const id = getIdFromUrl();
     console.log(id);
@@ -103,6 +103,35 @@ function submitSchemaForm(event) {
     console.log(finalJsonString);
     
 
+
+    try{
+
+ // Fetch existing categories data using a GET request
+    const response = await fetch(`http://54.197.173.166:8000/api/schema/`, { method: 'GET' });
+    if (!response.ok) {
+        throw new Error(`Error fetching session data: ${response.statusText}`); // Better error message
+    }
+    const schemas = await response.json();
+    console.log(schemas);
+
+    // Check for duplicate category names
+    let isUnique = true;
+    for (const schema of schemas) {
+        if (schema.name === formData.get('schema')) {
+            isUnique = false;
+            break; // Stop iterating if a duplicate is found
+        }
+    }
+
+    if (!isUnique) {
+        throw new Error("Schema already exists."); // Duplicate category error
+    }
+
+    // Check if the category name is less than 4 characters or a duplicate
+    if (formData.get('name').length < 4 || !isUnique) {
+        throw new Error("More than 4 characters are expected."); // Length validation error
+    }
+    
     fetch(`/accounts/get_cache/?key=access`, {
         method: 'GET'
     })
@@ -140,6 +169,19 @@ function submitSchemaForm(event) {
 .catch(error => {
     console.error('PATCH Error:', error);
 });
+
+} catch (error) {
+    // Display error message to the user
+    const alertContainer = document.getElementById('alertContainer');
+    alertContainer.innerHTML = `
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Error:</strong> Something went wrong: ${error}.
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    `;
+}
 }
 
 // Event listener para el envío del formulario

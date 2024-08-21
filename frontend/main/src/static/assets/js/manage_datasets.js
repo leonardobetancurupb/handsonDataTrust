@@ -14,24 +14,7 @@ function getCookie(name) {
     return cookieValue;
 }
 
-function getCacheVariable(key) {
-    const variableName = key;
 
-    data = fetch(`/accounts/get_cache/?key=${variableName}`, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log(data);
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
-    return data
-}
 
 let select_value_schema;
 document.getElementById('idSchema').addEventListener('change', function() {
@@ -45,6 +28,7 @@ document.getElementById('idSchema').addEventListener('change', function() {
     if (select.value) {
         button.disabled = false;
         buttonExport.disabled = false; // Habilita el botón si se selecciona una opción
+        
     } else {
         button.disabled = true; // Deshabilita el botón si no hay ninguna opción seleccionada
         buttonExport.disabled = true;
@@ -54,9 +38,10 @@ document.getElementById('idPolicy').addEventListener('change', function() {
     var select = document.getElementById('idPolicy');
     var button = document.getElementById('viewPolicyBtn');
     if (select.value) {
-      button.disabled = false; // Habilita el botón si se selecciona una opción
+        button.disabled = false; 
+        
     } else {
-      button.disabled = true; // Deshabilita el botón si no hay ninguna opción seleccionada
+        button.disabled = true; 
     }
 });
 
@@ -68,6 +53,10 @@ function fetchDatasets() {
         method: "GET",
         headers: myHeaders2,
     };
+
+    try{
+
+    
     fetch('http://54.197.173.166:8000/schema/', requestOptions2)
         .then(response => response.json())
         .then(data => {
@@ -77,7 +66,41 @@ function fetchDatasets() {
                 option.value = schema.id;
                 option.textContent = schema.description;
                 select.appendChild(option);
+                // Update modals
+                const newName = schema.name.replace(/_/g, " ");
+                const structure = schema.structure.replace(/\s/g, ", ");
+        
+                const modalSchemaContainer = document.getElementById('myModal');
+                modalSchemaContainer.innerHTML = `
+                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                        <div class="modal-content h-100">
+                            <div class="modal-header">
+                                <div>
+                                    <h4 class="modal-title">Information Schema</h4>
+                                    ${newName}
+                                </div>
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <div id="home" class="container"><br>
+                                    <p>ID: ${schema.id}<br><strong>Summary</strong><hr>
+                                    <ul>
+                                        <li><strong>Description</strong> ${schema.description}</li>
+                                        <li><strong>Columns</strong> ${structure}</li>
+                                        <li><strong>Encrypted columns</strong> ${schema.fieldToEncrypt}</li>
+                                    </ul>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
             });
+
         })
         .catch(error => console.error('Error fetching schemas:', error));
         fetch('http://54.197.173.166:8000/policy/', requestOptions2)
@@ -89,7 +112,36 @@ function fetchDatasets() {
                 option.value = policy.id;
                 option.textContent = policy.name;
                 select.appendChild(option);
+                const modalPolicyContainer = document.getElementById('ModalPolicy');
+                modalPolicyContainer.innerHTML = `
+                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                        <div class="modal-content h-100">
+                            <div class="modal-header">
+                                <div>
+                                    <h4 class="modal-title">Information Policy</h4>
+                                    ${policy.name}
+                                </div>
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <div id="home" class="container"><br>
+                                    <p>ID: ${policy.id}<br><strong>Summary</strong><hr>
+                                    <ul>
+                                        <li><strong>Description</strong> ${policy.description}</li>
+                                        <li><strong>Expiration Time</strong> ${policy.estimatedTime}</li>
+                                        <li><strong>Value</strong> $${policy.Value}</li>
+                                    </ul>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
             });
+            
         })
         .catch(error => console.error('Error fetching policies:', error));
         fetch('http://54.197.173.166:8000/category/', requestOptions2)
@@ -104,119 +156,31 @@ function fetchDatasets() {
             });
         })
         .catch(error => console.error('Error fetching categories:', error));
-}
-
-
-async function submitDatasetForm(event) {
-    event.preventDefault(); 
-    const form = event.target; // Obtiene el formulario
-    const formData3 = new FormData(form); // Crea un objeto FormData con los datos del formulario
-    console.log(JSON.stringify(formData3));
-    // Convierte FormData a un objeto JSON
-    const formDataObj = {};
-    formData3.forEach((value, key) => {
-        formDataObj[key] = value;
-    });
-    console.log(formDataObj);
-    try {
-
-            // Obtiene el id de sesión desde la caché
-            const sessionResponse = await fetch(`/accounts/get_cache/?key=id_session`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-            const sessionData = await sessionResponse.json();
-            
-            if (sessionData.value) {
-                const id_user = sessionData.value;
-                console.log(id_user);
-
-                // Obtiene los holders desde la API
-                const holdersResponse = await fetch('http://54.197.173.166:8000/api/holders/', {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                });
-                const holdersData = await holdersResponse.json();
-
-                // Filtra el holder correspondiente
-                const filteredObject = holdersData.find(item => item.idPerson === id_user);
-                
-                if (filteredObject) {
-                    const id = filteredObject.id;
-                    console.log('holder id:', id);
-                    console.log(formData);
-                    // Configura los encabezados para la solicitud POST
-                    const myHeaders3 = new Headers();
-                    myHeaders3.append("Content-Type", "multipart/form-data");
-                    myHeaders3.append("Authorization", "Bearer " + tokenData.value);
-                    myHeaders3.append("X-CSRFToken", getCookie('csrftoken'));
-
-                    // Envía la solicitud POST con los datos del formulario
-                    const requestOptions = {
-                        method: "POST",
-                        headers: myHeaders3,
-                        body: formData,
-                    };
-
-                    const postResponse = await fetch(`/holder/soli_data/${id}/`, requestOptions);
-                    const result = await postResponse.text();
-                    console.log(result);
-                    // window.location.href = '/administrator/shcemas_owner';
-                } else {
-                    console.log('holder not exist.');
-                }
-            } else {
-                console.error('Session id not found in cache.');
-            }
     } catch (error) {
-        console.error('Error:', error);
+        // Display error message to the user
+        const alertContainer = document.getElementById('alertContainer');
+        alertContainer.innerHTML = `
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>Error:</strong> Failed to load data.
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        `;
     }
+        
+        
 }
 
 
 
 
-
-// document.getElementById('datasetForm').addEventListener('submit', submitDatasetForm);
-document.getElementById('ExportFileform').addEventListener('submit', function(event) {
-    event.preventDefault(); // Evita el envío tradicional del formulario
-
-    // Aquí puedes definir tu lógica para establecer la URL de destino
-    const dynamicAction = `http://54.197.173.166:8000/downloadSchema/${select_value_schema}/`;
-    
-    // Asigna la acción dinámica al formulario
-    this.action = dynamicAction;
-    
-    // O puedes enviar el formulario manualmente usando fetch u otra técnica
-    const formData2 = new FormData(this);
-    
-    fetch(dynamicAction, {
-        method: 'POST',
-        body: formData2
-    }).then(response => {
-        if (response.ok) {
-            return response.blob(); // Suponiendo que la respuesta es un archivo para descargar
-        } else {
-            throw new Error('Network response was not ok.');
-        }
-    }).then(blob => {
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.style.display = 'none';
-        a.href = url;
-        a.download = 'app.xlsx'; // Cambia 'filename.extension' por el nombre que quieras para el archivo
-        document.body.appendChild(a);
-        a.click();
-        window.URL.revokeObjectURL(url);
-    }).catch(error => {
-        console.error('There was a problem with the fetch operation:', error);
-    });
-});
-
+function updateFileName() {
+    var input = document.getElementById('fileInput');
+    var label = input.nextElementSibling; // El elemento <label> sigue al <input> en el DOM
+    var fileName = input.files.length > 0 ? input.files[0].name : 'Choose File';
+    label.textContent = fileName;
+}
 
 document.addEventListener("DOMContentLoaded", function() {
     fetchDatasets();
@@ -238,15 +202,13 @@ fileInput.addEventListener('change', handleFileChange);
     } 
 
 
-    // form.addEventListener('submit', handleFormSubmit);
-    //  function handleFormSubmit(event) { event.preventDefault(); 
-    //     // Prevent default form submission 
-    //     fetch('http://127.0.0.1:8000/saveData/holder/1/',
-    //      { method: 'POST', body: formData, }) 
-    //      .then(response => response.json()) // Handle response as JSON 
-    //      .then(data => { 
-    //         console.log('Form submitted successfully:', data); 
-    //     }) .catch(error => {
-    //          console.error('Error submitting form:', error); 
-    //         }); 
-    //     }
+
+document.getElementById('viewSchemaBtn').addEventListener('click', function(event) {
+    event.preventDefault(); // Prevent the default link behavior
+    $('#myModal').modal('show'); // Show the modal
+});
+
+document.getElementById('viewPolicyBtn').addEventListener('click', function(event) {
+    event.preventDefault(); // Prevent the default link behavior
+    $('#ModalPolicy').modal('show'); // Show the modal
+});

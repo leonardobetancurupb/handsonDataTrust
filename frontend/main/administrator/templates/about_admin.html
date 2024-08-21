@@ -57,82 +57,52 @@
                 <div class="lap-home  p-3 border border-1">
                     <div class="d-flex justify-content-between w-100">
                         <h3>
-                            Manage Users 
+                            About us
                         </h3>
                     </div>
-                    <div class="row form-group d-block">
-                        Filters
-                        <hr>
-                        <div class="d-flex">
-                            <div class="col w-50">
-                                <label for="searchInput">By Name:</label>
-                                <input type="text" id="searchInput" class="form-control" placeholder="Search..." >
-                            </div>
-                            <div class="col w-50"> 
-                                <label for="searchRole">By Role:</label> 
-                                <br>
-                                <select name="searchRole" id="searchRole" class="form-control">
-                                    <option value="" selected disabled>Select a role...</option>
-                                    <option value="data subject">Data Subject</option>
-                                    <option value="admin">Admin</option>
-                                    <option value="consumer">Consumer</option>
-                                </select>
-                            </div>
-                        </div>
+                    <p class="pl-5 pr-5 font-size-small">
+                        <strong>
+                            Data Guardian Trust
+                        </strong><br>
+                        A Data Trust is a legal entity established to manage and govern data for the benefit of a specific group of individuals, organizations, or society at large. The core idea behind a Data Trust is to provide a trusted framework where data can be managed responsibly, transparently, and fairly, ensuring that the rights and privacy expectations of individuals are respected.
+                       <br>
+                        <strong>
+                            Acknowledgements
+                        </strong><br>
+                        We would like to express our deepest gratitude to the following institutions for their support and contributions to the development of this project:
+                    </p>
+                    <div class="d-flex justify-content-around p-3"> 
+                        <img src={% static "assets/img/upb_icon.svg" %} class="img-fluid w-25" alt="">
+                        <img src={% static "assets/img/logo_minciencias.svg" %} class="img-fluid w-25" alt="">
+                        <img src={% static "assets/img/logo-CRC.svg" %} class="img-fluid w-25" alt="">
                     </div>
-                    <div class="container mt-1 w-100 sensor-table form-group h-75">
-                      <table class="table table-sm table-hover " id="userTable">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Username</th>
-                                <th>Role</th>
-                            </tr>
-                        </thead>
-                        <tbody id="TableUsers">
-
-
-                            {% for user in users %}
-                                <tr>
-
-                                </tr>
-                            {% empty %}
-                                <tr>
-                                    <td colspan="4">No users found.</td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                      </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-              <!-- Modal's Section -->
-      <!-- Modal -->
-    <div class="modal fade" id="staticBackdrop" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="staticBackdropLabel">Delete User</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    Are you sure you want to delete this user?
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-danger" id="confirmDeleteButton">Delete</button>
+                    <p class="pl-5 pr-5 font-size-small">
+                        <strong>
+                            Authors
+                        </strong>
+                        <ul class="pl-5 pr-5 font-size-small"> 
+                            <li>
+                                Leonardo Betancur Agudelo
+                            </li>
+                            <li>
+                                Jorge Mario Londono Pelaez
+                            </li>
+                            <li>
+                                John Andersson Cardenas Quiros
+                            </li>
+                            <li>
+                                Juan Pablo Montoya Orozco
+                            </li>
+                            <li>
+                                Luisa Alvarez Bello
+                            </li>
+                        </ul>
+                    </p>
                 </div>
             </div>
         </div>
     </div>
 
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
-    <script src={% static "assets/js/manage_users.js" %}></script>
     {% else %}
     <script>
         window.onload=function() {

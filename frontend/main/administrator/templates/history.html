@@ -16,6 +16,12 @@
                         <a href={% url 'administrator:menu' %}>Home</a>
                     </li >
                     <li class="list-group-item list-group-item-action ">
+                        <a href={% url 'administrator:category' %}>Category</a>
+                    </li>
+                    <li class="list-group-item list-group-item-action ">
+                        <a href={% url 'administrator:create_category' %}>New Category</a>
+                    </li>
+                    <li class="list-group-item list-group-item-action ">
                         <a href={% url 'administrator:policy' %}>Policies</a>
                     </li>
                     <li class="list-group-item list-group-item-action ">
@@ -37,15 +43,16 @@
                         <a href={% url 'administrator:history' %}>History</a>
                     </li>
                     <li class="list-group-item list-group-item-action ">
-                        <a href={% url 'administrator:category' %}>Category</a>
+                        <a href={% url 'administrator:about_admin' %}>About</a>
                     </li>
                     <li class="list-group-item list-group-item-action ">
-                        <a href={% url 'accounts:settings' %}>Settings</a>
+                        <a href={% url 'accounts:log_out' %}>Log out</a>
                     </li>
                 </ul>
             </div>
         </div>
         <div class="col-md-9 w-100 vh-100 mt-5 mr-3 align-self-center">
+            <div id="alertContainer" class="position-absolute position-alert"></div> 
             <div class="ventana-home">
                 <div class="lap-home  p-3 border border-1">
                     <div class="d-flex justify-content-between w-100">
@@ -53,6 +60,7 @@
                             Manage Logs 
                         </h3>
                     </div>
+                    <!-- Filters-->
                     <div class="row form-group justify-content-around">
                         <div class="border p-2 rounded">
                             Filter by...
@@ -62,13 +70,11 @@
                                     <input type="text" id="filterType" class="w-90 form-control" placeholder="Type to filter...">
                                 </div>
                             
-                                <!-- Input de filtro para source -->
                                 <div class="  w-50">
                                     <label for="filterSource">Source:</label>
                                     <input type="text" id="filterSource" class="w-90 form-control" placeholder="Source to filter...">
                                 </div>
                             
-                                <!-- Input de filtro para destination -->
                                 <div class=" w-50">
                                     <label for="filterDestination">Destination:</label>
                                     <input type="text" class="w-90 form-control" id="filterDestination" placeholder="Destination to filter...">
@@ -79,7 +85,6 @@
                         <div class="border p-2 rounded">
                             Range Date
                             <div class="d-flex">
-                                <!-- Filtros de fecha -->
                                 <div class=" w-50">
                                     <label for="startDate">From:</label>
                                     <input type="date" class="w-90 form-control" id="startDate">
@@ -91,7 +96,7 @@
                             </div>
                         </div>
                     </div>
-                    History
+                    History LIMIT 20
                     <div class="container mt-1 w-100 sensor-table form-group h-75">
                         <table class="table table-sm table-hover " id="logsTable">
                             <thead>
@@ -105,10 +110,12 @@
                                 </tr>
                             </thead>
                             <tbody id="jsonTableBody">
+                                <tr>
+                                    <td colspan="6">No logs found.</td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
-                    <div id="table-container"></div>
                 </div>
             </div>
         </div>

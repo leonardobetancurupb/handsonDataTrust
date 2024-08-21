@@ -10,109 +10,86 @@
 
     <div class="row w-100 ml-4 mt-2 justify-content-between">
         <div class="col-sm-2 shadow-sm p-1 border border-1">
-            <div class="nav flex-column nav-pills text-center mt-4" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                <ul class="list-group ml-0">
-                    <li class="list-group-item list-group-item-action ">
-                        <a href={% url 'administrator:menu' %}>Home</a>
-                    </li >
-                    <li class="list-group-item list-group-item-action ">
-                      <a href={% url 'administrator:policy' %}>Policies</a>
-                    </li>
-                    <li class="list-group-item list-group-item-action ">
-                      <a href={% url 'administrator:create_policy' %}>New Policy</a>
-                    </li>
-                    <li class="list-group-item list-group-item-action ">
-                      <a href={% url 'administrator:schemas' %}>Schemas</a>
-                    </li>
-                    <li class="list-group-item list-group-item-action ">
-                      <a href={% url 'administrator:create_schemas' %}>New Schema</a>
-                    </li>
-                    <li class="list-group-item list-group-item-action ">
-                        <a href={% url 'administrator:registered_data' %}>Datasets</a>
-                    </li>
-                    <li class="list-group-item list-group-item-action ">
-                      <a href={% url 'administrator:view_users' %}>Users</a>
-                    </li>
-                    <li class="list-group-item list-group-item-action ">
-                      <a href={% url 'administrator:history' %}>History</a>
-                    </li>
-                    <li class="list-group-item list-group-item-action ">
+          <div class="nav flex-column nav-pills text-center mt-4" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+              <ul class="list-group ml-0">
+                  <li class="list-group-item list-group-item-action ">
+                      <a href={% url 'administrator:menu' %}>Home</a>
+                  </li >
+                  <li class="list-group-item list-group-item-action ">
                       <a href={% url 'administrator:category' %}>Category</a>
-                    </li>
-                    <li class="list-group-item list-group-item-action ">
-                        <a href={% url 'accounts:settings' %}>Settings</a>
-                    </li>
-                </ul>
-            </div>
+                  </li>
+                  <li class="list-group-item list-group-item-action ">
+                      <a href={% url 'administrator:create_category' %}>New Category</a>
+                  </li>
+                  <li class="list-group-item list-group-item-action ">
+                      <a href={% url 'administrator:policy' %}>Policies</a>
+                  </li>
+                  <li class="list-group-item list-group-item-action ">
+                      <a href={% url 'administrator:create_policy' %}>New Policy</a>
+                  </li>
+                  <li class="list-group-item list-group-item-action ">
+                      <a href={% url 'administrator:schemas' %}>Schemas</a>
+                  </li>
+                  <li class="list-group-item list-group-item-action ">
+                      <a href={% url 'administrator:create_schemas' %}>New Schema</a>
+                  </li>
+                  <li class="list-group-item list-group-item-action ">
+                      <a href={% url 'administrator:registered_data' %}>Datasets</a>
+                  </li>
+                  <li class="list-group-item list-group-item-action ">
+                      <a href={% url 'administrator:view_users' %}>Users</a>
+                  </li>
+                  <li class="list-group-item list-group-item-action ">
+                      <a href={% url 'administrator:history' %}>History</a>
+                  </li>
+                  <li class="list-group-item list-group-item-action ">
+                    <a href={% url 'administrator:about_admin' %}>About</a>
+                </li>
+                  <li class="list-group-item list-group-item-action ">
+                    <a href={% url 'accounts:log_out' %}>Log out</a>
+                </li>
+              </ul>
+          </div>
         </div>
         <div class="col-md-9 w-100 vh-100 mt-5 mr-3 align-self-center">
+            <div id="alertContainer" class="position-absolute position-alert"></div> 
             <div class="ventana-home">
                 <div class="lap-home  p-2 border border-1">
                     <h3>
                     Recent Activity 
                     </h3>
+                    <div class="d-flex justify-content-center:""">
+                        <button class=" btn-outline-primary btn  w-25 mr-2">
+                            Total Paid to Datatrust: ${{total_20_percent}} <br>
+                        </button>
+                        <button class=" btn-outline-primary btn w-25">
+                            Total Money Paid: ${{total_money_paid}} <br>
+                        </button>
+                    </div>
                     <div class="container-fluid d-flex h-50">
                         <div id="main" style="width: 80%;height:250px;"></div>
-                            <div class=" w-20 d-flex ">
-                                <img src={% static "assets/img/LOGO-REGULAR-LIGHT.svg" %} class="img-fluid h-50 w-100 align-self-center" alt="">
+                            <div class=" w-25 d-flex ">
+                                <img src={% static "assets/img/LOGO-REGULAR-LIGHT.svg" %} class="img-fluid h-100 w-100 align-self-center" alt="">
                             </div>
                         </div>  
                         <div class="h-25">
-                            <h6>Projects</h6>
-                            <div class="h-100 sensor-table">
-                                <table class="table table-hover table-sm">
-                                    <thead>
+                            <h6>Logs LIMIT 7</h6>   
+                            <div class="container mt-1 w-100 sensor-table form-group h-75 ">
+                                <table class="table table-sm table-hover border" id="logsTable">
+                                    <thead class="h-100">
                                         <tr>
-                                            <th>#</th>
+                                            <th>Log ID</th>
+                                            <th>Type</th>
                                             <th>Source</th>
-                                            <th>Action</th>
                                             <th>Destination</th>
+                                            <th>Description</th>
                                             <th>Timestamp</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody id="jsonTableBody">
                                         <tr>
-                                            <td>78</td>
-                                            <td>3</td>
-                                            <td>GET</td>
-                                            <td>Data</td>
-                                            <td>06/07/2025 16:35:143</td>
+                                            <td colspan="6">No logs found.</td>
                                         </tr>
-                                        <tr>
-                                          <td>79</td>
-                                          <td>3</td>
-                                          <td>GET</td>
-                                          <td>Data</td>
-                                          <td>06/07/2025 16:36:143</td>
-                                      </tr>
-                                      <tr>
-                                        <td>80</td>
-                                        <td>3</td>
-                                        <td>GET</td>
-                                        <td>Data</td>
-                                        <td>06/07/2025 16:44:143</td>
-                                      </tr>
-                                      <tr>
-                                        <td>81</td>
-                                        <td>3</td>
-                                        <td>GET</td>
-                                        <td>Data</td>
-                                        <td>06/07/2025 16:48:143</td>
-                                      </tr>
-                                      <tr>
-                                        <td>82</td>
-                                        <td>3</td>
-                                        <td>POST</td>
-                                        <td>Data</td>
-                                        <td>06/07/2025 16:50:143</td>
-                                      </tr>
-                                      <tr>
-                                        <td>83</td>
-                                        <td>3</td>
-                                        <td>GET</td>
-                                        <td>Data</td>
-                                        <td>06/07/2025 16:55:143</td>
-                                      </tr>
                                     </tbody>
                                 </table>
                             </div>

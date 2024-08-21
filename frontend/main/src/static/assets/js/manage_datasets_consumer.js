@@ -1,14 +1,14 @@
- // function to get id category
+// Function to get the ID of a category from the URL
 function getIdFromUrl() {
-    var urlActual = window.location.href;
-    var partesUrl = urlActual.split('/');
-    var ultimoSegmento = partesUrl[partesUrl.length - 2];
-    console.log(ultimoSegmento);
-    return ultimoSegmento
+    const currentUrl = window.location.href;
+    const urlParts = currentUrl.split('/');
+    const categoryID = urlParts[urlParts.length - 2]; // Assuming the ID is the second to last segment
+    console.log(categoryID);
+    return categoryID;
 }
 
- // Función para filtrar categorías
- function filterDatasets() {
+// Function to filter datasets based on title, start date, and end date
+function filterDatasets() {
     const searchInput = document.getElementById('searchInput').value.toLowerCase();
     const startDate = document.getElementById('startDate').value;
     const endDate = document.getElementById('endDate').value;
@@ -16,9 +16,8 @@ function getIdFromUrl() {
 
     cards.forEach(card => {
         const cardTitle = card.querySelector('.card-title').innerText.toLowerCase();
-        const expirationDate = card.querySelector('.expiration-date').innerText; // Asegúrate de que esta clase exista en tu HTML
-
-        let isTitleMatch = cardTitle.includes(searchInput);
+        const expirationDate = card.querySelector('.expiration-date').innerText; 
+        const isTitleMatch = cardTitle.includes(searchInput);
         let isDateInRange = true;
 
         if (startDate || endDate) {
@@ -35,55 +34,52 @@ function getIdFromUrl() {
             }
         }
 
-        if (isTitleMatch && isDateInRange) {
-            card.style.display = '';
-        } else {
-            card.style.display = 'none';
-        }
+        card.style.display = (isTitleMatch && isDateInRange) ? '' : 'none';
     });
 }
 
+let urlToDelete; // Variable to store the delete URL
 
+// Function to initiate dataset deletion
+function deleteDataset(event) {
+    event.preventDefault(); // Prevent the default link behavior
+    console.log("deleteDataset function triggered");
+    urlToDelete = event.currentTarget.getAttribute('data-url'); // Get the URL from the data attribute
 
-let urlToDelete; // Variable para almacenar la URL de eliminación
+    // Show the confirmation modal
+    $('#confirmDeleteModal').modal('show');
+}
 
-        function deleteDataset(event) {
-            event.preventDefault(); // Evita el comportamiento predeterminado del enlace
-            console.log("Se ha metido en la funcion deletedataset");
-            urlToDelete = event.currentTarget.getAttribute('data-url'); // Obtiene la URL del enlace
+// Function to confirm deletion
+document.getElementById('confirmDeleteButton').addEventListener('click', () => {
+    const myHeaders = new Headers({
+        "Content-Type": "application/json"
+    });
 
-            // Mostrar el modal de confirmación
-            $('#confirmDeleteModal').modal('show');
-        }
+    const requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+    };
 
-        // Función para confirmar la eliminación
-        document.getElementById('confirmDeleteButton').addEventListener('click', function() {
-            const myHeaders = new Headers();
-            myHeaders.append("Content-Type", "application/json");
+    fetch(urlToDelete, requestOptions)
+        .then(response => {
+            if (response.ok) {
+                console.log("Dataset deleted successfully.");
+                // Hide the confirmation modal and reload datasets
+                $('#confirmDeleteModal').modal('hide');
+                loadDatasets();
+            } else {
+                console.error("Failed to delete dataset.");
+            }
+        })
+        .catch(error => console.error('Error:', error));
+});
 
-            const requestOptions = {
-                method: "POST",
-                headers: myHeaders,
-            };
-
-            fetch(urlToDelete, requestOptions)
-                .then(response => {
-                    if (response.ok) {
-                        console.log("Dataset deleted successfully.");
-                        // Navegar a otra página o recargar la lista de categorías
-                        $('#confirmDeleteModal').modal('hide'); // Ocultar el modal de confirmación
-                        loadDatasets(); // Recargar las categorías después de eliminar una
-                    } else {
-                        console.error("Failed to delete dataset.");
-                    }
-                })
-                .catch(error => console.error('Error:', error));
-        });
-
-// Función para cargar las categorías desde el servidor y mostrarlas en tarjetas
+// Function to load datasets from the server and display them as cards
 const loadDatasets = async () => {
-    const myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
+    const myHeaders = new Headers({
+        "Content-Type": "application/json"
+    });
 
     const requestOptions = {
         method: "GET",
@@ -91,55 +87,49 @@ const loadDatasets = async () => {
     };
 
     try {
-        // Hacer la solicitud GET al servidor para obtener las políticas
+        // Fetch datasets from the server
         const datasetResponse = await fetch('http://54.197.173.166:8000/api/data/', requestOptions);
         const datasets = await datasetResponse.json();
         console.log(datasets);
-        
-        // Limpiar el contenedor antes de agregar nuevas tarjetas
+
         const cardContainer = document.getElementById('cardContainerDatasets');
-        cardContainer.innerHTML = ''; // Asegúrate de que esto esté ejecutándose correctamente
+        cardContainer.innerHTML = ''; // Clear the container before adding new cards
 
         const groupedData = {};
-        for (const item of datasets) {
+        datasets.forEach(item => {
             const key = `${item.idSchema}-${item.idPolicy}`;
-            if (!groupedData[key]) {
-            groupedData[key] = [];
-            }
+            if (!groupedData[key]) groupedData[key] = [];
             groupedData[key].push(item);
-        }
+        });
 
-        const outputData = [];
-        for (const key in groupedData) {
+        const outputData = Object.keys(groupedData).map(key => {
             const [idSchema, idPolicy] = key.split('-');
             const count = groupedData[key].length;
-            const dataId = groupedData[key][0].id;  // Assuming data.id is always present in the first element
-            outputData.push({
-            count,
-            data: {
-                id: dataId,
-                idPolicy: groupedData[key][0].idPolicy,
-                idSchema: groupedData[key][0].idSchema,
-                idCategory: groupedData[key][0].idCategory,
-            }
-            });
-        }
+            const dataId = groupedData[key][0].id; // Assuming id is always present in the first element
+            return {
+                count,
+                data: {
+                    id: dataId,
+                    idPolicy: groupedData[key][0].idPolicy,
+                    idSchema: groupedData[key][0].idSchema,
+                    idCategory: groupedData[key][0].idCategory,
+                }
+            };
+        });
 
-        // Iterar sobre cada política y obtener la categoría correspondiente
+        // Iterate over each dataset and fetch related policy, schema, and category
         for (const item of outputData) {
-            const count = item.count;
-            const dataset = item.data;
+            const { count, data: dataset } = item;
             console.log(`Count: ${count}, Data ID: ${dataset.id}`);
-            // Obtener la categoría correspondiente
-            const policyResponse = await fetch(`http://54.197.173.166:8000/api/policy/${dataset.idPolicy}/`, requestOptions);
-            const policy = await policyResponse.json();
-            const schemaResponse = await fetch(`http://54.197.173.166:8000/api/schema/${dataset.idSchema}/`, requestOptions);
-            const schema = await schemaResponse.json();
-            const categoryResponse = await fetch(`http://54.197.173.166:8000/api/category/${dataset.idCategory}/`, requestOptions);
-            const category = await categoryResponse.json();
-            // Construir el HTML de la tarjeta con la data
-            name_schema = schema.name
-            new_name = name_schema.replace(/_/g, " ");
+
+            const [policy, schema, category] = await Promise.all([
+                fetch(`http://54.197.173.166:8000/api/policy/${dataset.idPolicy}/`, requestOptions).then(res => res.json()),
+                fetch(`http://54.197.173.166:8000/api/schema/${dataset.idSchema}/`, requestOptions).then(res => res.json()),
+                fetch(`http://54.197.173.166:8000/api/category/${dataset.idCategory}/`, requestOptions).then(res => res.json())
+            ]);
+            const cost = parseFloat(count) * parseFloat(policy.Value);
+            // Build the card HTML with dataset information
+            const nameSchema = schema.name.replace(/_/g, " ");
             const cardHtml = `
             <div class="col-md-6 mb-4 card-wrapper">
                 <div class="card">
@@ -147,37 +137,43 @@ const loadDatasets = async () => {
                         -
                     </div>
                     <div class="card-body">
-                        <h5 class="card-title">${new_name}</h5>
-                        <h6 class="card-subtitle mb-2 text-muted btn">${category.category}</h6>
-                        <p class="card-text">Expiration: ${policy.estimatedTime} <br> Count: ${count}</p>
+                        <h5 class="card-title">${nameSchema}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted btn">${policy.name}</h6>
+                        <p class="card-text">Category: ${category.category} <br> Expiration: <i class="expiration-date">${policy.estimatedTime}</i> <br> Count: ${count} <br> Cost: $${cost.toFixed(2)} </p>
                         <div class="d-flex justify-content-between">
-                        <a href="/consumer/select_dataset/${dataset.id}" class="btn btn-danger">Select</a>
+                            <a href="/consumer/select_dataset/${dataset.id}" class="btn btn-danger">Select</a>
                         </div>
                     </div>
                 </div>
-            </div>
-            `;
-            cardContainer.innerHTML += cardHtml; // Agregar la tarjeta al contenedor
+            </div>`;
+            cardContainer.innerHTML += cardHtml;
         }
 
-        // Event listeners a los nuevos enlaces de eliminación
+        // Add event listeners to the new delete links
         document.querySelectorAll('.delete-dataset').forEach(link => {
             link.addEventListener('click', deleteDataset);
         });
 
-        // Event listener para el campo de búsqueda y los campos de fecha
+        // Add event listeners for the search input and date filters
         document.getElementById('searchInput').addEventListener('input', filterDatasets);
         document.getElementById('startDate').addEventListener('input', filterDatasets);
         document.getElementById('endDate').addEventListener('input', filterDatasets);
 
-
     } catch (error) {
-        console.error('Error fetching datasets:', error);
+        // Optionally display an error message to the user
+        const alertContainer = document.getElementById('alertContainer');
+        const alertHtml = `
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Error:</strong> Failed to load data.
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>`;
+        alertContainer.innerHTML = alertHtml;
     }
 };
 
-
-// Llamar a la función para cargar las categorías cuando la página se cargue
+// Load datasets when the page is fully loaded
 window.addEventListener("load", async () => {
     await loadDatasets();
 });

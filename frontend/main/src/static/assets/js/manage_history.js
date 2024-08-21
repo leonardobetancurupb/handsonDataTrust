@@ -8,7 +8,6 @@ document.addEventListener("DOMContentLoaded", function() {
             // Convert the JSON object to an array and sort it by log_id in descending order
             const logsArray = Object.values(jsonData);
             logsArray.sort((a, b) => b.log_id - a.log_id);
-
             const createRow = (log) => {
                 const row = document.createElement("tr");
 
@@ -17,7 +16,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     <td>${log.type}</td>
                     <td>${log.source}</td>
                     <td>${log.destination}</td>
-                    <td>${log.description.content}</td>
+                    <td>${log.description.content.description}</td>
                     <td>${new Date(log.timestamp * 1000).toLocaleString()}</td>
                 `;
 
@@ -25,8 +24,10 @@ document.addEventListener("DOMContentLoaded", function() {
             };
 
             const updateTable = (filteredLogs) => {
+                const lastLimitLogs = filteredLogs.slice(0, 20);
+                console.log(lastLimitLogs);
                 logsTableBody.innerHTML = ''; // Clear the table body
-                filteredLogs.forEach(log => logsTableBody.appendChild(createRow(log)));
+                lastLimitLogs.forEach(log => logsTableBody.appendChild(createRow(log)));
             };
 
             const filterLogs = () => {
@@ -42,7 +43,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     const sourceMatch = log.source.toLowerCase().includes(filterSource);
                     const destinationMatch = log.destination.toLowerCase().includes(filterDestination);
                     const dateMatch = (!startDate.getTime() || logDate >= startDate) &&
-                                      (!endDate.getTime() || logDate <= endDate);
+                                    (!endDate.getTime() || logDate <= endDate);
 
                     return typeMatch && sourceMatch && destinationMatch && dateMatch;
                 });
@@ -60,7 +61,17 @@ document.addEventListener("DOMContentLoaded", function() {
             document.getElementById('startDate').addEventListener('change', filterLogs);
             document.getElementById('endDate').addEventListener('change', filterLogs);
         } catch (error) {
-            console.error("Error fetching logs:", error);
+            // Optionally displays an error message to the user
+        const alertContainer = document.getElementById('alertContainer');
+        const alertHtml = `
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Error:</strong> Failed to load data.
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+        `;
+        alertContainer.innerHTML = alertHtml;
         }
     };
 

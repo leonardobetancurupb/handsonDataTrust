@@ -14,7 +14,7 @@ function updateSelectOptions() {
     });
 }
 
-function submitSchemaForm(event) {
+async function submitSchemaForm(event) {
     event.preventDefault(); // Evita el envío tradicional del formulario
     
     const form = event.target; // Obtiene el formulario
@@ -44,6 +44,41 @@ function submitSchemaForm(event) {
     console.log(formDataObj);
     const finalJsonString = JSON.stringify(formDataObj);
     console.log(finalJsonString);
+
+    try{
+
+    
+    // Fetch existing categories data using a GET request
+    const response = await fetch(`http://54.197.173.166:8000/api/schema/`, { method: 'GET' });
+    if (!response.ok) {
+        throw new Error(`Error fetching session data: ${response.statusText}`); // Better error message
+    }
+    const schemas = await response.json();
+    console.log(schemas);
+
+    // Check for duplicate category names
+    let isUnique = true;
+    for (const schema of schemas) {
+        if (schema.name === formData.get('schema')) {
+            isUnique = false;
+            break; // Stop iterating if a duplicate is found
+        }
+    }
+
+    if(formDataObj['fieldToEncrypt'].length<1){
+        throw new Error("Select field to encrypt, min 1.");// Better error message
+    
+    }
+
+    if (!isUnique) {
+        throw new Error("Schema already exists."); // Duplicate  error
+    }
+
+    // Check if the category name is less than 4 characters or a duplicate
+    if (formData.get('name').length < 4 || !isUnique) {
+        throw new Error("More than 4 characters are expected."); // Length validation error
+    }
+
     fetch(`/accounts/get_cache/?key=access`, {
         method: 'GET'
     })
@@ -78,6 +113,18 @@ function submitSchemaForm(event) {
 .catch(error => {
     console.error('GET Error:', error);
 });
+} catch (error) {
+    // Display error message to the user
+    const alertContainer = document.getElementById('alertContainer');
+    alertContainer.innerHTML = `
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Error:</strong> Something went wrong: ${error}.
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    `;
+}
 }
 
 // Event listener para el envío del formulario

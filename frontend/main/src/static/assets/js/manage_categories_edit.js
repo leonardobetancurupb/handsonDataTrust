@@ -1,136 +1,169 @@
-
-// function to get id category
+// Function to get the category ID from the URL
 function getIdFromUrl() {
-    var urlActual = window.location.href;
-    var partesUrl = urlActual.split('/');
-    var ultimoSegmento = partesUrl[partesUrl.length - 2];
-    console.log(ultimoSegmento);
-    return ultimoSegmento
+    var currentUrl = window.location.href; // Use a more descriptive variable name
+    var urlParts = currentUrl.split('/'); // Use camelCase for variable names
+    var lastSegment = urlParts[urlParts.length - 2]; // Last segment before the last slash
+    console.log(lastSegment);
+    return lastSegment;
 }
 
-// function to load and set data form to update
+// Function to load and set form data to update a category
 function loadCategoryData() {
     const id = getIdFromUrl();
     console.log(id);
-    if (!id) return;
-    const myHeaders2 = new Headers();
-    myHeaders2.append("Content-Type", "application/json");
+    if (!id) return; // Exit if there's no ID
+
+    const headers = new Headers();
+    headers.append("Content-Type", "application/json");
     
-    const requestOptions2 = {
+    const requestOptions = {
         method: "GET",
-        headers: myHeaders2,
+        headers: headers,
     };
-    fetch(`http://54.197.173.166:8000/api/category/${id}/`, requestOptions2)
+
+    fetch(`http://54.197.173.166:8000/api/category/${id}/`, requestOptions)
         .then(response => response.json())
         .then(data => {
-            document.getElementById('name').value = data.category;
+            document.getElementById('name').value = data.category; // Set the form field value
         })
-        .catch(error => console.error('Error loading category data:', error));
+        .catch(error => console.error('Error loading category data:', error)); // Improved error handling
 }
 
-
-function submitCategoryForm(event) {
-    event.preventDefault(); // prevent default actions
+async function submitCategoryForm(event) {
+    event.preventDefault(); // Prevent default form submission
     const id = getIdFromUrl();
     console.log(id);
     if (!id) return;
-    const form = event.target; // get form
-    const formData = new FormData(form); // create new form with data
+
+    const form = event.target; // Get the form element
+    const formData = new FormData(form); // Create a FormData object
     
-    // FormData to Json format
+    // Convert FormData to JSON format
     const formDataObj = {};
     formData.forEach((value, key) => {
         formDataObj[key] = value;
     });
     
+    try {
+        // Fetch existing categories data using a GET request
+        const response = await fetch(`http://54.197.173.166:8000/api/category/`, { method: 'GET' });
+        if (!response.ok) {
+            throw new Error(`Error fetching session data: ${response.statusText}`); // Better error message
+        }
+        const categories = await response.json();
+        console.log(categories);
     
+        // Check for duplicate category names
+        let isUnique = true;
+        for (const category of categories) {
+            if (category.category === formData.get('category')) {
+                isUnique = false;
+                break; // Stop iterating if a duplicate is found
+            }
+        }
+    
+        if (!isUnique) {
+            throw new Error("Category already exists."); // Duplicate category error
+        }
+    
+        // Check if the category name is less than 4 characters or a duplicate
+        if (formData.get('category').length < 4 || !isUnique) {
+            throw new Error("More than 4 characters are expected."); // Length validation error
+        }
+    
+        // Fetch session token and update the category
+        const tokenResponse = await fetch(`/accounts/get_cache/?key=access`, { method: 'GET' });
+        const tokenData = await tokenResponse.json();
 
-    fetch(`/accounts/get_cache/?key=access`, {
-        method: 'GET'
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.value) {
-            console.log(data);
-            console.log(data.value);
-
-
-        const myHeaders = new Headers();
-        myHeaders.append("Content-Type", "application/json");
-        myHeaders.append("Authorization", "Bearer "+data.value);
+        if (tokenData.value) {
+            console.log(tokenData);
+            const headers = new Headers();
+            headers.append("Content-Type", "application/json");
+            headers.append("Authorization", "Bearer " + tokenData.value);
+            
+            const requestOptions = {
+                method: "PATCH",
+                headers: headers,
+                body: JSON.stringify(formDataObj),
+            };
         
-        const requestOptions = {
-            method: "PATCH",
-            headers: myHeaders,
-            body: JSON.stringify(formDataObj),
-        };
-    
-    // request patch
-    fetch(`http://54.197.173.166:8000/api/category/${id}/`, requestOptions)
-        .then(response => response.text())
-        .then(result => {
-            console.log(result); 
-            // reload categories
-            loadCategoryData();
-            window.location.href = '/administrator/category';
-        })
-        .catch(error => console.error(error));
-    } else {
-        console.error('Token not found in response.');
+            // Send PATCH request to update the category
+            const updateResponse = await fetch(`http://54.197.173.166:8000/api/category/${id}/`, requestOptions);
+            const updateResult = await updateResponse.text();
+            console.log(updateResult);
+
+            loadCategoryData(); // Reload the category data
+            window.location.href = '/administrator/category'; // Redirect to the category list
+        } else {
+            console.error('Token not found in response.'); // Error if token is not found
+        }
+    } catch (error) { // Handle errors thrown during validation or token fetch
+        // Optionally display an error message to the user
+        const alertContainer = document.getElementById('alertContainer');
+        const alertHtml = `
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>Error:</strong> ${error.message}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        `;
+        alertContainer.innerHTML = alertHtml; // Inject alert HTML into the page
     }
-})
-.catch(error => {
-    console.error('PATCH Error:', error);
-});
 }
 
-// Event listener to send form
+// Event listener to handle form submission
 document.getElementById('categoryForm').addEventListener('submit', submitCategoryForm);
 
-// delete validation function
+// Function to delete a category
 document.getElementById('confirmDeleteButton').addEventListener('click', function() {
     const id = getIdFromUrl();
     console.log(id);
     if (!id) return;
 
-    fetch(`/accounts/get_cache/?key=access`, {
-        method: 'GET'
-        })
+    fetch(`/accounts/get_cache/?key=access`, { method: 'GET' })
         .then(response => response.json())
         .then(data => {
             if (data.value) {
                 console.log(data);
-                console.log(data.value);
 
-
-                const myHeaders = new Headers();
-                myHeaders.append("Content-Type", "application/json");
-                myHeaders.append("Authorization", "Bearer "+data.value);
+                const headers = new Headers();
+                headers.append("Content-Type", "application/json");
+                headers.append("Authorization", "Bearer " + data.value);
                 
                 const requestOptions = {
                     method: "DELETE",
-                    headers: myHeaders,
+                    headers: headers,
                 };
     
-                // delete request
+                // Send DELETE request to remove the category
                 fetch(`http://54.197.173.166:8000/category/${id}/`, requestOptions)
                     .then(response => response.text())
                     .then(result => {
-                        
-                            console.log("Category deleted successfully.");
-                            $('#confirmDeleteModal').modal('hide'); // modal
-                            window.location.href = '/administrator/category'; // reload window
-                       
+                        console.log("Category deleted successfully.");
+                        $('#confirmDeleteModal').modal('hide'); // Hide the modal
+                        window.location.href = '/administrator/category'; // Redirect to the category list
                     })
-                    .catch(error => console.error(error));
+                    .catch(error => console.error(error)); // Handle delete errors
             } else {
                 console.error('Token not found in response.');
             }
         })
     .catch(error => {
-        console.error('DELETE Error:', error);
+        console.error('DELETE Error:', error); // Handle fetch errors
+        // Optionally display an error message to the user
+        const alertContainer = document.getElementById('alertContainer');
+        const alertHtml = `
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>Error:</strong> Failed on delete data, try again or reload this page.
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        `;
+        alertContainer.innerHTML = alertHtml; // Inject alert HTML into the page
     }); 
 });
 
-// LOAD DATA ON WINDOWS RELOAD
+// Load category data when the page is fully loaded
 document.addEventListener('DOMContentLoaded', loadCategoryData);

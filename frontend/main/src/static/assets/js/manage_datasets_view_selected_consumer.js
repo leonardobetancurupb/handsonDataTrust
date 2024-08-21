@@ -1,208 +1,219 @@
- // function to get id category
+// Extracts the last segment of the current URL
 function getIdFromUrl() {
-    var urlActual = window.location.href;
-    var partesUrl = urlActual.split('/');
-    var ultimoSegmento = partesUrl[partesUrl.length - 1];
-    console.log(ultimoSegmento);
-    return ultimoSegmento
+    const url = window.location.href;
+    const segments = url.split('/');
+    return segments[segments.length - 1];
 }
 
+// Handles form submission to fetch and process data
 function submitSignForm(event) {
-    event.preventDefault(); // Evita el envío tradicional del formulario
+    event.preventDefault(); // Prevents the default form submission
 
-    fetch(`/accounts/get_cache/?key=access`, {
-        method: 'GET'
-    })
-    .then(response => response.json())
-    .then(async data => {
-        if (data.value) {
-            console.log(data);
-            console.log(data.value);
+    fetch(`/accounts/get_cache/?key=access`, { method: 'GET' })
+        .then(response => response.json())
+        .then(async data => {
+            if (data.value) {
+                // Fetch session ID
+                const sessionResponse = await fetch(`/accounts/get_cache/?key=id_session`, { method: 'GET' });
+                const sessionData = await sessionResponse.json();
 
-            const postResponse = await fetch(`/accounts/get_cache/?key=id_session`, {
-                method: 'GET'
-            });
-            const result = await postResponse.json();
-            console.log(result);
+                // Fetch consumer data
+                const consumerResponse = await fetch(`http://54.197.173.166:8000/api/consumers/`, { method: 'GET' });
+                const consumers = await consumerResponse.json();
+                const filteredConsumers = consumers.filter(item => item.idPerson === sessionData.value);
 
-            const get_id_data = await fetch(`http://54.197.173.166:8000/api/data/${getIdFromUrl()}/`, {
-                method: 'GET'
-            });
-            const data_result = await get_id_data.json();
-            console.log(data_result.idSchema);
+                // Fetch dataset details
+                const datasetResponse = await fetch(`http://54.197.173.166:8000/api/data/${getIdFromUrl()}/`, { method: 'GET' });
+                const dataset = await datasetResponse.json();
 
-            const datasetResponse = await fetch('http://54.197.173.166:8000/api/data/',  {
-                method: 'GET'
-            });
-            const datasets = await datasetResponse.json();
-            console.log(datasets);
+                // Fetch all datasets
+                const allDatasetsResponse = await fetch('http://54.197.173.166:8000/api/data/', { method: 'GET' });
+                const allDatasets = await allDatasetsResponse.json();
 
+                // Filter datasets based on schema and policy
+                const filteredData = allDatasets.filter(item => item.idSchema === dataset.idSchema && item.idPolicy === dataset.idPolicy);
+                const ids = filteredData.map(item => item.id);
 
-            const filteredData = datasets.filter(item => item.idSchema === data_result.idSchema);
-            const ids = filteredData.map(item => item.id);
-            const myHeaders = new Headers();
-            myHeaders.append("Content-Type", "application/json");
-            myHeaders.append("Authorization", "Bearer " + data.value);
-            const requestOptions = {
-                method: "POST",
-                headers: myHeaders,
-                body: JSON.stringify({
-                    "idConsumer": result.value,
-                    "lstDataId": ids,
-                    "idSchema": data_result.idSchema
-                }),
-            };
-            console.log(requestOptions);
-            // Hacer la solicitud POST al servidor
-            fetch("http://54.197.173.166:8000/sign/", requestOptions)
-                .then(response => response.text())
-                .then(result => {
-                    console.log(result);
-                    // window.location.href = '/consumer/view_datasets';
-                })
-                .catch(error => console.error('POST Error:', error));
-        } else {
-            console.error('Token not found in response.');
-        }
-    })
-    .catch(error => {
-        console.error('GET Error:', error);
-    });
+                // Prepare request headers and body
+                const headers = new Headers();
+                headers.append("Content-Type", "application/json");
+                headers.append("Authorization", "Bearer " + data.value);
+
+                const requestOptions = {
+                    method: "POST",
+                    headers: headers,
+                    body: JSON.stringify({
+                        idConsumer: filteredConsumers[0].id,
+                        lstDataId: ids,
+                        idSchema: dataset.idSchema,
+                        idPolicy: dataset.idPolicy
+                    })
+                };
+
+                // Submit the POST request
+                fetch("http://54.197.173.166:8000/sign/", requestOptions)
+                    .then(response => response.text())
+                    .then(result => console.log(result))
+                    .catch(error => console.error('POST Error:', error));
+            } else {
+                console.error('Token not found in response.');
+            }
+        })
+        .catch(error => console.error('GET Error:', error));
 }
 
-// Event listener para el envío del formulario
+// Attach event listener to the form submit button
 document.getElementById('confirm_terms').addEventListener('click', submitSignForm);
 
-
-
-
-// Función para cargar las categorías desde el servidor y mostrarlas en tarjetas
+// Loads datasets from the server and displays them in cards
 const loadDatasets = async () => {
-    const myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
+    const headers = new Headers();
+    headers.append("Content-Type", "application/json");
 
     const requestOptions = {
         method: "GET",
-        headers: myHeaders,
+        headers: headers
     };
 
     try {
-        // Hacer la solicitud GET al servidor para obtener las políticas
-        const datasetResponse = await fetch('http://54.197.173.166:8000/api/data/', requestOptions);
-        const datasets = await datasetResponse.json();
-        console.log(datasets);
+        // Fetch datasets
+        const response = await fetch('http://54.197.173.166:8000/api/data/', requestOptions);
+        const datasets = await response.json();
 
-        // Limpiar el contenedor antes de agregar nuevas tarjetas
+        // Clear the card container
         const cardContainer = document.getElementById('cardContainerDatasets');
-        cardContainer.innerHTML = ''; // Asegúrate de que esto esté ejecutándose correctamente
+        cardContainer.innerHTML = '';
 
+        // Group datasets by schema and policy
         const groupedData = {};
-        for (const item of datasets) {
+        datasets.forEach(item => {
             const key = `${item.idSchema}-${item.idPolicy}`;
             if (!groupedData[key]) {
-            groupedData[key] = [];
+                groupedData[key] = [];
             }
             groupedData[key].push(item);
-        }
+        });
 
-        const outputData = [];
-        for (const key in groupedData) {
+        const outputData = Object.keys(groupedData).map(key => {
             const [idSchema, idPolicy] = key.split('-');
             const count = groupedData[key].length;
-            const dataId = groupedData[key][0].id;  // Assuming data.id is always present in the first element
-            outputData.push({
-            count,
-            data: {
-                id: dataId,
-                idPolicy: groupedData[key][0].idPolicy,
-                idSchema: groupedData[key][0].idSchema,
-                idCategory: groupedData[key][0].idCategory,
-                format: groupedData[key][0].format,
-            }
-            });
-        }
-        console.log(outputData);
+            const data = groupedData[key][0];
+            return {
+                count,
+                data: {
+                    id: data.id,
+                    idPolicy: data.idPolicy,
+                    idSchema: data.idSchema,
+                    idCategory: data.idCategory,
+                    format: data.format
+                }
+            };
+        });
+
+        // Filter data based on the current URL
         const filteredData = outputData.filter(item => item.data.id === getIdFromUrl());
-        const ids = filteredData.map(item => item.id);
-        console.log(filteredData);
-        // Iterar sobre cada política y obtener la categoría correspondiente
+
         for (const item of filteredData) {
-            const count = item.count;
-            const dataset = item.data;
-            console.log(item);
-            console.log(`Count: ${count}, Data ID: ${dataset.id}`);
-            // Obtener la categoría correspondiente
-            const policyResponse = await fetch(`http://54.197.173.166:8000/api/policy/${dataset.idPolicy}/`, requestOptions);
-            const policy = await policyResponse.json();
-            const schemaResponse = await fetch(`http://54.197.173.166:8000/api/schema/${dataset.idSchema}/`, requestOptions);
-            const schema = await schemaResponse.json();
-            const categoryResponse = await fetch(`http://54.197.173.166:8000/api/category/${dataset.idCategory}/`, requestOptions);
-            const category = await categoryResponse.json();
-            // Construir el HTML de la tarjeta con la data
-            name_schema = schema.name;
-            new_name = name_schema.replace(/_/g, " ");
-            list_schema = schema.structure;
-            structure = list_schema.replace(/\s/g, "_");
+            const { count, data } = item;
+
+            // Fetch policy, schema, and category details
+            const [policyResponse, schemaResponse, categoryResponse] = await Promise.all([
+                fetch(`http://54.197.173.166:8000/api/policy/${data.idPolicy}/`, requestOptions),
+                fetch(`http://54.197.173.166:8000/api/schema/${data.idSchema}/`, requestOptions),
+                fetch(`http://54.197.173.166:8000/api/category/${data.idCategory}/`, requestOptions)
+            ]);
+
+            const [policy, schema, category] = await Promise.all([
+                policyResponse.json(),
+                schemaResponse.json(),
+                categoryResponse.json()
+            ]);
+
+            const newName = schema.name.replace(/_/g, " ");
+            const structure = schema.structure.replace(/\s/g, "; ");
+            const cost = parseFloat(count) * parseFloat(policy.Value);
+            // Generate HTML for dataset card
             const cardHtml = `
                 <div class="form-group id="cardContainerDatasets"">
-                    <h3>
-                    ${schema.name}
-                    </h3>
+                    <h3>${newName}</h3>
                     <div class="d-flex justify-content-between">
-                        <p>
-                            Count: ${count} <br>
-                            Expiration ${policy.expirationTime}
-                        </p>
-                        <div class=" d-flex w-25 justify-content-end">
+                        <p>Count: ${count} <br>Expiration ${policy.estimatedTime} <br> Cost: $${cost.toFixed(2)}</p>
+                        <div class="d-flex w-25 justify-content-end">
                             <div class="d-block mr-3">
                                 <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#ModalTerms">Create new Project from this Dataset</button>
                             </div>
                         </div>
                     </div>
-                    <div class="container mt-2 " >
-                        <div class="card" >
+                    <div class="container mt-2">
+                        <div class="card">
                             <div class="card-header">
-                                <h6 id="item-category">Category: ${category.category} </h6>
+                                <h6 id="item-category">Category: ${category.category}</h6>
                             </div>
                             <div class="card-body">
-                                <p id="item-description"><strong>Description: </strong>
-                                    ${schema.description}    
-                                </p>
+                                <p id="item-description"><strong>Description: </strong>${schema.description}</p>
                                 <div class="row">
-                                    <div class="col"> 
-                                    <p id="item-format"><strong>Format: </strong>${dataset.format}</p>
+                                    <div class="col">
+                                        <p id="item-format"><strong>Format: </strong>${data.format}</p>
                                     </div>
-                                    <div class="col"> 
-                                    <p id="item-idPolicy"><strong>Policy: </strong>${policy.name}</p>
-                                    <button type="button" class="btn btn-sm btn-outline-danger ml-3" data-toggle="modal" data-target="#ModalPolicy">View policy selected</button>
+                                    <div class="col">
+                                        <p id="item-idPolicy"><strong>Policy: </strong>${policy.name}</p>
+                                        <button type="button" class="btn btn-sm btn-outline-danger ml-3" data-toggle="modal" data-target="#ModalPolicy">View policy selected</button>
+                                    </div>
+                                    <div class="col">
+                                        <p><strong>Columns</strong><br>${structure}</p>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col"> 
-                                <p>
-                                    ID: 1&nbsp;&nbsp;Since 06/07/2024 <br>
-                                    <strong>
-                                        Columns
-                                    </strong>
-                                    ${structure}
-                                </p>
-                            </div>
-                            </div>
-                        </div>
                         </div>
                     </div>
+                </div>
             `;
-            cardContainer.innerHTML += cardHtml; // Agregar la tarjeta al contenedor
+            cardContainer.innerHTML += cardHtml;
+
+            const modalPolicyHtml = `
+                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                    <div class="modal-content h-100">
+                        <div class="modal-header">
+                            <div>
+                                <h4 class="modal-title">Information Policy</h4>
+                                ${policy.name}
+                            </div>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <div id="home" class="container"><br>
+                                <p>ID: ${policy.id}<br><strong>Summary</strong><hr>
+                                <ul>
+                                    <li><strong>Description</strong> ${policy.description}</li>
+                                    <li><strong>Category</strong> ${category.category}</li>
+                                    <li><strong>Expiration Time</strong> ${policy.estimatedTime}</li>
+                                    <li><strong>Value</strong> $${policy.Value}</li>
+                                </ul>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('ModalPolicy').innerHTML = modalPolicyHtml;
         }
-
-
-
     } catch (error) {
-        console.error('Error fetching datasets:', error);
+        // Display error message to the user
+        const alertContainer = document.getElementById('alertContainer');
+        const alertHtml = `
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>Error:</strong> Failed to load data.
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        `;
+        alertContainer.innerHTML = alertHtml;
     }
 };
 
-
-// Llamar a la función para cargar las categorías cuando la página se cargue
-window.addEventListener("load", async () => {
-    await loadDatasets();
-});
+// Load datasets on page load
+window.addEventListener("load", loadDatasets);

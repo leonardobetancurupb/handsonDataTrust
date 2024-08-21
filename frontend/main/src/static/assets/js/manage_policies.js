@@ -23,17 +23,47 @@ function fetchPolicies() {
         })
         .catch(error => console.error('Error fetching categories:', error));
 }
-function submitPolicyForm(event) {
-    event.preventDefault(); // Evita el envío tradicional del formulario
+async function submitPolicyForm(event) {
+    event.preventDefault(); 
 
-    const form = event.target; // Obtiene el formulario
-    const formData = new FormData(form); // Crea un objeto FormData con los datos del formulario
+    const form = event.target; // get form
+    const formData = new FormData(form); 
     
-    // Convierte FormData a un objeto JSON
+    
     const formDataObj = {};
     formData.forEach((value, key) => {
         formDataObj[key] = value;
     });
+
+    try{
+        // Fetch existing categories data using a GET request
+        const response = await fetch(`http://54.197.173.166:8000/api/policy/`, { method: 'GET' });
+        if (!response.ok) {
+            throw new Error(`Error fetching session data: ${response.statusText}`); // Better error message
+        }
+        const policies = await response.json();
+        console.log(policies);
+    
+        // Check for duplicate category names
+        let isUnique = true;
+        for (const policy of policies) {
+            if (policy.name === formData.get('policy')) {
+                isUnique = false;
+                break; // Stop iterating if a duplicate is found
+            }
+        }
+    
+        if (!isUnique) {
+            throw new Error("Policy already exists."); // Duplicate category error
+        }
+    
+        // Check if the category name is less than 4 characters or a duplicate
+        if (formData.get('name').length < 4 || !isUnique) {
+            throw new Error("More than 4 characters are expected."); // Length validation error
+        }
+    
+
+    
 
     fetch(`/accounts/get_cache/?key=access`, {
         method: 'GET'
@@ -43,18 +73,18 @@ function submitPolicyForm(event) {
         if (data.value) {
             console.log(data.value);
 
-            // Configura los encabezados para la solicitud POST
+            // headers options
             const myHeaders = new Headers();
             myHeaders.append("Content-Type", "application/json");
             myHeaders.append("Authorization", "Bearer " + data.value);
-
+            formDataObj['Value'] = parseFloat(formDataObj['Value'])
             const requestOptions = {
                 method: "POST",
                 headers: myHeaders,
                 body: JSON.stringify(formDataObj),
             };
             
-            // Hacer la solicitud POST al servidor
+            // send request post
             fetch("http://54.197.173.166:8000/api/policy/", requestOptions)
                 .then(response => response.text())
                 .then(result => {
@@ -69,7 +99,19 @@ function submitPolicyForm(event) {
     .catch(error => {
         console.error('GET Error:', error);
     });
+} catch (error) {
+    // Display error message to the user
+    const alertContainer = document.getElementById('alertContainer');
+    alertContainer.innerHTML = `
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Error:</strong> Something went wrong: ${error}.
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    `;
 }
-// Event listener para el envío del formulario
+}
+// Event listener to send form
 document.getElementById('policyForm').addEventListener('submit', submitPolicyForm);
 

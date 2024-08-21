@@ -1,7 +1,8 @@
 import json
 from django.http import JsonResponse, HttpResponseForbidden
 from django.shortcuts import render
-from src.utils.logger import get_last_logs
+import requests
+from src.utils.logger import get_all_logs, get_all_types, get_last_logs
 from django.contrib.auth import get_user_model
 from django.views.decorators.http import require_http_methods
 from django.middleware.csrf import get_token
@@ -11,7 +12,48 @@ from django.core.cache import cache
 def menu(request):
     template_name = 'menu.html'
     variable_value = cache.get('access', 'Variable not found')
-    return render(request, template_name, {'token':variable_value})
+    url = "http://54.197.173.166:8000/api/policy/"
+    url2 = "http://54.197.173.166:8000/api/consumers/"
+    headers = {}
+    payload = ""
+    response2 = requests.get(url2, headers=headers, data=payload)
+    response = requests.get(url,headers=headers, data=payload)
+    policies=response.json()
+    consumers = response2.json()
+    # Load the JSON data
+    # consumers = json.loads(data)
+
+    # Initialize totals
+    total_money_paid = 0
+    total_20_percent = 0
+    # Retrieve the user session ID from the cache
+    id_user = cache.get('id_session')
+
+    # Dictionary to quickly access policy values by their ID
+    policy_values = {policy['id']: float(policy['Value']) for policy in policies}
+
+    # Calculate the total value for each consumer
+    for consumer in consumers:
+        money_paid = float(consumer["moneyPaid"])
+        total_money_paid += money_paid
+        for auth in consumer['authorization']:
+            policy_id = auth['idPolicy']
+            policy_value = policy_values[policy_id]
+            num_items = len(auth['lstSignedData'])
+            
+            # Calculate 20% of the policy value multiplied by the number of items
+            total_20_percent += 0.2 * policy_value * num_items
+            
+    # Render the template with the access token
+    # Define the context for the template
+    context = {
+        'token': variable_value,
+        'total_money_paid': total_money_paid,
+        'total_20_percent': total_20_percent
+    }
+    # Render the template with the context
+    return render(request, template_name, context)
+
 
 def policy(request):
     template_name = 'policy.html'
@@ -49,8 +91,8 @@ def view_users(request):
     variable_value = cache.get('access', 'Variable not found')
     return render(request, template_name, {'token':variable_value})
 
-def history_user(request):
-    template_name = 'history_user.html'
+def about(request):
+    template_name = 'about_admin.html'
     variable_value = cache.get('access', 'Variable not found')
     return render(request, template_name, {'token':variable_value})
 
@@ -65,7 +107,7 @@ def history(request):
     variable_value = cache.get('access', 'Variable not found')
     return render(request, template_name, {'token':variable_value})
 
-def data_selected(request):
+def data_selected(request, id):
     template_name = 'data_selected.html'
     variable_value = cache.get('access', 'Variable not found')
     return render(request, template_name, {'token':variable_value})
@@ -87,28 +129,14 @@ def category(request):
 
 def logs(request):
     
-    # Ruta del archivo .txt
-    input_file = 'src/utils/audit.txt'
-    
-    records = []
-    
-    # Leer y procesar el archivo
     try:
-        with open(input_file, 'r') as file:
-            lines = file.readlines()
-        
-        for line in lines:
-            try:
-                record = json.loads(line.strip())
-                records.append(record)
-            except json.JSONDecodeError as e:
-                print(f"Error decodificando la línea: {line.strip()} - {e}")
+        response = get_all_logs()
 
-    except FileNotFoundError as e:
-        return JsonResponse({'error': 'Archivo no encontrado'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': 'Not logs found.'}, status=404)
     
     # Retornar la respuesta JSON
-    return JsonResponse(records, safe=False, json_dumps_params={'indent': 4})
+    return JsonResponse(response, safe=False, json_dumps_params={'indent': 4})
 
 
 @require_http_methods(["DELETE"])
@@ -127,5 +155,7 @@ def delete_user(request, user_id):
         return JsonResponse({'status': 'error', 'message': 'User not found'})
     
     
-def logs_example(request):
-    return JsonResponse(get_last_logs(10), safe=False)
+def echarts_types(request):
+    data_dict=get_all_types()
+    data_list = [{'value': int(value), 'name': key} for key, value in data_dict.items()]
+    return JsonResponse(data_list, safe=False)

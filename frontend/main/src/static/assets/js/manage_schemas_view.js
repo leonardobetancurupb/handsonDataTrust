@@ -20,7 +20,7 @@ let urlToDelete;
 function deleteSchema(event) {
     event.preventDefault(); // prevent default actions
     console.log("Se ha metido en la funcion deleteschema");
-    urlToDelete = event.currentTarget.getAttribute('data-url'); // Obtiene la URL del enlace
+    urlToDelete = event.currentTarget.getAttribute('data-url'); 
     // view modal
     $('#confirmDeleteModal').modal('show');
 }
@@ -74,7 +74,7 @@ const loadSchemas = async () => {
         .then(response => response.json())
         .then(data => {
             const cardContainer = document.getElementById('cardContainerSchemas');
-            cardContainer.innerHTML = ''; // Limpiar el contenedor antes de agregar nuevas tarjetas
+            cardContainer.innerHTML = ''; 
             console.log(data)
             data.forEach(schema => {
                 name_schema = schema.name
@@ -99,7 +99,7 @@ const loadSchemas = async () => {
                     </div>
                 </div>
                 `;
-                cardContainer.innerHTML += cardHtml; // Agregar la tarjeta al contenedor
+                cardContainer.innerHTML += cardHtml; 
             });
 
             document.querySelectorAll('.delete-schema').forEach(link => {
@@ -108,7 +108,17 @@ const loadSchemas = async () => {
             document.getElementById('searchInput').addEventListener('input', filterSchemas);
         })
         .catch(error => {
-            console.error('Error fetching schemas:', error);
+            // Optionally displays an error message to the user
+        const alertContainer = document.getElementById('alertContainer');
+        const alertHtml = `
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Error:</strong> Failed to load data.
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+        `;
+        alertContainer.innerHTML = alertHtml;
         });
 }
 

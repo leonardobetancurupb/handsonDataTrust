@@ -9,7 +9,7 @@ urlpatterns = [
     path('select_dataset/<id>', views.select_dataset, name='select_dataset'),
     path('select_dataset_activated/<id>', views.select_dataset_activated, name='select_dataset_activated'),
     path('view_datasets/', views.view_dataset, name='view_datasets'),
-    
+    path('about_consumer/', views.about, name='about_consumer'),
 ]
 
 

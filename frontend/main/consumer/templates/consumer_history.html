@@ -8,32 +8,31 @@
 
     {% load static %}
 
-    
-    {% comment %} <a href={% url 'consumer:info' %}>Home</a>
-    <a href={% url 'consumer:view_datasets' %}>Datasets</a>
-    <a href={% url 'consumer:consumer_history' %}>Projects</a>
-    <a href={% url 'accounts:settings' %}>Settings</a> {% endcomment %}
 
     <div class="row w-100 ml-4 mt-2 justify-content-between">
         <div class="col-sm-2 shadow-sm p-1 border border-1">
             <div class="nav flex-column nav-pills text-center mt-4" id="v-pills-tab" role="tablist" aria-orientation="vertical">
                 <ul class="list-group ml-0">
                     <li class="list-group-item list-group-item-action ">
-                        <a href={% url 'consumer:info' %}>Home</a>
+                        <a class="text-danger" href={% url 'consumer:info' %}>Home</a>
                     </li >
                     <li class="list-group-item list-group-item-action ">
-                        <a href={% url 'consumer:view_datasets' %}>Datasets</a>
+                        <a class="text-danger" href={% url 'consumer:view_datasets' %}>Datasets</a>
                     </li>
                     <li class="list-group-item list-group-item-action ">
-                        <a href={% url 'consumer:consumer_history' %}>Projects</a>
+                        <a class="text-danger" href={% url 'consumer:consumer_history' %}>Projects</a>
                     </li>
                     <li class="list-group-item list-group-item-action ">
-                        <a href={% url 'accounts:settings' %}>Settings</a>
+                        <a class="text-danger" href={% url 'consumer:about_consumer' %}>About</a>
+                    </li>
+                    <li class="list-group-item list-group-item-action ">
+                        <a class="text-danger" href={% url 'accounts:log_out' %}>Log out</a>
                     </li>
                 </ul>
             </div>
         </div>
         <div class="col-md-9 w-100 vh-100 mt-5 mr-3 align-self-center">
+            <div id="alertContainer" class="position-absolute position-alert"></div> 
             <div class="ventana-home">
                 <div class="lap-home  p-2 border border-1">
                     <div class="form-group ">
@@ -41,32 +40,45 @@
                             Projects
                         </h3>
                         Filters
-                        <div class="d-flex justify-content-between">
-                            <input type="text" id="searchInput" class="form-control" placeholder="Search...">
-                            <input type="date" id="searchDate" class="form-control" placeholder="Search...">
+                        <div class="row form-group">
+                            <div class="col w-25">
+                                <label for="searchInput">Name:</label>
+                                <input type="text" id="searchInput" class="form-control w-100" placeholder="Search...">
+                            </div>
+                            <div class="col w-75">
+                                Range Date
+                                <div class="d-flex w-100">
+                                    <div class="col w-50">
+                                        <label for="startDate">From:</label>
+                                        <input type="date" id="startDate" class="form-control w-100" placeholder="Start Date">
+                                    </div>
+                                    <div class="col w-50">
+                                        <label for="endDate">To:</label>
+                                        <input type="date" id="endDate" class="form-control w-100" placeholder="End Date">
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="container-fluid d-flex h-75 w-100"> 
                         <div class="h-100 w-100">
                             <h6>Datasets in enviroment</h6>
-                            <div class="h-100 sensor-table w-100">
+                            <div class="h-90 sensor-table w-100">
                                 <table class="table table-hover table-sm w-100">
                                     <thead>
                                         <tr>
                                             <th>#</th>
                                             <th>Project</th>
-                                            <th>Category</th>
+                                            <th>Policy</th>
+                                            <th>Since</th>
                                             <th>Expiration</th>
+                                            <th>Cost</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody id="tableProjectsConsumers">
                                         <tr>
-                                            <td>1</td>
-                                            <td>Medical Cost Personal Data</td>
-                                            <td>Clustering</td>
-                                            <td>06/07/2025</td>
-                                            <td> <a href="{% url 'consumer:select_dataset_activated' %}"><img class="img-fluid table-icon" src={% static "assets/img/right.png" %} alt=""></a></td>
+                                            <td colspan="7">No projects found.</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -81,7 +93,7 @@
         </div>
     </div>
 
-    <script src={% static 'assets/js/manage_analitycs.js' %}></script>
+    <script src={% static 'assets/js/manage_projects_consumer.js' %}></script>
     <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
     {% else %}
     <script>
