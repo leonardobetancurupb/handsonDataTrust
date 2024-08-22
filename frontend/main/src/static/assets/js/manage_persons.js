@@ -1,13 +1,10 @@
-let myApiKey = "";
-fetch('/accounts/key/')
-    .then(response => response.json())
-    .then(data => {
-        myApiKey = data.my_api_key;
-        console.log("API Key:", myApiKey);
-    })
-    .catch(error => console.error("Error fetching config:", error));
-
-
+// Function to get key
+async function getKey() {
+    var Response = await fetch('/accounts/key/');
+    var key_json = await Response.json();
+    console.log(key_json.my_api_key);
+    return key_json.my_api_key;
+}
 
 // Function to set a cache variable
 function setCacheVariable(key_input, value_input) {
@@ -53,7 +50,7 @@ function getCookie(name) {
 function AdminFormSubmit(person) {
     console.log(person);
     const idPerson = person; // ID of the person with admin role
-
+    const myApiKey = getKey();
     const data = {
         idPerson: idPerson,
     };
@@ -80,7 +77,7 @@ function AdminFormSubmit(person) {
 function HolderFormSubmit(person) {
     console.log(person);
     const idPerson = person; // ID of the person with holder role
-
+    const myApiKey = getKey();
     const data = {
         idPerson: idPerson,
     };
@@ -110,7 +107,7 @@ function handleAdditionalFormSubmit(event, person) {
     const idPerson = person; // ID of the person with consumer role
     const company = document.getElementById('company').value;
     const nit = document.getElementById('nit').value;
-
+    const myApiKey = getKey();
     const data = {
         idPerson: idPerson,
         company: company,
@@ -138,7 +135,7 @@ function handleAdditionalFormSubmit(event, person) {
 // Function to handle registration form submission
 function submitRegisterPersonForm(event) {
     event.preventDefault(); // Prevent default form submission
-    
+    const myApiKey = getKey();
     const form = event.target; // Get the form element
     const formData = new FormData(form); // Create FormData object with form data
     
@@ -188,7 +185,7 @@ if (registerForm) {
 // Function to handle login form submission
 function submitLoginPersonForm(event) {
     event.preventDefault(); // Prevent default form submission
-    
+    const myApiKey = getKey();
     const form = event.target; // Get the form element
     const formData = new FormData(form); // Create FormData object with form data
     

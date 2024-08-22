@@ -1,13 +1,10 @@
-let myApiKey = "";
-fetch('/accounts/key/')
-    .then(response => response.json())
-    .then(data => {
-        myApiKey = data.my_api_key;
-        console.log("API Key:", myApiKey);
-    })
-    .catch(error => console.error("Error fetching config:", error));
-
-
+// Function to get key
+async function getKey() {
+    var Response = await fetch('/accounts/key/');
+    var key_json = await Response.json();
+    console.log(key_json.my_api_key);
+    return key_json.my_api_key;
+}
 
 function getIdFromUrl() {
     var urlActual = window.location.href;
@@ -25,7 +22,7 @@ async function loadCategoryOptions(selectedCategoryId) {
         method: "GET",
         headers: myHeaders,
     };
-
+    const myApiKey = getKey();
     try {
         const response = await fetch(`http://${myApiKey}:8000/category/`, requestOptions);
         const categories = await response.json();
@@ -55,7 +52,7 @@ async function loadPolicyData() {
 
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
-
+    const myApiKey = getKey();
     const requestOptions = {
         method: "GET",
         headers: myHeaders,
@@ -88,7 +85,7 @@ async function submitPolicyForm(event) {
     if (!id) return;
     const form = event.target; // get form
     const formData = new FormData(form); // create new form with data
-    
+    const myApiKey = getKey();
     // FormData to Json format
     const formDataObj = {};
     formData.forEach((value, key) => {
@@ -180,7 +177,7 @@ document.getElementById('confirmDeleteButton').addEventListener('click', functio
     const id = getIdFromUrl();
     console.log(id);
     if (!id) return;
-
+    const myApiKey = getKey();
     fetch(`/accounts/get_cache/?key=access`, {
         method: 'GET'
         })

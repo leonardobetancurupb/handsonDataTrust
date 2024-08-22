@@ -1,12 +1,10 @@
-let myApiKey = "";
-fetch('/accounts/key/')
-    .then(response => response.json())
-    .then(data => {
-        myApiKey = data.my_api_key;
-        console.log("API Key:", myApiKey);
-    })
-    .catch(error => console.error("Error fetching config:", error));
-
+// Function to get key
+async function getKey() {
+    var Response = await fetch('/accounts/key/');
+    var key_json = await Response.json();
+    console.log(key_json.my_api_key);
+    return key_json.my_api_key;
+}
 
 
 // Function to get the category ID from the URL
@@ -104,7 +102,7 @@ document.getElementById('confirmDeleteButton').addEventListener('click', functio
 const loadDatasets = async () => {
     const headers = new Headers();
     headers.append("Content-Type", "application/json");
-
+    const myApiKey = getKey();
     const requestOptions = {
         method: "GET",
         headers: headers,
