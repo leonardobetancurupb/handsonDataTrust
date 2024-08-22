@@ -30,7 +30,6 @@ The project is organized as follows:
 ### **Prerequisites**
 - **Docker**: Ensure that Docker and Docker Compose are installed.
 - **Python 3.8+**: Required to run the Django development environment and scripts.
-  
 
 ### **Setup Instructions**
 1. **Clone the repository**:
@@ -38,16 +37,13 @@ The project is organized as follows:
    git clone https://github.com/leonardobetancurupb/handsonDataTrust.git
    cd handsonDataTrust
    ```
-2. **Manual configurations**:
-   **!IMPORTANT!**
-   You need to change your IP or hostname on file 'frontend\main\src\utils\key.txt'.
 
-4. **Build and run the containers**:
+2. **Build and run the containers**:
    ```bash
    sudo docker compose up -d --build
    ```
 
-5. **Set up the environment and Scripts**:
+3. **Set up the environment and Scripts**:
    ```bash
    cd scripts
    sudo apt install python3-venv
@@ -61,7 +57,7 @@ The project is organized as follows:
    python populate_data.py
    ```
 
-6. **Access the application**:
+4. **Access the application**:
 Open your web browser and go to http://localhost:80 to see the application running.
 
 ### Contributing
@@ -76,8 +72,8 @@ We welcome contributions! If you would like to contribute to the project, please
 For questions, suggestions, or bug reports, please open an issue or contact the project maintainers.
 
 #### Authors:
-- Leonardo Bentacur  mail: leonardo.betancur@upb.edu.co
-- Jorge Mario Londono mail: jorge.londono@upb.edu.co
-- Juan Pablo Montoya mail: juanmontoyao1803@gmail.com
-- John Andersson Cardenas mail: a.cardenas.quiros@gmail.com 
-- Luisa Alvarez mail: luisa.alvabello@gmail.com
+- Leonardo Bentacur  mail: leonardo
+- Jorge Mario Londono
+- Juan Pablo Montoya
+- John Andersson Cardenas
+- Luisa Alvarez
