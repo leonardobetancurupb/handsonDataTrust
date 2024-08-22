@@ -1,4 +1,4 @@
-const myApiKey ="";
+let myApiKey = "";
 fetch('/api/config/')
     .then(response => response.json())
     .then(data => {
