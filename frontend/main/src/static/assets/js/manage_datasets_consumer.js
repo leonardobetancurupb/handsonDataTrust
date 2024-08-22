@@ -88,7 +88,7 @@ const loadDatasets = async () => {
 
     try {
         // Fetch datasets from the server
-        const datasetResponse = await fetch('http://backend:8000/api/data/', requestOptions);
+        const datasetResponse = await fetch('http://localhost:8000/api/data/', requestOptions);
         const datasets = await datasetResponse.json();
         console.log(datasets);
 
@@ -123,9 +123,9 @@ const loadDatasets = async () => {
             console.log(`Count: ${count}, Data ID: ${dataset.id}`);
 
             const [policy, schema, category] = await Promise.all([
-                fetch(`http://backend:8000/api/policy/${dataset.idPolicy}/`, requestOptions).then(res => res.json()),
-                fetch(`http://backend:8000/api/schema/${dataset.idSchema}/`, requestOptions).then(res => res.json()),
-                fetch(`http://backend:8000/api/category/${dataset.idCategory}/`, requestOptions).then(res => res.json())
+                fetch(`http://localhost:8000/api/policy/${dataset.idPolicy}/`, requestOptions).then(res => res.json()),
+                fetch(`http://localhost:8000/api/schema/${dataset.idSchema}/`, requestOptions).then(res => res.json()),
+                fetch(`http://localhost:8000/api/category/${dataset.idCategory}/`, requestOptions).then(res => res.json())
             ]);
             const cost = parseFloat(count) * parseFloat(policy.Value);
             // Build the card HTML with dataset information

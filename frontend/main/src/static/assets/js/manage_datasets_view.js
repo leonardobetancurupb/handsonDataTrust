@@ -98,7 +98,7 @@ const loadDatasets = async () => {
 
     try {
         // Fetch datasets from the server
-        const datasetResponse = await fetch('http://backend:8000/api/data/', requestOptions);
+        const datasetResponse = await fetch('http://localhost:8000/api/data/', requestOptions);
         const datasets = await datasetResponse.json();
         console.log(datasets);
 
@@ -106,7 +106,7 @@ const loadDatasets = async () => {
         const IdPerson = await getIdPersonResponse.json();
         console.log(IdPerson);
 
-        const getIdHolderResponse = await fetch(`http://backend:8000/api/holders/`, requestOptions);
+        const getIdHolderResponse = await fetch(`http://localhost:8000/api/holders/`, requestOptions);
         const IdHolder = await getIdHolderResponse.json();
         const filteredHolder = IdHolder.find(item => item.idPerson === IdPerson.value);
         console.log(filteredHolder);
@@ -119,11 +119,11 @@ const loadDatasets = async () => {
 
         // Iterate over the filtered datasets and create cards
         for (const dataset of filteredData) {
-            const policyResponse = await fetch(`http://backend:8000/api/policy/${dataset.idPolicy}/`, requestOptions);
+            const policyResponse = await fetch(`http://localhost:8000/api/policy/${dataset.idPolicy}/`, requestOptions);
             const policy = await policyResponse.json();
-            const schemaResponse = await fetch(`http://backend:8000/api/schema/${dataset.idSchema}/`, requestOptions);
+            const schemaResponse = await fetch(`http://localhost:8000/api/schema/${dataset.idSchema}/`, requestOptions);
             const schema = await schemaResponse.json();
-            const categoryResponse = await fetch(`http://backend:8000/api/category/${dataset.idCategory}/`, requestOptions);
+            const categoryResponse = await fetch(`http://localhost:8000/api/category/${dataset.idCategory}/`, requestOptions);
             const category = await categoryResponse.json();
 
             const schemaName = schema.name.replace(/_/g, " ");
@@ -141,7 +141,7 @@ const loadDatasets = async () => {
                                 <a href="../dataset_selected/${dataset.id}" class="btn btn-success">Select</a>
                                 <div>
                                     <a href='../edit_datasets/${dataset.id}' class="mr-1"><img src='/static/assets/img/edit.png' alt="Edit"></a>
-                                    <a href="#" data-url="http://backend:8000/data/${dataset.id}/" class="mr-1 delete-dataset">
+                                    <a href="#" data-url="http://localhost:8000/data/${dataset.id}/" class="mr-1 delete-dataset">
                                         <img src='/static/assets/img/delete.png' alt="Delete">
                                     </a>
                                 </div>

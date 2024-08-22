@@ -131,7 +131,6 @@ def get_all_types():
   return data
 
 print(get_all_types())
-print(requests.request("GET", "http://backend:8000/api/registers/", headers={}, data=""))
 
 def get_user_consumers(user):
 

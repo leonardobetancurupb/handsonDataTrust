@@ -29,7 +29,7 @@ function filterDatasets() {
 document.addEventListener("DOMContentLoaded", function() {
     const fetchUsers = async () => {
         try {
-            const response = await fetch("http://backend:8000/api/registers/", { method: 'GET'});
+            const response = await fetch("http://localhost:8000/api/registers/", { method: 'GET'});
             const jsonData = await response.json();
             const logsTableBody = document.querySelector("#TableUsers");
 
