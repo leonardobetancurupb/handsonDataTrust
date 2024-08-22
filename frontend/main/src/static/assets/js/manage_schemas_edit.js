@@ -1,12 +1,10 @@
-let myApiKey = "";
-fetch('/accounts/key/')
-    .then(response => response.json())
-    .then(data => {
-        myApiKey = data.my_api_key;
-        console.log("API Key:", myApiKey);
-    })
-    .catch(error => console.error("Error fetching config:", error));
-
+// Function to get key
+async function getKey() {
+    var Response = await fetch('/accounts/key/');
+    var key_json = await Response.json();
+    console.log(key_json.my_api_key);
+    return key_json.my_api_key;
+}
 // module to get url
 function getIdFromUrl() {
     var urlActual = window.location.href;
@@ -23,7 +21,7 @@ async function loadSchemaData() {
     const id = getIdFromUrl();
     console.log(id);
     if (!id) return;
-
+    const myApiKey = getKey();
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
@@ -83,6 +81,7 @@ async function submitSchemaForm(event) {
     const id = getIdFromUrl();
     console.log(id);
     if (!id) return;
+    const myApiKey = getKey();
     const form = event.target; // get form
     const formData = new FormData(form); // create new form with data
     
@@ -200,7 +199,7 @@ document.getElementById('confirmDeleteButton').addEventListener('click', functio
     const id = getIdFromUrl();
     console.log(id);
     if (!id) return;
-
+    const myApiKey = getKey();
     fetch(`/accounts/get_cache/?key=access`, {
         method: 'GET'
         })

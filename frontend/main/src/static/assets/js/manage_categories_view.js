@@ -1,15 +1,10 @@
-
-
-let myApiKey = "";
-fetch('/accounts/key/')
-    .then(response => response.json())
-    .then(data => {
-        myApiKey = data.my_api_key;
-        console.log("API Key:", myApiKey);
-    })
-    .catch(error => console.error("Error fetching config:", error));
-
-
+// Function to get key
+async function getKey() {
+    var Response = await fetch('/accounts/key/');
+    var key_json = await Response.json();
+    console.log(key_json.my_api_key);
+    return key_json.my_api_key;
+}
 
 // Filter function for category cards
 function filterCategories() {
@@ -51,6 +46,7 @@ function deleteCategory(event) {
   // Function to handle delete confirmation button click
 document.getElementById('confirmDeleteButton').addEventListener('click', function() {
     // Fetch access token
+    const myApiKey = getKey();
     fetch(`/accounts/get_cache/?key=access`, {
         method: 'GET'
         })
@@ -103,7 +99,7 @@ const loadCategories = async () => {
     // Create headers for GET request
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
-
+    const myApiKey = getKey();
     // Create request options for GET request
     const requestOptions = {
         method: "GET",
@@ -123,7 +119,7 @@ const loadCategories = async () => {
                 <div class="card border border-secondary">
                     <div class="card-body">
                     <h6 class="card-title">
-                        <strong class="btn btn-secondary mr-3" disabled><span class="math-inline">\{category\.id\}</strong\></span>{category.category}
+                        <strong class="btn btn-secondary mr-3" disabled><span class="math-inline">${category.id}</strong></span>${category.category}
                     </h6>
                     <hr>
                     <div class="d-flex justify-content-end">

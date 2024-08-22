@@ -1,12 +1,10 @@
-
-let myApiKey = "";
-fetch('/accounts/key/')
-    .then(response => response.json())
-    .then(data => {
-        myApiKey = data.my_api_key;
-        console.log("API Key:", myApiKey);
-    })
-    .catch(error => console.error("Error fetching config:", error));
+// Function to get key
+async function getKey() {
+    var Response = await fetch('/accounts/key/');
+    var key_json = await Response.json();
+    console.log(key_json.my_api_key);
+    return key_json.my_api_key;
+}
 
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -15,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function() {
 function fetchPolicies() {
     const myHeaders2 = new Headers();
     myHeaders2.append("Content-Type", "application/json");
-    
+    const myApiKey = getKey();
     const requestOptions2 = {
         method: "GET",
         headers: myHeaders2,
@@ -35,7 +33,7 @@ function fetchPolicies() {
 }
 async function submitPolicyForm(event) {
     event.preventDefault(); 
-
+    const myApiKey = getKey();
     const form = event.target; // get form
     const formData = new FormData(form); 
     

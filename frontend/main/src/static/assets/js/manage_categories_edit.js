@@ -1,12 +1,11 @@
 
-let myApiKey ="";
-fetch('/accounts/key/')
-    .then(response => response.json())
-    .then(data => {
-        myApiKey = data.my_api_key;
-        console.log("API Key:", myApiKey);
-    })
-    .catch(error => console.error("Error fetching config:", error));
+// Function to get key
+async function getKey() {
+    var Response = await fetch('/accounts/key/');
+    var key_json = await Response.json();
+    console.log(key_json.my_api_key);
+    return key_json.my_api_key;
+}
 
 
 // Function to get the category ID from the URL
@@ -23,7 +22,7 @@ function loadCategoryData() {
     const id = getIdFromUrl();
     console.log(id);
     if (!id) return; // Exit if there's no ID
-
+    const myApiKey = getKey();
     const headers = new Headers();
     headers.append("Content-Type", "application/json");
     
@@ -45,7 +44,7 @@ async function submitCategoryForm(event) {
     const id = getIdFromUrl();
     console.log(id);
     if (!id) return;
-
+    const myApiKey = getKey();
     const form = event.target; // Get the form element
     const formData = new FormData(form); // Create a FormData object
     
@@ -131,7 +130,7 @@ document.getElementById('confirmDeleteButton').addEventListener('click', functio
     const id = getIdFromUrl();
     console.log(id);
     if (!id) return;
-
+    const myApiKey = getKey();
     fetch(`/accounts/get_cache/?key=access`, { method: 'GET' })
         .then(response => response.json())
         .then(data => {

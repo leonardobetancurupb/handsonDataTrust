@@ -66,7 +66,6 @@ function deleteDataset(event) {
 document.getElementById('confirmDeleteButton').addEventListener('click', function() {
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
-
     const requestOptions = {
         method: "DELETE",
         headers: myHeaders,
@@ -86,12 +85,12 @@ document.getElementById('confirmDeleteButton').addEventListener('click', functio
             // Display an error message to the user
             const alertContainer = document.getElementById('alertContainer');
             const alertHtml = `
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <strong>Error:</strong> Failed to delete data, try again or reload this page.
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Error:</strong> Failed to delete data, try again or reload this page.
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
             `;
             alertContainer.innerHTML = alertHtml;
         });
@@ -101,6 +100,7 @@ document.getElementById('confirmDeleteButton').addEventListener('click', functio
 const loadDatasets = async () => {
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
+    const myApiKey = getKey();
 
     const requestOptions = {
         method: "GET",

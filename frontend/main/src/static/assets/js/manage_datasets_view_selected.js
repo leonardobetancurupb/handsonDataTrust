@@ -1,13 +1,10 @@
-let myApiKey = "";
-fetch('/api/config/')
-    .then(response => response.json())
-    .then(data => {
-        myApiKey = data.my_api_key;
-        console.log("API Key:", myApiKey);
-    })
-    .catch(error => console.error("Error fetching config:", error));
-
-
+// Function to get key
+async function getKey() {
+    var Response = await fetch('/accounts/key/');
+    var key_json = await Response.json();
+    console.log(key_json.my_api_key);
+    return key_json.my_api_key;
+}
 
 // Extracts the last segment of the current URL
 function getIdFromUrl() {
@@ -46,11 +43,10 @@ function findConsumerIds(data, nameSchema, idPolicy) {
 document.getElementById('confirmDeleteButton').addEventListener('click', function() {
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
-
     fetch(urlToDelete, { method: "POST", headers: myHeaders })
-        .then(response => {
-            if (response.ok) {
-                console.log("Dataset deleted successfully.");
+    .then(response => {
+        if (response.ok) {
+            console.log("Dataset deleted successfully.");
                 $('#confirmDeleteModal').modal('hide'); // Hide the confirmation modal
                 loadDatasets(); // Reload datasets
             } else {
@@ -65,7 +61,9 @@ const loadDatasets = async () => {
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
+    const myApiKey = getKey();
     try {
+
         // Fetch session data
         const sessionResponse = await fetch(`/accounts/get_cache/?key=id_session`);
         if (!sessionResponse.ok) throw new Error(`Error fetching session data: ${sessionResponse.statusText}`);

@@ -1,13 +1,10 @@
-
-let myApiKey = "";
-fetch('/accounts/key/')
-    .then(response => response.json())
-    .then(data => {
-        myApiKey = data.my_api_key;
-        console.log("API Key:", myApiKey);
-    })
-    .catch(error => console.error("Error fetching config:", error));
-
+// Function to get key
+async function getKey() {
+    var Response = await fetch('/accounts/key/');
+    var key_json = await Response.json();
+    console.log(key_json.my_api_key);
+    return key_json.my_api_key;
+}
 
 // Extracts the last segment of the current URL
 function getIdFromUrl() {
@@ -19,7 +16,7 @@ function getIdFromUrl() {
 // Handles form submission to fetch and process data
 function submitSignForm(event) {
     event.preventDefault(); // Prevents the default form submission
-
+    const myApiKey = getKey();
     fetch(`/accounts/get_cache/?key=access`, { method: 'GET' })
         .then(response => response.json())
         .then(async data => {
@@ -85,7 +82,7 @@ const loadDatasets = async () => {
         method: "GET",
         headers: headers
     };
-
+    const myApiKey = getKey();
     try {
         // Fetch datasets
         const response = await fetch(`http://${myApiKey}:8000/api/data/`, requestOptions);

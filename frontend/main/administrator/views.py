@@ -55,8 +55,8 @@ def menu(request):
     # Define the context for the template
     context = {
         'token': variable_value,
-        'total_money_paid': total_money_paid,
-        'total_20_percent': total_20_percent
+        'total_money_paid': round(total_money_paid, 2),
+        'total_20_percent': round(total_20_percent, 2)
     }
     # Render the template with the context
     return render(request, template_name, context)
