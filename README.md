@@ -30,6 +30,7 @@ The project is organized as follows:
 ### **Prerequisites**
 - **Docker**: Ensure that Docker and Docker Compose are installed.
 - **Python 3.8+**: Required to run the Django development environment and scripts.
+  
 
 ### **Setup Instructions**
 1. **Clone the repository**:
@@ -37,13 +38,16 @@ The project is organized as follows:
    git clone https://github.com/leonardobetancurupb/handsonDataTrust.git
    cd handsonDataTrust
    ```
+2. **Manual configurations**:
+   **!IMPORTANT!**
+   You need to change your IP or hostname on file 'frontend\main\src\utils\key.txt'.
 
-2. **Build and run the containers**:
+4. **Build and run the containers**:
    ```bash
    sudo docker compose up -d --build
    ```
 
-3. **Set up the environment and Scripts**:
+5. **Set up the environment and Scripts**:
    ```bash
    cd scripts
    sudo apt install python3-venv
@@ -57,7 +61,7 @@ The project is organized as follows:
    python populate_data.py
    ```
 
-4. **Access the application**:
+6. **Access the application**:
 Open your web browser and go to http://localhost:80 to see the application running.
 
 ### Contributing
