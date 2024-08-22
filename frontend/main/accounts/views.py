@@ -77,3 +77,9 @@ def get_cache_variable(request):
         variable_value = cache.get(variable_name, 'Variable not found')
         return JsonResponse({'key': variable_name, 'value': variable_value})
     return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
+
+def key(request):
+    context = {
+        'API_KEY': settings.MY_API_KEY,
+    }
+    return render(request, 'my_template.html', context)

@@ -1,3 +1,14 @@
+
+const myApiKey ="";
+fetch('/accounts/key/')
+    .then(response => response.json())
+    .then(data => {
+        myApiKey = data.my_api_key;
+        console.log("API Key:", myApiKey);
+    })
+    .catch(error => console.error("Error fetching config:", error));
+
+
 // Function to filter policies based on search input and date range
 function filterPolicies() {
     const searchInput = document.getElementById('searchInput').value.toLowerCase();
@@ -88,7 +99,7 @@ const loadPolicies = async () => {
 
     try {
         // Fetch policies from the server
-        const policyResponse = await fetch('http://localhost:8000/api/policy/', requestOptions);
+        const policyResponse = await fetch(`http://${myApiKey}:8000/api/policy/`, requestOptions);
         const policies = await policyResponse.json();
         console.log(policies);
 
@@ -98,7 +109,7 @@ const loadPolicies = async () => {
 
         // Iterate over each policy and fetch the corresponding category
         for (const policy of policies) {
-            const categoryResponse = await fetch(`http://localhost:8000/api/category/${policy.idCategory}/`, requestOptions);
+            const categoryResponse = await fetch(`http://${myApiKey}:8000/api/category/${policy.idCategory}/`, requestOptions);
             const category = await categoryResponse.json();
 
             // Build the HTML for the card
@@ -123,7 +134,7 @@ const loadPolicies = async () => {
                                     <img src='/static/assets/img/edit.png' class="table-icon" alt="">
                                     Edit
                                 </a>
-                                <a href="#" data-url="http://localhost:8000/api/policy/${policy.id}/" class="btn btn-light btn-sm border border-secondary mr-3 h-25 delete-policy">
+                                <a href="#" data-url="http://${myApiKey}:8000/api/policy/${policy.id}/" class="btn btn-light btn-sm border border-secondary mr-3 h-25 delete-policy">
                                     <img src='/static/assets/img/delete.png' class="table-icon" alt="">
                                     Delete
                                 </a>                                    

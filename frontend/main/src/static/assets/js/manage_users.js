@@ -1,3 +1,13 @@
+const myApiKey ="";
+fetch('/accounts/key/')
+    .then(response => response.json())
+    .then(data => {
+        myApiKey = data.my_api_key;
+        console.log("API Key:", myApiKey);
+    })
+    .catch(error => console.error("Error fetching config:", error));
+
+
 
 function filterDatasets() {
     const searchInput = document.getElementById('searchInput').value.toLowerCase();
@@ -29,7 +39,7 @@ function filterDatasets() {
 document.addEventListener("DOMContentLoaded", function() {
     const fetchUsers = async () => {
         try {
-            const response = await fetch("http://localhost:8000/api/registers/", { method: 'GET'});
+            const response = await fetch(`http://${myApiKey}:8000/api/registers/`, { method: 'GET'});
             const jsonData = await response.json();
             const logsTableBody = document.querySelector("#TableUsers");
 

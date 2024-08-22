@@ -1,3 +1,13 @@
+const myApiKey ="";
+fetch('/accounts/key/')
+    .then(response => response.json())
+    .then(data => {
+        myApiKey = data.my_api_key;
+        console.log("API Key:", myApiKey);
+    })
+    .catch(error => console.error("Error fetching config:", error));
+
+ 
  // filter
 function filterSchemas() {
     const searchInput = document.getElementById('searchInput').value.toLowerCase();
@@ -70,7 +80,7 @@ const loadSchemas = async () => {
         headers: myHeaders,
     };
 
-    fetch('http://localhost:8000/api/schema/', requestOptions)
+    fetch(`http://${myApiKey}:8000/api/schema/`, requestOptions)
         .then(response => response.json())
         .then(data => {
             const cardContainer = document.getElementById('cardContainerSchemas');
@@ -90,7 +100,7 @@ const loadSchemas = async () => {
                                     <img src='/static/assets/img/edit.png' class="table-icon" alt="">
                                     Edit
                                 </a>
-                                <a href="#" data-url="http://localhost:8000/schema/${schema.id}/" class="btn btn-light btn-sm border border-secondary mr-3 h-25 delete-schema">
+                                <a href="#" data-url="http://${myApiKey}:8000/schema/${schema.id}/" class="btn btn-light btn-sm border border-secondary mr-3 h-25 delete-schema">
                                     <img src='/static/assets/img/delete.png'  class="table-icon" alt="">
                                     Delete
                                 </a>                                    

@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.core.cache import cache
 from django.shortcuts import redirect
 import requests
+from django.conf import settings
 
 # Renders the main page (home.html) and passes the access token from the cache.
 def menu(request):
@@ -12,7 +13,7 @@ def menu(request):
     # Retrieves the user ID from the cache.
     id_user = cache.get('id_session')
     # Defines the URL to fetch holders.
-    url = "http://localhost:8000/api/holders/"
+    url = "http://{settings.MY_API_KEY}:8000/api/holders/"
     payload = ""
     headers = {}
     # Makes a GET request to fetch holders.
@@ -38,7 +39,7 @@ def register_datasets(request):
     # Retrieves the user ID from the cache.
     id_user = cache.get('id_session')
     # Defines the URL to fetch holders.
-    url = "http://localhost:8000/api/holders/"
+    url = "http://{settings.MY_API_KEY}:8000/api/holders/"
     payload = ""
     headers = {}
     # Makes a GET request to fetch holders.
@@ -52,7 +53,7 @@ def register_datasets(request):
         # Gets the file sent in the form.
         archivo = request.FILES['archivo']
         # Defines the URL to send the file.
-        url_file = f"http://localhost:8000/saveData/holder/{data['id']}/"
+        url_file = f"http://{settings.MY_API_KEY}:8000/saveData/holder/{data['id']}/"
         files = {'archivo': archivo}
         # Makes a POST request to send the file.
         response = requests.request("POST", url_file, headers=headers, files=files)
@@ -85,8 +86,8 @@ def dataset_selected(request, id):
     # Retrieves the user ID from the cache.
     id_user = cache.get('id_session')
     # Defines the URLs to fetch holders and datasets.
-    url = "http://localhost:8000/api/holders/"
-    url_data = "http://localhost:8000/data/"
+    url = "http://{settings.MY_API_KEY}:8000/api/holders/"
+    url_data = "http://{settings.MY_API_KEY}:8000/data/"
     payload = ""
     headers = {}
     
@@ -120,8 +121,8 @@ def edit_datasets(request, id):
     # Retrieves the user ID from the cache.
     id_user = cache.get('id_session')
     # Defines the URLs to fetch holders and datasets.
-    url = "http://localhost:8000/api/holders/"
-    url_data = "http://localhost:8000/data/"
+    url = "http://{settings.MY_API_KEY}:8000/api/holders/"
+    url_data = "http://{settings.MY_API_KEY}:8000/data/"
     payload = ""
     headers = {}
     
@@ -143,7 +144,7 @@ def edit_datasets(request, id):
         # Gets the file sent in the form.
         archivo = request.FILES['archivo']
         # Defines the URL to send the updated file.
-        url_file = f"http://localhost:8000/updateData/{dataset['id']}/"
+        url_file = f"http://{settings.MY_API_KEY}:8000/updateData/{dataset['id']}/"
         files = {'archivo': archivo}
         # Makes a POST request to send the updated file.
         response = requests.request("POST", url_file, headers=headers, files=files)

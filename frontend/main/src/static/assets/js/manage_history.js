@@ -1,3 +1,14 @@
+const myApiKey ="";
+fetch('/accounts/key/')
+    .then(response => response.json())
+    .then(data => {
+        myApiKey = data.my_api_key;
+        console.log("API Key:", myApiKey);
+    })
+    .catch(error => console.error("Error fetching config:", error));
+
+
+
 document.addEventListener("DOMContentLoaded", function() {
     const fetchLogs = async () => {
         try {

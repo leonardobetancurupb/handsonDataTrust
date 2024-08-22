@@ -1,3 +1,14 @@
+const myApiKey ="";
+fetch('/accounts/key/')
+    .then(response => response.json())
+    .then(data => {
+        myApiKey = data.my_api_key;
+        console.log("API Key:", myApiKey);
+    })
+    .catch(error => console.error("Error fetching config:", error));
+
+
+
 // Function to set a cache variable
 function setCacheVariable(key_input, value_input) {
     const key = key_input;
@@ -49,7 +60,7 @@ function AdminFormSubmit(person) {
 
     console.log(JSON.stringify(data)); // Log the data being sent
 
-    fetch('http://localhost:8000/api/admin/', {
+    fetch(`http://${myApiKey}:8000/api/admin/`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -76,7 +87,7 @@ function HolderFormSubmit(person) {
 
     console.log(JSON.stringify(data)); // Log the data being sent
 
-    fetch('http://localhost:8000/api/holders/', {
+    fetch(`http://${myApiKey}:8000/api/holders/`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -108,7 +119,7 @@ function handleAdditionalFormSubmit(event, person) {
 
     console.log(JSON.stringify(data)); // Log the data being sent
 
-    fetch('http://localhost:8000/api/consumers/', {
+    fetch(`http://${myApiKey}:8000/api/consumers/`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -148,7 +159,7 @@ function submitRegisterPersonForm(event) {
     };
 
     // Send POST request to the server
-    fetch("http://localhost:8000/api/registers/", requestOptions)
+    fetch(`http://${myApiKey}:8000/api/registers/`, requestOptions)
         .then(response => response.json())
         .then(result => {
             if (formDataObj['role'] === 'consumer') {
@@ -198,7 +209,7 @@ function submitLoginPersonForm(event) {
     };
     
     // Send POST request to the server
-    fetch("http://localhost:8000/login/", requestOptions)
+    fetch(`http://${myApiKey}:8000/login/`, requestOptions)
         .then(response => response.json())
         .then(async result => {
             console.log(result); // Log the server response
@@ -216,7 +227,7 @@ function submitLoginPersonForm(event) {
                 getCacheVariable('id_session');
 
                 // Fetch person details
-                const PersonResponse = await fetch(`http://localhost:8000/api/registers/${result.id}/`, {method: "GET"});
+                const PersonResponse = await fetch(`http://${myApiKey}:8000/api/registers/${result.id}/`, {method: "GET"});
                 const person = await PersonResponse.json();
                 
                 // Redirect based on the role of the person

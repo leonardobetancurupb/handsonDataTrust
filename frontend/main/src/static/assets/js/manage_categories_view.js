@@ -1,3 +1,16 @@
+
+
+const myApiKey ="";
+fetch('/accounts/key/')
+    .then(response => response.json())
+    .then(data => {
+        myApiKey = data.my_api_key;
+        console.log("API Key:", myApiKey);
+    })
+    .catch(error => console.error("Error fetching config:", error));
+
+
+
 // Filter function for category cards
 function filterCategories() {
     // Get the search input value in lowercase
@@ -97,7 +110,7 @@ const loadCategories = async () => {
         headers: myHeaders,
     };
     // Send GET request to fetch categories
-    fetch('http://localhost:8000/api/category/', requestOptions)
+    fetch(`http://${myApiKey}:8000/api/category/`, requestOptions)
         .then(response => response.json())
         .then(data => {
             const cardContainer = document.getElementById('cardContainerCategories');
@@ -118,7 +131,7 @@ const loadCategories = async () => {
                         <img src='/static/assets/img/edit.png' class="table-icon" alt="">
                         Edit
                     </a>
-                    <a href="#" data-url="http://localhost:8000/api/category/${category.id}/" class="btn btn-light btn-sm border border-secondary mr-3 h-25 delete-category">
+                    <a href="#" data-url="http://${myApiKey}:8000/api/category/${category.id}/" class="btn btn-light btn-sm border border-secondary mr-3 h-25 delete-category">
                         <img src='/static/assets/img/delete.png' class="table-icon" alt="">
                         Delete
                     </a>

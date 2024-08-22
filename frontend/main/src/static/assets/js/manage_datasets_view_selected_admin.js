@@ -1,3 +1,15 @@
+
+const myApiKey ="";
+fetch('/accounts/key/')
+    .then(response => response.json())
+    .then(data => {
+        myApiKey = data.my_api_key;
+        console.log("API Key:", myApiKey);
+    })
+    .catch(error => console.error("Error fetching config:", error));
+
+
+
 // Retrieves the dataset ID from the current URL
 function getIdFromUrl() {
     const url = window.location.href;
@@ -55,7 +67,7 @@ const loadDatasets = async () => {
 
     try {
         // Fetch datasets from server
-        const response = await fetch('http://localhost:8000/api/data/', requestOptions);
+        const response = await fetch(`http://${myApiKey}:8000/api/data/`, requestOptions);
         const datasets = await response.json();
         console.log(datasets);
 
@@ -103,9 +115,9 @@ const loadDatasets = async () => {
 
             // Fetch policy, schema, and category details
             const [policyResponse, schemaResponse, categoryResponse] = await Promise.all([
-                fetch(`http://localhost:8000/api/policy/${data.idPolicy}/`, requestOptions),
-                fetch(`http://localhost:8000/api/schema/${data.idSchema}/`, requestOptions),
-                fetch(`http://localhost:8000/api/category/${data.idCategory}/`, requestOptions)
+                fetch(`http://${myApiKey}:8000/api/policy/${data.idPolicy}/`, requestOptions),
+                fetch(`http://${myApiKey}:8000/api/schema/${data.idSchema}/`, requestOptions),
+                fetch(`http://${myApiKey}:8000/api/category/${data.idCategory}/`, requestOptions)
             ]);
 
             const [policy, schema, category] = await Promise.all([

@@ -1,3 +1,14 @@
+const myApiKey ="";
+fetch('/accounts/key/')
+    .then(response => response.json())
+    .then(data => {
+        myApiKey = data.my_api_key;
+        console.log("API Key:", myApiKey);
+    })
+    .catch(error => console.error("Error fetching config:", error));
+
+
+
 // Function to get the category ID from the URL
 function getIdFromUrl() {
     var currentUrl = window.location.href; // Use a more descriptive variable name
@@ -101,7 +112,7 @@ const loadDatasets = async () => {
 
     try {
         // Make a GET request to the server to get the datasets
-        const datasetResponse = await fetch('http://localhost:8000/api/data/', requestOptions);
+        const datasetResponse = await fetch(`http://${myApiKey}:8000/api/data/`, requestOptions);
         const datasets = await datasetResponse.json();
         console.log(datasets);
         
@@ -140,11 +151,11 @@ const loadDatasets = async () => {
             console.log(`Count: ${count}, Data ID: ${dataset.id}`);
 
             // Get the corresponding category
-            const policyResponse = await fetch(`http://localhost:8000/api/policy/${dataset.idPolicy}/`, requestOptions);
+            const policyResponse = await fetch(`http://${myApiKey}:8000/api/policy/${dataset.idPolicy}/`, requestOptions);
             const policy = await policyResponse.json();
-            const schemaResponse = await fetch(`http://localhost:8000/api/schema/${dataset.idSchema}/`, requestOptions);
+            const schemaResponse = await fetch(`http://${myApiKey}:8000/api/schema/${dataset.idSchema}/`, requestOptions);
             const schema = await schemaResponse.json();
-            const categoryResponse = await fetch(`http://localhost:8000/api/category/${dataset.idCategory}/`, requestOptions);
+            const categoryResponse = await fetch(`http://${myApiKey}:8000/api/category/${dataset.idCategory}/`, requestOptions);
             const category = await categoryResponse.json();
 
             // Build the HTML for the card with the dataset information

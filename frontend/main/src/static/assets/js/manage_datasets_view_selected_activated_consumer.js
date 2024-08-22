@@ -1,3 +1,14 @@
+const myApiKey ="";
+fetch('/accounts/key/')
+    .then(response => response.json())
+    .then(data => {
+        myApiKey = data.my_api_key;
+        console.log("API Key:", myApiKey);
+    })
+    .catch(error => console.error("Error fetching config:", error));
+
+
+
 // Function to get the ID from the current URL
 function getIdFromUrl() {
     // Get the current URL
@@ -27,18 +38,18 @@ function submitSignForm(event) {
                 console.log(sessionResult);
 
                 // Fetch consumers and filter by session ID
-                const consumersResponse = await fetch(`http://localhost:8000/api/consumers/`, { method: 'GET' });
+                const consumersResponse = await fetch(`http://${myApiKey}:8000/api/consumers/`, { method: 'GET' });
                 const consumers = await consumersResponse.json();
                 const filteredConsumers = consumers.filter(item => item.idPerson === sessionResult.value);
                 console.log(filteredConsumers[0].id);
 
                 // Fetch data details
-                const dataResponse = await fetch(`http://localhost:8000/api/data/${getIdFromUrl()}/`, { method: 'GET' });
+                const dataResponse = await fetch(`http://${myApiKey}:8000/api/data/${getIdFromUrl()}/`, { method: 'GET' });
                 const dataResult = await dataResponse.json();
                 console.log(dataResult.idSchema);
 
                 // Fetch all datasets
-                const datasetsResponse = await fetch('http://localhost:8000/api/data/', { method: 'GET' });
+                const datasetsResponse = await fetch(`http://${myApiKey}:8000/api/data/`, { method: 'GET' });
                 const datasets = await datasetsResponse.json();
                 console.log(datasets);
 
@@ -62,7 +73,7 @@ function submitSignForm(event) {
                 console.log(requestOptions);
 
                 // Send POST request to sign the datasets
-                fetch("http://localhost:8000/sign/", requestOptions)
+                fetch(`http://${myApiKey}:8000/sign/`, requestOptions)
                     .then(response => response.text())
                     .then(result => {
                         console.log(result);
@@ -93,7 +104,7 @@ const loadDatasets = async () => {
 
     try {
         // Fetch all datasets
-        const datasetResponse = await fetch('http://localhost:8000/api/data/', requestOptions);
+        const datasetResponse = await fetch(`http://${myApiKey}:8000/api/data/`, requestOptions);
         if (!datasetResponse.ok) throw new Error(`Error fetching datasets: ${datasetResponse.statusText}`);
         const datasets = await datasetResponse.json();
         console.log(datasets);
@@ -105,7 +116,7 @@ const loadDatasets = async () => {
         console.log(sessionResult);
 
         // Fetch consumers and filter by session ID
-        const consumersResponse = await fetch(`http://localhost:8000/api/consumers/`, { method: 'GET' });
+        const consumersResponse = await fetch(`http://${myApiKey}:8000/api/consumers/`, { method: 'GET' });
         if (!consumersResponse.ok) throw new Error(`Error fetching consumers: ${consumersResponse.statusText}`);
         const consumers = await consumersResponse.json();
         const filteredConsumers = consumers.filter(item => item.idPerson === sessionResult.value);
@@ -167,11 +178,11 @@ const loadDatasets = async () => {
             console.log(`Count: ${count}, Data ID: ${dataset.id}`);
 
             // Fetch category and policy details
-            const policyResponse = await fetch(`http://localhost:8000/api/policy/${dataset.idPolicy}/`, requestOptions);
+            const policyResponse = await fetch(`http://${myApiKey}:8000/api/policy/${dataset.idPolicy}/`, requestOptions);
             const policy = await policyResponse.json();
-            const schemaResponse = await fetch(`http://localhost:8000/api/schema/${dataset.idSchema}/`, requestOptions);
+            const schemaResponse = await fetch(`http://${myApiKey}:8000/api/schema/${dataset.idSchema}/`, requestOptions);
             const schema = await schemaResponse.json();
-            const categoryResponse = await fetch(`http://localhost:8000/api/category/${dataset.idCategory}/`, requestOptions);
+            const categoryResponse = await fetch(`http://${myApiKey}:8000/api/category/${dataset.idCategory}/`, requestOptions);
             const category = await categoryResponse.json();
 
             // Card HTML

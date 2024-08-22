@@ -7,13 +7,14 @@ from django.contrib.auth import get_user_model
 from django.views.decorators.http import require_http_methods
 from django.middleware.csrf import get_token
 from django.core.cache import cache
+from django.conf import settings
 
 # Create your views here.
 def menu(request):
     template_name = 'menu.html'
     variable_value = cache.get('access', 'Variable not found')
-    url = "http://localhost:8000/api/policy/"
-    url2 = "http://localhost:8000/api/consumers/"
+    url = "http://{settings.MY_API_KEY}:8000/api/policy/"
+    url2 = "http://{settings.MY_API_KEY}:8000/api/consumers/"
     headers = {}
     payload = ""
     response2 = requests.get(url2, headers=headers, data=payload)

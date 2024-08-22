@@ -1,4 +1,13 @@
 
+const myApiKey = "";
+fetch('/accounts/key/')
+    .then(response => response.json())
+    .then(data => {
+        myApiKey = data.my_api_key;
+        console.log("API Key:", myApiKey);
+    })
+    .catch(error => console.error("Error fetching config:", error));
+
 // Finds consumer IDs based on schema name and policy ID
 function findConsumerIds(data) {
     const consumerIds = [];
@@ -30,7 +39,7 @@ const loadMoney = async () => {
         const result = await postResponse.json();
         console.log(result);
 
-        const getHoldersResponse = await fetch(`http://localhost:8000/api/holders/`, { method: 'GET' });
+        const getHoldersResponse = await fetch(`http://${myApiKey}:8000/api/holders/`, { method: 'GET' });
         if (!getHoldersResponse.ok) throw new Error(`Error fetching holders: ${getHoldersResponse.statusText}`);
         const resultHolders = await getHoldersResponse.json();
         const filteredHolderss = resultHolders.filter(item => item.idPerson === result.value);
@@ -38,7 +47,7 @@ const loadMoney = async () => {
         
         groupedData=filteredHolderss[0].authorization;
 
-        const policyResponse = await fetch(`http://localhost:8000/api/policy/`, requestOptions);
+        const policyResponse = await fetch(`http://${myApiKey}:8000/api/policy/`, requestOptions);
         if (!policyResponse.ok) throw new Error(`Error fetching policy: ${policyResponse.statusText}`);
         const policies = await policyResponse.json();
 
@@ -78,7 +87,7 @@ const loadMoney = async () => {
             tableContainer_consumption.innerHTML = `<tr><td colspan="4">No consumers found.</td></tr>`;
         } else {
             for (const id of consumerIds) {
-                const consumerResponse = await fetch(`http://localhost:8000/api/consumers/${id}/`);
+                const consumerResponse = await fetch(`http://${myApiKey}:8000/api/consumers/${id}/`);
                 if (!consumerResponse.ok) throw new Error(`Error fetching consumer: ${consumerResponse.statusText}`);
                 const consumer = await consumerResponse.json();
                 tableContainer_consumption.innerHTML += `
