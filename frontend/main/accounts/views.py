@@ -79,7 +79,6 @@ def get_cache_variable(request):
     return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
 
 def key(request):
-    context = {
-        'API_KEY': settings.MY_API_KEY,
-    }
-    return render(request, 'my_template.html', context)
+    return JsonResponse({
+        'my_api_key': settings.MY_API_KEY,
+    })
