@@ -36,10 +36,10 @@ document.getElementById('idSchema').addEventListener('change', function() {
 
     if (select.value) {
         button.disabled = false;
-        buttonExport.disabled = false; // Habilita el botón si se selecciona una opción
+        buttonExport.disabled = false; 
         
     } else {
-        button.disabled = true; // Deshabilita el botón si no hay ninguna opción seleccionada
+        button.disabled = true; 
         buttonExport.disabled = true;
     }
 });
@@ -63,6 +63,8 @@ async function fetchDatasets() {
         headers: myHeaders2,
     };
 
+    var select = document.getElementById('idSchema');
+    select_value_schema = select.value;
     try{
 
     
@@ -78,40 +80,42 @@ async function fetchDatasets() {
                 // Update modals
                 const newName = schema.name.replace(/_/g, " ");
                 const structure = schema.structure.replace(/\s/g, ", ");
-        
-                const modalSchemaContainer = document.getElementById('myModal');
-                modalSchemaContainer.innerHTML = `
-                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-                        <div class="modal-content h-100">
-                            <div class="modal-header">
-                                <div>
-                                    <h4 class="modal-title">Information Schema</h4>
-                                    ${newName}
+                if(schema.id===select_value_schema){
+                    const modalSchemaContainer = document.getElementById('myModal');
+                    modalSchemaContainer.innerHTML = `
+                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                            <div class="modal-content h-100">
+                                <div class="modal-header">
+                                    <div>
+                                        <h4 class="modal-title">Information Schema</h4>
+                                        ${newName}
+                                    </div>
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
                                 </div>
-                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            </div>
-                            <div class="modal-body">
-                                <div id="home" class="container"><br>
-                                    <p>ID: ${schema.id}<br><strong>Summary</strong><hr>
-                                    <ul>
-                                        <li><strong>Description</strong> ${schema.description}</li>
-                                        <li><strong>Columns</strong> ${structure}</li>
-                                        <li><strong>Encrypted columns</strong> ${schema.fieldToEncrypt}</li>
-                                    </ul>
-                                    </p>
+                                <div class="modal-body">
+                                    <div id="home" class="container"><br>
+                                        <p>ID: ${schema.id}<br><strong>Summary</strong><hr>
+                                        <ul>
+                                            <li><strong>Description</strong> ${schema.description}</li>
+                                            <li><strong>Columns</strong> ${structure}</li>
+                                            <li><strong>Encrypted columns</strong> ${schema.fieldToEncrypt}</li>
+                                        </ul>
+                                        </p>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                `;
-
+                    `;
+                }
             });
 
         })
         .catch(error => console.error('Error fetching schemas:', error));
+
+        var select_policy = document.getElementById('idPolicy');
         fetch(`http://${myApiKey}:8000/policy/`, requestOptions2)
         .then(response => response.json())
         .then(data => {
@@ -121,34 +125,38 @@ async function fetchDatasets() {
                 option.value = policy.id;
                 option.textContent = policy.name;
                 select.appendChild(option);
-                const modalPolicyContainer = document.getElementById('ModalPolicy');
-                modalPolicyContainer.innerHTML = `
-                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-                        <div class="modal-content h-100">
-                            <div class="modal-header">
-                                <div>
-                                    <h4 class="modal-title">Information Policy</h4>
-                                    ${policy.name}
+
+                if(policy.id === select_policy.value){
+                    const modalPolicyContainer = document.getElementById('ModalPolicy');
+                    modalPolicyContainer.innerHTML = `
+                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                            <div class="modal-content h-100">
+                                <div class="modal-header">
+                                    <div>
+                                        <h4 class="modal-title">Information Policy</h4>
+                                        ${policy.name}
+                                    </div>
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
                                 </div>
-                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            </div>
-                            <div class="modal-body">
-                                <div id="home" class="container"><br>
-                                    <p>ID: ${policy.id}<br><strong>Summary</strong><hr>
-                                    <ul>
-                                        <li><strong>Description</strong> ${policy.description}</li>
-                                        <li><strong>Expiration Time</strong> ${policy.estimatedTime}</li>
-                                        <li><strong>Value</strong> $${policy.Value}</li>
-                                    </ul>
-                                    </p>
+                                <div class="modal-body">
+                                    <div id="home" class="container"><br>
+                                        <p>ID: ${policy.id}<br><strong>Summary</strong><hr>
+                                        <ul>
+                                            <li><strong>Description</strong> ${policy.description}</li>
+                                            <li><strong>Expiration Time</strong> ${policy.estimatedTime}</li>
+                                            <li><strong>Value</strong> $${policy.Value}</li>
+                                        </ul>
+                                        </p>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                `;
+                    `;
+                }
+                
             });
             
         })
