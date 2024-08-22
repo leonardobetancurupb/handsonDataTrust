@@ -4,7 +4,7 @@
 
 {% block content %}
 
-  {% if request.user.is_authenticated %}
+{% if token != "Variable not found" %}
 
     {% load static %}
 
@@ -14,100 +14,63 @@
       <div class="col-sm-2 shadow-sm p-1 border border-1">
         <div class="nav flex-column nav-pills text-center mt-4" id="v-pills-tab" role="tablist" aria-orientation="vertical">
           <ul class="list-group ml-0">
-            <li class="list-group-item list-group-item-action ">
-                <a href={% url 'holder:home' %}>Home</a>
+            <li class="list-group-item list-group-item-action text-success">
+                <a class="text-success" href={% url 'holder:home' %}>Home</a>
               </li >
               <li class="list-group-item list-group-item-action ">
-                <a href={% url 'holder:schemas_owner' %}>Datasets</a>
+                <a class="text-success" href={% url 'holder:schemas_owner' %}>Datasets</a>
               </li>
               <li class="list-group-item list-group-item-action ">
-                <a href={% url 'holder:register_datasets' %}>Create New</a>
+                <a class="text-success" href={% url 'holder:register_datasets' %}>Create New</a>
               </li>
               <li class="list-group-item list-group-item-action ">
-                <a href={% url 'accounts:settings' %}>Settings</a>
+                <a class="text-success" href={% url 'holder:about_owner' %}>About</a>
+              </li>
+              <li class="list-group-item list-group-item-action ">
+                <a class="text-success" href={% url 'accounts:log_out' %}>Log out</a>
               </li>
             </ul>
           </div>
         </div>
         <div class="col-md-9 w-100 vh-100 mt-5 mr-3 align-self-center">
+          <div id="alertContainer" class="position-absolute position-alert"></div> 
           <div class="ventana-home">
             <div class="lap-home  p-2 border border-1">
               <h3>
                 Recent Activity 
               </h3>
               <div class="container-fluid d-flex h-50">
-                <div id="main" style="width: 80%;height:250px;"></div>
-                <div class=" w-20 d-flex ">
-                  <img src={% static "assets/img/LOGO-REGULAR-LIGHT.svg" %} class="img-fluid h-50 w-100 align-self-center" alt="">
+                <div id="main" style="width: 50%;height:250px;" class="d-flex justify-content-center align-items-center"></div>
+                <div class=" w-50 d-flex ">
+                  <img src={% static "assets/img/LOGO-REGULAR-LIGHT-GREEN.svg" %} class="img-fluid h-100 w-100 align-self-center" alt="">
                 </div>
               </div>  
               <div class="h-25">
                 <h6>Consumption</h6>
-                <div class="h-100 sensor-table">
-                  <table class="table table-hover table-sm">
+                <div class="sensor-table">
+                  <table class="table  table-sm border">
                     <thead>
                       <tr>
                         <th>#</th>
-                        <th>Consumidor</th>
-                        <th>Dataset</th>
-                        <th>Since</th>
-                        <th>Actions</th>
+                        <th>Company</th>
+                        <th>NIT</th>
                       </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="tabledata">
                       <tr>
-                        <td>1</td>
-                        <td>John Doe</td>
-                        <td>21</td>
-                        <td>06/07/2024 10:54:234</td>
-                        <td> <a href="{% url 'holder:dataset_selected' %}"><img class="img-fluid table-icon" src={% static "assets/img/right.png" %} alt=""></a></td>
-                      </tr>
-                      <tr>
-                        <td>2</td>
-                        <td>Mary Smith</td>
-                        <td>22</td>
-                        <td>06/07/2024 10:58:234</td>
-                        <td> <a href="{% url 'holder:dataset_selected' %}"><img class="img-fluid table-icon" src={% static "assets/img/right.png" %} alt=""></a></td>
-                      </tr>
-                      <tr>
-                        <td>3</td>
-                        <td>July Dooley</td>
-                        <td>23</td>
-                        <td>06/07/2024 11:11:154</td>
-                        <td> <a href="{% url 'holder:dataset_selected' %}"><img class="img-fluid table-icon" src={% static "assets/img/right.png" %} alt=""></a></td>
-                      </tr>
-                      <tr>
-                        <td>3</td>
-                        <td>July Dooley</td>
-                        <td>23</td>
-                        <td>06/07/2024 11:11:154</td>
-                        <td> <a href="{% url 'holder:dataset_selected' %}"><img class="img-fluid table-icon" src={% static "assets/img/right.png" %} alt=""></a></td>
-                      </tr>
-                      <tr>
-                        <td>3</td>
-                        <td>July Dooley</td>
-                        <td>23</td>
-                        <td>06/07/2024 11:11:154</td>
-                        <td> <a href="{% url 'holder:dataset_selected' %}"><img class="img-fluid table-icon" src={% static "assets/img/right.png" %} alt=""></a></td>
-                      </tr>
-                      <tr>
-                        <td>3</td>
-                        <td>July Dooley</td>
-                        <td>23</td>
-                        <td>06/07/2024 11:11:154</td>
-                        <td> <a href="{% url 'holder:dataset_selected' %}"><img class="img-fluid table-icon" src={% static "assets/img/right.png" %} alt=""></a></td>
-                      </tr>
+                        <td colspan="4">No consumers found.</td>
+                    </tr>
                     </tbody>
                   </table>
                 </div>
               <div>
-              <button class="btn btn-primary mt-2">Datasets</button>
+                <a href={% url "holder:schemas_owner" %} class="btn btn-success mt-2">Datasets</a>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <script src={% static 'assets/js/manage_analitycs.js' %}></script>
+    <script src={% static 'assets/js/manage_analitycs_holder.js' %}></script>
     <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
   {% else %}
     <script>

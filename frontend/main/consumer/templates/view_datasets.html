@@ -4,7 +4,7 @@
 
 {% block content %}
 
-    {% if request.user.is_authenticated %}
+    {% if token != "Variable not found" %}
 
     {% load static %}
 
@@ -15,21 +15,25 @@
         <div class="nav flex-column nav-pills text-center mt-4" id="v-pills-tab" role="tablist" aria-orientation="vertical">
           <ul class="list-group ml-0">
             <li class="list-group-item list-group-item-action ">
-              <a href={% url 'consumer:info' %}>Home</a>
+              <a class="text-danger" href={% url 'consumer:info' %}>Home</a>
             </li >
             <li class="list-group-item list-group-item-action ">
-              <a href={% url 'consumer:view_datasets' %}>Datasets</a>
+              <a class="text-danger" href={% url 'consumer:view_datasets' %}>Datasets</a>
             </li>
             <li class="list-group-item list-group-item-action ">
-              <a href={% url 'consumer:consumer_history' %}>Projects</a>
+              <a class="text-danger" href={% url 'consumer:consumer_history' %}>Projects</a>
             </li>
             <li class="list-group-item list-group-item-action ">
-              <a href={% url 'accounts:settings' %}>Settings</a>
+              <a class="text-danger" href={% url 'consumer:about_consumer' %}>About</a>
+            </li>
+            <li class="list-group-item list-group-item-action ">
+              <a class="text-danger" href={% url 'accounts:log_out' %}>Log out</a>
             </li>
             </ul>
           </div>
         </div>
         <div class="col-md-9 w-100 vh-100 mt-5 mr-3 align-self-center">
+          <div id="alertContainer" class="position-absolute position-alert"></div> 
           <div class="ventana-home">
             <div class="lap-home  p-2 border border-1">
               <div class="form-group ">
@@ -37,69 +41,29 @@
                   Datasets
                 </h3>
                 Filters
-                <div class="row">
+                <div class="row form-group">
                   <div class="col w-25">
-                    <label for="searchInput" class="form-label">Category</label>
-                    <input type="text" id="searchInput" class="form-control w-100" placeholder="Search...">
+                      <label for="searchInput">Name:</label>
+                      <input type="text" id="searchInput" class="form-control w-100" placeholder="Search...">
                   </div>
-                  <div class="col w-25">
-                    <label for="searchDate" class="form-label">Expiration</label>
-                    <input type="date" id="searchDate" class="form-control  w-100" placeholder="Search...">
-                  </div>
-                  <div class="col w-25  w-100">
-                    <label for="PolicyInput" class="form-label ">Policy</label>
-                        <br>
-                        <select name="PolicyInput" id="PolicyInput" class="form-select">
-                          <!-- Opción por defecto -->
-                          <option value="" disabled selected>Select a Policy</option>
-                            <option value="Only for studies">Only for studies</option>
-                            <option value="Only for developments">Only for developments</option>
-                        </select>
-                  </div>
-                  <div class="col w-25  w-100">
-                    <label for="SchemaInput" class="form-label">Schema</label>
-                        <br>
-                        <select name="SchemaInput" id="SchemaInput" class="form-select">
-                          <!-- Opción por defecto -->
-                          <option value="" disabled selected>Select a Schema</option>
-                            <option value="Only for studies">Medical Cost Personal</option>
-                            <option value="Only for developments">Bank Personal Loan</option>
-                        </select>
+                  <div class="col w-75">
+                      Range Date
+                      <div class="d-flex w-100">
+                          <div class="col w-50">
+                              <label for="startDate">From:</label>
+                              <input type="date" id="startDate" class="form-control w-100" placeholder="Start Date">
+                          </div>
+                          <div class="col w-50">
+                              <label for="endDate">To:</label>
+                              <input type="date" id="endDate" class="form-control w-100" placeholder="End Date">
+                          </div>
+                      </div>
                   </div>
                 </div>
               </div>
             <div class="container mt-1 sensor-table">
-              <div class="row" id="cardContainer">
-                <div class="col-md-6 mb-4 card-wrapper">
-                  <div class="card">
-                    <div class="w-100 h-25 bg-secondary rounded-top d-flex justify-content-center text-light">
-                      -
-                    </div>
-                    <div class="card-body">
-                      <h5 class="card-title">Medical Cost Personal Data</h5>
-                      <h6 class="card-subtitle mb-2 text-muted btn">Clustering</h6>
-                      <p class="card-text">Expiration: 06/07/2025</p>
-                      <div class="d-flex justify-content-between">
-                        <a href="{% url 'consumer:select_dataset' %}" class="btn btn-primary">Select</a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-6 mb-4 card-wrapper">
-                  <div class="card">
-                    <div class="w-100 h-25 bg-secondary rounded-top d-flex justify-content-center text-light">
-                      -
-                    </div>
-                    <div class="card-body">
-                      <h5 class="card-title">Bank Personal Loan</h5>
-                      <h6 class="card-subtitle mb-2 text-muted btn">Machine Learning</h6>
-                      <p class="card-text">Expiration: 06/07/2025</p>
-                      <div class="d-flex justify-content-between">
-                        <a href="{% url 'consumer:select_dataset' %}" class="btn btn-primary">Select</a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+              <div class="row" id="cardContainerDatasets">
+                
               </div>
             </div>
           </div>
@@ -107,25 +71,26 @@
       </div>
 
       <!-- Modal -->
-      <div class="modal" id="staticBackdrop" >
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title">Delete</h5>
-              <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-            <div class="modal-body">
-              Are you sure to delete that datatset?
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-danger">Accept</button>
+        <div class="modal" id="confirmDeleteModal" >
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Delete</h5>
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                  Are you sure to delete it?
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-danger " id="confirmDeleteButton">Accept</button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
     </div>
-
+    <script src={% static 'assets/js/manage_datasets_consumer.js' %}></script>
       {% else %}
       <script>
         window.onload=function() {

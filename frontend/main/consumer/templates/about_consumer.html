@@ -1,0 +1,92 @@
+{% extends 'layouts/default/page.html' %}
+
+{% load i18n %}
+
+{% block content %}
+
+    {% if token != "Variable not found" %}
+
+    {% load static %}
+
+    <div class="row w-100 ml-4 mt-2 justify-content-between">
+        <div class="col-sm-2 shadow-sm p-1 border border-1">
+            <div class="nav flex-column nav-pills text-center mt-4" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                <ul class="list-group ml-0">
+                    <li class="list-group-item list-group-item-action ">
+                        <a class="text-danger" href={% url 'consumer:info' %}>Home</a>
+                    </li >
+                    <li class="list-group-item list-group-item-action ">
+                        <a class="text-danger" href={% url 'consumer:view_datasets' %}>Datasets</a>
+                    </li>
+                    <li class="list-group-item list-group-item-action ">
+                        <a class="text-danger" href={% url 'consumer:consumer_history' %}>Projects</a>
+                    </li>
+                    <li class="list-group-item list-group-item-action ">
+                        <a class="text-danger" href={% url 'consumer:about_consumer' %}>About</a>
+                    </li>
+                    <li class="list-group-item list-group-item-action ">
+                        <a class="text-danger" href={% url 'accounts:log_out' %}>Log out</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-9 w-100 vh-100 mt-5 mr-3 align-self-center">
+            <div id="alertContainer" class="position-absolute position-alert"></div> 
+            <div class="ventana-home">
+                <div class="lap-home  p-3 border border-1">
+                    <div class="d-flex justify-content-between w-100">
+                        <h3>
+                            About us
+                        </h3>
+                    </div>
+                    <p class="pl-5 pr-5 font-size-small">
+                        <strong>
+                            Data Guardian Trust
+                        </strong><br>
+                        A Data Trust is a legal entity established to manage and govern data for the benefit of a specific group of individuals, organizations, or society at large. The core idea behind a Data Trust is to provide a trusted framework where data can be managed responsibly, transparently, and fairly, ensuring that the rights and privacy expectations of individuals are respected.
+                       <br>
+                        <strong>
+                            Acknowledgements
+                        </strong><br>
+                        We would like to express our deepest gratitude to the following institutions for their support and contributions to the development of this project:
+                    </p>
+                    <div class="d-flex justify-content-around p-3"> 
+                        <img src={% static "assets/img/upb_icon.svg" %} class="img-fluid w-25" alt="">
+                        <img src={% static "assets/img/logo_minciencias.svg" %} class="img-fluid w-25" alt="">
+                        <img src={% static "assets/img/logo-CRC.svg" %} class="img-fluid w-25" alt="">
+                    </div>
+                    <p class="pl-5 pr-5 font-size-small">
+                        <strong>
+                            Authors
+                        </strong>
+                        <ul class="pl-5 pr-5 font-size-small"> 
+                            <li>
+                                Leonardo Betancur Agudelo
+                            </li>
+                            <li>
+                                Jorge Mario Londono Pelaez
+                            </li>
+                            <li>
+                                John Andersson Cardenas Quiros
+                            </li>
+                            <li>
+                                Juan Pablo Montoya Orozco
+                            </li>
+                            <li>
+                                Luisa Alvarez Bello
+                            </li>
+                        </ul>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% else %}
+    <script>
+        window.onload=function() {
+        window.location.href = "{% url 'accounts:log_in' %}";
+        }  
+    </script>
+    {% endif %}
+{% endblock %}

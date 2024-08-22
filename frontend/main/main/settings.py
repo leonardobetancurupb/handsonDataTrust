@@ -95,6 +95,14 @@ DATABASES = {
     }
 }
 
+# CACHE
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'unique-snowflake',
+    }
+}
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -115,8 +123,8 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 ENABLE_USER_ACTIVATION = False
-DISABLE_USERNAME = False
-LOGIN_VIA_EMAIL = False
+DISABLE_USERNAME = True
+LOGIN_VIA_EMAIL = True
 LOGIN_VIA_EMAIL_OR_USERNAME = False
 LOGIN_REDIRECT_URL = 'index'
 LOGIN_URL = 'accounts:log_in'
