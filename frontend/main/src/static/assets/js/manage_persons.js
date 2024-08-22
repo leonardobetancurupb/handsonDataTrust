@@ -47,10 +47,10 @@ function getCookie(name) {
 }
 
 // Function to handle form submission for admin roles
-function AdminFormSubmit(person) {
+async function AdminFormSubmit(person) {
     console.log(person);
     const idPerson = person; // ID of the person with admin role
-    const myApiKey = getKey();
+    const myApiKey = await getKey();
     const data = {
         idPerson: idPerson,
     };
@@ -74,10 +74,10 @@ function AdminFormSubmit(person) {
 }
 
 // Function to handle form submission for holder roles
-function HolderFormSubmit(person) {
+async function HolderFormSubmit(person) {
     console.log(person);
     const idPerson = person; // ID of the person with holder role
-    const myApiKey = getKey();
+    const myApiKey = await getKey();
     const data = {
         idPerson: idPerson,
     };
@@ -101,13 +101,13 @@ function HolderFormSubmit(person) {
 }
 
 // Function to handle additional form submission for consumers
-function handleAdditionalFormSubmit(event, person) {
+async function handleAdditionalFormSubmit(event, person) {
     event.preventDefault(); // Prevent default form submission
     console.log(person);
     const idPerson = person; // ID of the person with consumer role
     const company = document.getElementById('company').value;
     const nit = document.getElementById('nit').value;
-    const myApiKey = getKey();
+    const myApiKey = await getKey();
     const data = {
         idPerson: idPerson,
         company: company,
@@ -133,9 +133,9 @@ function handleAdditionalFormSubmit(event, person) {
 }
 
 // Function to handle registration form submission
-function submitRegisterPersonForm(event) {
+async function submitRegisterPersonForm(event) {
     event.preventDefault(); // Prevent default form submission
-    const myApiKey = getKey();
+    const myApiKey = await getKey();
     const form = event.target; // Get the form element
     const formData = new FormData(form); // Create FormData object with form data
     
@@ -183,9 +183,9 @@ if (registerForm) {
 }
 
 // Function to handle login form submission
-function submitLoginPersonForm(event) {
+async function submitLoginPersonForm(event) {
     event.preventDefault(); // Prevent default form submission
-    const myApiKey = getKey();
+    const myApiKey = await getKey();
     const form = event.target; // Get the form element
     const formData = new FormData(form); // Create FormData object with form data
     

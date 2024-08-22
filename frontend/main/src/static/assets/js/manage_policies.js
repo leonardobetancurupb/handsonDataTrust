@@ -10,10 +10,10 @@ async function getKey() {
 document.addEventListener("DOMContentLoaded", function() {
     fetchPolicies();
 });
-function fetchPolicies() {
+async function fetchPolicies() {
     const myHeaders2 = new Headers();
     myHeaders2.append("Content-Type", "application/json");
-    const myApiKey = getKey();
+    const myApiKey = await getKey();
     const requestOptions2 = {
         method: "GET",
         headers: myHeaders2,
@@ -33,7 +33,7 @@ function fetchPolicies() {
 }
 async function submitPolicyForm(event) {
     event.preventDefault(); 
-    const myApiKey = getKey();
+    const myApiKey = await getKey();
     const form = event.target; // get form
     const formData = new FormData(form); 
     

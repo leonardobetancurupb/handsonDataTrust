@@ -102,7 +102,7 @@ document.getElementById('confirmDeleteButton').addEventListener('click', functio
 const loadDatasets = async () => {
     const headers = new Headers();
     headers.append("Content-Type", "application/json");
-    const myApiKey = getKey();
+    const myApiKey = await getKey();
     const requestOptions = {
         method: "GET",
         headers: headers,

@@ -19,9 +19,9 @@ function getIdFromUrl() {
 }
 
 // Function to handle form submission for signing
-function submitSignForm(event) {
+async function submitSignForm(event) {
     event.preventDefault(); // Prevents the default form submission
-    const myApiKey = getKey();
+    const myApiKey = await getKey();
     // Fetch access token from the cache
     fetch(`/accounts/get_cache/?key=access`, { method: 'GET' })
         .then(response => response.json())
@@ -98,7 +98,7 @@ const loadDatasets = async () => {
         method: "GET",
         headers: headers,
     };
-    const myApiKey = getKey();
+    const myApiKey = await getKey();
     try {
         // Fetch all datasets
         const datasetResponse = await fetch(`http://${myApiKey}:8000/api/data/`, requestOptions);

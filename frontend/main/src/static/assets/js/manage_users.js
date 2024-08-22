@@ -36,7 +36,7 @@ function filterDatasets() {
 document.addEventListener("DOMContentLoaded", function() {
     const fetchUsers = async () => {
         try {
-            const myApiKey = getKey();
+            const myApiKey = await getKey();
             const response = await fetch(`http://${myApiKey}:8000/api/registers/`, { method: 'GET'});
             const jsonData = await response.json();
             const logsTableBody = document.querySelector("#TableUsers");
