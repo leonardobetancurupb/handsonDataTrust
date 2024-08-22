@@ -55,7 +55,7 @@ const loadDatasets = async () => {
 
     try {
         // Fetch datasets from server
-        const response = await fetch('http://backend:8000/api/data/', requestOptions);
+        const response = await fetch('http://localhost:8000/api/data/', requestOptions);
         const datasets = await response.json();
         console.log(datasets);
 
@@ -103,9 +103,9 @@ const loadDatasets = async () => {
 
             // Fetch policy, schema, and category details
             const [policyResponse, schemaResponse, categoryResponse] = await Promise.all([
-                fetch(`http://backend:8000/api/policy/${data.idPolicy}/`, requestOptions),
-                fetch(`http://backend:8000/api/schema/${data.idSchema}/`, requestOptions),
-                fetch(`http://backend:8000/api/category/${data.idCategory}/`, requestOptions)
+                fetch(`http://localhost:8000/api/policy/${data.idPolicy}/`, requestOptions),
+                fetch(`http://localhost:8000/api/schema/${data.idSchema}/`, requestOptions),
+                fetch(`http://localhost:8000/api/category/${data.idCategory}/`, requestOptions)
             ]);
 
             const [policy, schema, category] = await Promise.all([

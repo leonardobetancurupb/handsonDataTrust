@@ -12,8 +12,8 @@ from django.core.cache import cache
 def menu(request):
     template_name = 'menu.html'
     variable_value = cache.get('access', 'Variable not found')
-    url = "http://backend:8000/api/policy/"
-    url2 = "http://backend:8000/api/consumers/"
+    url = "http://localhost:8000/api/policy/"
+    url2 = "http://localhost:8000/api/consumers/"
     headers = {}
     payload = ""
     response2 = requests.get(url2, headers=headers, data=payload)

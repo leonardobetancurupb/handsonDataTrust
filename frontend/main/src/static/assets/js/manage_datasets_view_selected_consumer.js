@@ -18,16 +18,16 @@ function submitSignForm(event) {
                 const sessionData = await sessionResponse.json();
 
                 // Fetch consumer data
-                const consumerResponse = await fetch(`http://backend:8000/api/consumers/`, { method: 'GET' });
+                const consumerResponse = await fetch(`http://localhost:8000/api/consumers/`, { method: 'GET' });
                 const consumers = await consumerResponse.json();
                 const filteredConsumers = consumers.filter(item => item.idPerson === sessionData.value);
 
                 // Fetch dataset details
-                const datasetResponse = await fetch(`http://backend:8000/api/data/${getIdFromUrl()}/`, { method: 'GET' });
+                const datasetResponse = await fetch(`http://localhost:8000/api/data/${getIdFromUrl()}/`, { method: 'GET' });
                 const dataset = await datasetResponse.json();
 
                 // Fetch all datasets
-                const allDatasetsResponse = await fetch('http://backend:8000/api/data/', { method: 'GET' });
+                const allDatasetsResponse = await fetch('http://localhost:8000/api/data/', { method: 'GET' });
                 const allDatasets = await allDatasetsResponse.json();
 
                 // Filter datasets based on schema and policy
@@ -51,7 +51,7 @@ function submitSignForm(event) {
                 };
 
                 // Submit the POST request
-                fetch("http://backend:8000/sign/", requestOptions)
+                fetch("http://localhost:8000/sign/", requestOptions)
                     .then(response => response.text())
                     .then(result => console.log(result))
                     .catch(error => console.error('POST Error:', error));
@@ -77,7 +77,7 @@ const loadDatasets = async () => {
 
     try {
         // Fetch datasets
-        const response = await fetch('http://backend:8000/api/data/', requestOptions);
+        const response = await fetch('http://localhost:8000/api/data/', requestOptions);
         const datasets = await response.json();
 
         // Clear the card container
@@ -118,9 +118,9 @@ const loadDatasets = async () => {
 
             // Fetch policy, schema, and category details
             const [policyResponse, schemaResponse, categoryResponse] = await Promise.all([
-                fetch(`http://backend:8000/api/policy/${data.idPolicy}/`, requestOptions),
-                fetch(`http://backend:8000/api/schema/${data.idSchema}/`, requestOptions),
-                fetch(`http://backend:8000/api/category/${data.idCategory}/`, requestOptions)
+                fetch(`http://localhost:8000/api/policy/${data.idPolicy}/`, requestOptions),
+                fetch(`http://localhost:8000/api/schema/${data.idSchema}/`, requestOptions),
+                fetch(`http://localhost:8000/api/category/${data.idCategory}/`, requestOptions)
             ]);
 
             const [policy, schema, category] = await Promise.all([

@@ -49,7 +49,7 @@ async function submitSchemaForm(event) {
 
     
     // Fetch existing categories data using a GET request
-    const response = await fetch(`http://backend:8000/api/schema/`, { method: 'GET' });
+    const response = await fetch(`http://localhost:8000/api/schema/`, { method: 'GET' });
     if (!response.ok) {
         throw new Error(`Error fetching session data: ${response.statusText}`); // Better error message
     }
@@ -99,7 +99,7 @@ async function submitSchemaForm(event) {
     };
     console.log(finalJsonString);
     // Hacer la solicitud POST al servidor
-    fetch("http://backend:8000/api/schema/", requestOptions)
+    fetch("http://localhost:8000/api/schema/", requestOptions)
         .then(response => response.text())
         .then(result => {
             console.log(result);

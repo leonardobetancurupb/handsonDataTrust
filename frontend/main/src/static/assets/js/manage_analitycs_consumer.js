@@ -8,7 +8,7 @@ const loadDatasets = async () => {
     };
 
     try {
-        const datasetResponse = await fetch('http://backend:8000/api/data/', requestOptions);
+        const datasetResponse = await fetch('http://localhost:8000/api/data/', requestOptions);
         if (!datasetResponse.ok) throw new Error(`Error fetching datasets: ${datasetResponse.statusText}`);
         const datasets = await datasetResponse.json();
 
@@ -17,7 +17,7 @@ const loadDatasets = async () => {
         const result = await postResponse.json();
         console.log(result);
 
-        const getConsumerResponse = await fetch(`http://backend:8000/api/consumers/`, { method: 'GET' });
+        const getConsumerResponse = await fetch(`http://localhost:8000/api/consumers/`, { method: 'GET' });
         if (!getConsumerResponse.ok) throw new Error(`Error fetching consumers: ${getConsumerResponse.statusText}`);
         const resultConsumer = await getConsumerResponse.json();
         const filteredConsumers = resultConsumer.filter(item => item.idPerson === result.value);
@@ -75,15 +75,15 @@ const loadDatasets = async () => {
             const dataset = item.data;
             const auth = item.auth;
 
-            const policyResponse = await fetch(`http://backend:8000/api/policy/${dataset.idPolicy}/`, requestOptions);
+            const policyResponse = await fetch(`http://localhost:8000/api/policy/${dataset.idPolicy}/`, requestOptions);
             if (!policyResponse.ok) throw new Error(`Error fetching policy: ${policyResponse.statusText}`);
             const policy = await policyResponse.json();
 
-            const schemaResponse = await fetch(`http://backend:8000/api/schema/${dataset.idSchema}/`, requestOptions);
+            const schemaResponse = await fetch(`http://localhost:8000/api/schema/${dataset.idSchema}/`, requestOptions);
             if (!schemaResponse.ok) throw new Error(`Error fetching schema: ${schemaResponse.statusText}`);
             const schema = await schemaResponse.json();
 
-            const categoryResponse = await fetch(`http://backend:8000/api/category/${dataset.idCategory}/`, requestOptions);
+            const categoryResponse = await fetch(`http://localhost:8000/api/category/${dataset.idCategory}/`, requestOptions);
             if (!categoryResponse.ok) throw new Error(`Error fetching category: ${categoryResponse.statusText}`);
             const category = await categoryResponse.json();
 
