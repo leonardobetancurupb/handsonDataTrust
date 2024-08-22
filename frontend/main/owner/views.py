@@ -68,7 +68,7 @@ def register_datasets(request):
             'idPolicy':policy,
             'idSchema': schema,
             'format': format,
-            'IdCategory': category
+            'idCategory': category
         }
         # Defines the URL to send the file.
         url_file = f"http://{key}:8000/saveData/holder/{data['id']}/"
