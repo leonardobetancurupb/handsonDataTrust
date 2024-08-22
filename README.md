@@ -76,8 +76,8 @@ We welcome contributions! If you would like to contribute to the project, please
 For questions, suggestions, or bug reports, please open an issue or contact the project maintainers.
 
 #### Authors:
-- Leonardo Bentacur  mail: leonardo
-- Jorge Mario Londono
-- Juan Pablo Montoya
-- John Andersson Cardenas
-- Luisa Alvarez
+- Leonardo Bentacur  mail: leonardo.betancur@upb.edu.co
+- Jorge Mario Londono mail: jorge.londono@upb.edu.co
+- Juan Pablo Montoya mail: juanmontoyao1803@gmail.com
+- John Andersson Cardenas mail: a.cardenas.quiros@gmail.com 
+- Luisa Alvarez mail: luisa.alvabello@gmail.com
