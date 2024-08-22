@@ -10,7 +10,7 @@ from django.core.cache import cache
 from django.conf import settings
 
 
-with open('../src/utils/key.txt', 'r') as file:
+with open('/code/src/utils/key.txt', 'r') as file:
     key = file.read()
 # Create your views here.
 def menu(request):
