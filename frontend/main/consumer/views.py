@@ -2,14 +2,14 @@ import json
 from django.shortcuts import render
 from django.core.cache import cache
 import requests
-
+from django.conf import settings
 # View to render the main menu page
 def menu(request):
     template_name = 'info.html'
     # Retrieve the access token from the cache
     variable_value = cache.get('access', 'Variable not found')
     
-    url2 = "http://localhost:8000/api/consumers/"
+    url2 = "http://{settings.MY_API_KEY}:8000/api/consumers/"
     headers = {}
     payload = ""
     response2 = requests.get(url2, headers=headers, data=payload)
@@ -71,7 +71,7 @@ def select_dataset_activated(request, id):
     id_user = cache.get('id_session')
     
     # Define the API URL and headers
-    url2 = "http://localhost:8000/api/consumers/"
+    url2 = "http://{settings.MY_API_KEY}:8000/api/consumers/"
     headers = {}
     payload = ""
 
@@ -88,7 +88,7 @@ def select_dataset_activated(request, id):
     firm = sign[0] if sign else {}
     
     # Fetch the dataset from the API
-    url = f"http://localhost:8000/api/data/{firm.get('lstSignedData', [])[0]}/"
+    url = f"http://{settings.MY_API_KEY}:8000/api/data/{firm.get('lstSignedData', [])[0]}/"
     response = requests.get(url, headers=headers, data=payload)
     dataset = response.json()
     

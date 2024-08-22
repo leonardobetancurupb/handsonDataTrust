@@ -1,3 +1,14 @@
+const myApiKey ="";
+fetch('/api/config/')
+    .then(response => response.json())
+    .then(data => {
+        myApiKey = data.my_api_key;
+        console.log("API Key:", myApiKey);
+    })
+    .catch(error => console.error("Error fetching config:", error));
+
+
+
 // Extracts the last segment of the current URL
 function getIdFromUrl() {
     const urlParts = window.location.href.split('/');
@@ -61,25 +72,25 @@ const loadDatasets = async () => {
         const sessionData = await sessionResponse.json();
         
         // Fetch holders
-        const holdersResponse = await fetch(`http://localhost:8000/api/holders/`);
+        const holdersResponse = await fetch(`http://${myApiKey}:8000/api/holders/`);
         if (!holdersResponse.ok) throw new Error(`Error fetching holders: ${holdersResponse.statusText}`);
         const holders = await holdersResponse.json();
         const filteredHolders = holders.filter(item => item.idPerson === sessionData.value);
         if (filteredHolders.length === 0) throw new Error('No holders found for the session');
         
         // Fetch dataset
-        const datasetResponse = await fetch(`http://localhost:8000/api/data/${getIdFromUrl()}`);
+        const datasetResponse = await fetch(`http://${myApiKey}:8000/api/data/${getIdFromUrl()}`);
         const dataset = await datasetResponse.json();
 
         // Clear and update card container
         const cardContainer = document.getElementById('cardContainerDatasets');
         cardContainer.innerHTML = ''; 
 
-        const policyResponse = await fetch(`http://localhost:8000/api/policy/${dataset.idPolicy}/`);
+        const policyResponse = await fetch(`http://${myApiKey}:8000/api/policy/${dataset.idPolicy}/`);
         const policy = await policyResponse.json();
-        const schemaResponse = await fetch(`http://localhost:8000/api/schema/${dataset.idSchema}/`);
+        const schemaResponse = await fetch(`http://${myApiKey}:8000/api/schema/${dataset.idSchema}/`);
         const schema = await schemaResponse.json();
-        const categoryResponse = await fetch(`http://localhost:8000/api/category/${dataset.idSchema}/`);
+        const categoryResponse = await fetch(`http://${myApiKey}:8000/api/category/${dataset.idSchema}/`);
         const category = await categoryResponse.json();
         
         const newName = schema.name.replace(/_/g, " ");
@@ -97,7 +108,7 @@ const loadDatasets = async () => {
                         </a>
                     </div>
                     <div class="d-block mr-3">
-                        <a href="#" class="delete-dataset text-success" data-url="http://localhost:8000/api/data/${dataset.id}/">
+                        <a href="#" class="delete-dataset text-success" data-url="http://${myApiKey}:8000/api/data/${dataset.id}/">
                             <img src='/static/assets/img/delete.png' alt="">
                             <p class="">Delete</p>
                         </a>
@@ -137,7 +148,7 @@ const loadDatasets = async () => {
             tableContainer.innerHTML = `<tr><td colspan="4">No consumers found.</td></tr>`;
         } else {
             for (const id of consumerIds) {
-                const consumerResponse = await fetch(`http://localhost:8000/api/consumers/${id}/`);
+                const consumerResponse = await fetch(`http://${myApiKey}:8000/api/consumers/${id}/`);
                 if (!consumerResponse.ok) throw new Error(`Error fetching consumer: ${consumerResponse.statusText}`);
                 const consumer = await consumerResponse.json();
                 tableContainer.innerHTML += `

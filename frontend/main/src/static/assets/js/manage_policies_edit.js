@@ -1,3 +1,12 @@
+const myApiKey ="";
+fetch('/accounts/key/')
+    .then(response => response.json())
+    .then(data => {
+        myApiKey = data.my_api_key;
+        console.log("API Key:", myApiKey);
+    })
+    .catch(error => console.error("Error fetching config:", error));
+
 
 
 function getIdFromUrl() {
@@ -18,7 +27,7 @@ async function loadCategoryOptions(selectedCategoryId) {
     };
 
     try {
-        const response = await fetch('http://localhost:8000/category/', requestOptions);
+        const response = await fetch(`http://${myApiKey}:8000/category/`, requestOptions);
         const categories = await response.json();
         const categorySelect = document.getElementById('IdCategory');
         categorySelect.innerHTML = ''; 
@@ -53,7 +62,7 @@ async function loadPolicyData() {
     };
 
     try {
-        const response = await fetch(`http://localhost:8000/api/policy/${id}/`, requestOptions);
+        const response = await fetch(`http://${myApiKey}:8000/api/policy/${id}/`, requestOptions);
         const data = await response.json();
 
 
@@ -89,7 +98,7 @@ async function submitPolicyForm(event) {
     try{
 
         // Fetch existing categories data using a GET request
-        const response = await fetch(`http://localhost:8000/api/policy/`, { method: 'GET' });
+        const response = await fetch(`http://${myApiKey}:8000/api/policy/`, { method: 'GET' });
         if (!response.ok) {
             throw new Error(`Error fetching session data: ${response.statusText}`); // Better error message
         }
@@ -136,7 +145,7 @@ async function submitPolicyForm(event) {
                 };
             
                 // request patch
-                fetch(`http://localhost:8000/api/policy/${id}/`, requestOptions)
+                fetch(`http://${myApiKey}:8000/api/policy/${id}/`, requestOptions)
                     .then(response => response.text())
                     .then(result => {
                         console.log(result); 
@@ -192,7 +201,7 @@ document.getElementById('confirmDeleteButton').addEventListener('click', functio
                 };
     
                 // delete request
-                fetch(`http://localhost:8000/policy/${id}/`, requestOptions)
+                fetch(`http://${myApiKey}:8000/policy/${id}/`, requestOptions)
                     .then(response => response.text())
                     .then(result => {
                             console.log("Category deleted successfully.");

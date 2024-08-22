@@ -1,3 +1,14 @@
+
+const myApiKey ="";
+fetch('/accounts/key/')
+    .then(response => response.json())
+    .then(data => {
+        myApiKey = data.my_api_key;
+        console.log("API Key:", myApiKey);
+    })
+    .catch(error => console.error("Error fetching config:", error));
+
+
 // Function to get the ID of a category from the URL
 function getIdFromUrl() {
     const currentUrl = window.location.href;
@@ -88,7 +99,7 @@ const loadDatasets = async () => {
 
     try {
         // Fetch datasets from the server
-        const datasetResponse = await fetch('http://localhost:8000/api/data/', requestOptions);
+        const datasetResponse = await fetch(`http://${myApiKey}:8000/api/data/`, requestOptions);
         const datasets = await datasetResponse.json();
         console.log(datasets);
 
@@ -123,9 +134,9 @@ const loadDatasets = async () => {
             console.log(`Count: ${count}, Data ID: ${dataset.id}`);
 
             const [policy, schema, category] = await Promise.all([
-                fetch(`http://localhost:8000/api/policy/${dataset.idPolicy}/`, requestOptions).then(res => res.json()),
-                fetch(`http://localhost:8000/api/schema/${dataset.idSchema}/`, requestOptions).then(res => res.json()),
-                fetch(`http://localhost:8000/api/category/${dataset.idCategory}/`, requestOptions).then(res => res.json())
+                fetch(`http://${myApiKey}:8000/api/policy/${dataset.idPolicy}/`, requestOptions).then(res => res.json()),
+                fetch(`http://${myApiKey}:8000/api/schema/${dataset.idSchema}/`, requestOptions).then(res => res.json()),
+                fetch(`http://${myApiKey}:8000/api/category/${dataset.idCategory}/`, requestOptions).then(res => res.json())
             ]);
             const cost = parseFloat(count) * parseFloat(policy.Value);
             // Build the card HTML with dataset information

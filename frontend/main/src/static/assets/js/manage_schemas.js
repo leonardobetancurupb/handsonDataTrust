@@ -1,3 +1,12 @@
+const myApiKey ="";
+fetch('/accounts/key/')
+    .then(response => response.json())
+    .then(data => {
+        myApiKey = data.my_api_key;
+        console.log("API Key:", myApiKey);
+    })
+    .catch(error => console.error("Error fetching config:", error));
+
 
 function updateSelectOptions() {
     const input = document.getElementById('structure').value;
@@ -49,7 +58,7 @@ async function submitSchemaForm(event) {
 
     
     // Fetch existing categories data using a GET request
-    const response = await fetch(`http://localhost:8000/api/schema/`, { method: 'GET' });
+    const response = await fetch(`http://${myApiKey}:8000/api/schema/`, { method: 'GET' });
     if (!response.ok) {
         throw new Error(`Error fetching session data: ${response.statusText}`); // Better error message
     }
@@ -99,7 +108,7 @@ async function submitSchemaForm(event) {
     };
     console.log(finalJsonString);
     // Hacer la solicitud POST al servidor
-    fetch("http://localhost:8000/api/schema/", requestOptions)
+    fetch(`http://${myApiKey}:8000/api/schema/`, requestOptions)
         .then(response => response.text())
         .then(result => {
             console.log(result);

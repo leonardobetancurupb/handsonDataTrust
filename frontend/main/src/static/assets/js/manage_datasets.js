@@ -1,3 +1,14 @@
+const myApiKey ="";
+fetch('/accounts/key/')
+    .then(response => response.json())
+    .then(data => {
+        myApiKey = data.my_api_key;
+        console.log("API Key:", myApiKey);
+    })
+    .catch(error => console.error("Error fetching config:", error));
+
+
+
 const formData = new FormData();
 function getCookie(name) {
     let cookieValue = null;
@@ -57,7 +68,7 @@ function fetchDatasets() {
     try{
 
     
-    fetch('http://localhost:8000/schema/', requestOptions2)
+    fetch(`http://${myApiKey}:8000/schema/`, requestOptions2)
         .then(response => response.json())
         .then(data => {
             const select = document.getElementById('idSchema');
@@ -103,7 +114,7 @@ function fetchDatasets() {
 
         })
         .catch(error => console.error('Error fetching schemas:', error));
-        fetch('http://localhost:8000/policy/', requestOptions2)
+        fetch(`http://${myApiKey}:8000/policy/`, requestOptions2)
         .then(response => response.json())
         .then(data => {
             const select = document.getElementById('idPolicy');
@@ -144,7 +155,7 @@ function fetchDatasets() {
             
         })
         .catch(error => console.error('Error fetching policies:', error));
-        fetch('http://localhost:8000/category/', requestOptions2)
+        fetch(`http://${myApiKey}:8000/category/`, requestOptions2)
         .then(response => response.json())
         .then(data => {
             const select = document.getElementById('idCategory');

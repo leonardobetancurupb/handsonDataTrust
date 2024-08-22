@@ -1,3 +1,14 @@
+const myApiKey ="";
+fetch('/accounts/key/')
+    .then(response => response.json())
+    .then(data => {
+        myApiKey = data.my_api_key;
+        console.log("API Key:", myApiKey);
+    })
+    .catch(error => console.error("Error fetching config:", error));
+
+
+
 async function submitCategoryForm(event) {
     // Prevents the default form submission behavior
     event.preventDefault();
@@ -6,7 +17,7 @@ async function submitCategoryForm(event) {
     // Try validating the category and fetching the token
     try {
         // Fetches existing categories data using GET request
-        const postResponse = await fetch(`http://localhost:8000/api/category/`, { method: 'GET' });
+        const postResponse = await fetch(`http://${myApiKey}:8000/api/category/`, { method: 'GET' });
         if (!postResponse.ok) {
             throw new Error(`Error fetching session data: ${postResponse.statusText}`);
         }
@@ -52,7 +63,7 @@ async function submitCategoryForm(event) {
             };
     
             // Sends the POST request to create the category
-            fetch("http://localhost:8000/api/category/", requestOptions)
+            fetch(`http://${myApiKey}:8000/api/category/`, requestOptions)
                 .then(response => response.text())
                 .then(result => {
                 console.log(result);
