@@ -1,4 +1,4 @@
-const myApiKey ="";
+let myApiKey = "";
 fetch('/accounts/key/')
     .then(response => response.json())
     .then(data => {
