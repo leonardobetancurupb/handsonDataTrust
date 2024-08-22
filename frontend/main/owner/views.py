@@ -77,7 +77,10 @@ def register_datasets(request):
         response = requests.request("POST", url_file, headers=headers, files=files, data=body)
         print(response.text)
         # Redirects to the 'schemas_owner' view after sending the file.
-        return redirect('/holder/schemas_owner/')
+        if 300>response.status_code>=200:
+            return redirect('/holder/schemas_owner/')
+        else:
+            print(response.status_code)
     
     # Passes the access token and the holder ID to the template context.
     context = {
