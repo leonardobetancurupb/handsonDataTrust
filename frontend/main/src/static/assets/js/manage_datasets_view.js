@@ -107,7 +107,7 @@ const loadDatasets = async () => {
 
     try {
         // Fetch datasets from the server
-        const datasetResponse = await fetch('http://${myApiKey}:8000/api/data/', requestOptions);
+        const datasetResponse = await fetch(`http://${myApiKey}:8000/api/data/`, requestOptions);
         const datasets = await datasetResponse.json();
         console.log(datasets);
 

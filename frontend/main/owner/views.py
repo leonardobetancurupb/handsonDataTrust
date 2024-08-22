@@ -51,7 +51,7 @@ def register_datasets(request):
     headers = {}
     # Makes a GET request to fetch holders.
     response = requests.request("GET", url, headers=headers, data=payload)
-
+    print(response.json())
     # Filters the holders to get the one corresponding to the current user.
     filtrados = list(filter(lambda diccionario: diccionario["idPerson"] == id_user, response.json()))
     data = filtrados[0]
@@ -60,11 +60,22 @@ def register_datasets(request):
     if request.method == 'POST':
         # Gets the file sent in the form.
         archivo = request.FILES['archivo']
+        policy = request.FILES['idPolicy']
+        schema = request.FILES['idSchema']
+        format = request.FILES['format']
+        category = request.FILES['idCategory']
+        
+        body={
+            'idPolicy':policy,
+            'idSchema': schema,
+            'format': format,
+            'IdCategory': category
+        }
         # Defines the URL to send the file.
         url_file = f"http://{key}:8000/saveData/holder/{data['id']}/"
         files = {'archivo': archivo}
         # Makes a POST request to send the file.
-        response = requests.request("POST", url_file, headers=headers, files=files)
+        response = requests.request("POST", url_file, headers=headers, files=files, data=body)
         
         # Redirects to the 'schemas_owner' view after sending the file.
         return redirect('/holder/schemas_owner/')
@@ -72,7 +83,7 @@ def register_datasets(request):
     # Passes the access token and the holder ID to the template context.
     context = {
         'token': variable_value,
-        'id_holder': data['id']
+        'id_holder': schema
     }
     # Renders the template with the context.
     return render(request, template_name, context)
