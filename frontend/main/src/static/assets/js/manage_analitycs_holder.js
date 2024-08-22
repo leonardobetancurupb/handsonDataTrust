@@ -30,7 +30,7 @@ const loadMoney = async () => {
         const result = await postResponse.json();
         console.log(result);
 
-        const getHoldersResponse = await fetch(`http://backend:8000/api/holders/`, { method: 'GET' });
+        const getHoldersResponse = await fetch(`http://127.0.0.1:8000/api/holders/`, { method: 'GET' });
         if (!getHoldersResponse.ok) throw new Error(`Error fetching holders: ${getHoldersResponse.statusText}`);
         const resultHolders = await getHoldersResponse.json();
         const filteredHolderss = resultHolders.filter(item => item.idPerson === result.value);
@@ -38,7 +38,7 @@ const loadMoney = async () => {
         
         groupedData=filteredHolderss[0].authorization;
 
-        const policyResponse = await fetch(`http://backend:8000/api/policy/`, requestOptions);
+        const policyResponse = await fetch(`http://127.0.0.1:8000/api/policy/`, requestOptions);
         if (!policyResponse.ok) throw new Error(`Error fetching policy: ${policyResponse.statusText}`);
         const policies = await policyResponse.json();
 
@@ -78,7 +78,7 @@ const loadMoney = async () => {
             tableContainer_consumption.innerHTML = `<tr><td colspan="4">No consumers found.</td></tr>`;
         } else {
             for (const id of consumerIds) {
-                const consumerResponse = await fetch(`http://backend:8000/api/consumers/${id}/`);
+                const consumerResponse = await fetch(`http://127.0.0.1:8000/api/consumers/${id}/`);
                 if (!consumerResponse.ok) throw new Error(`Error fetching consumer: ${consumerResponse.statusText}`);
                 const consumer = await consumerResponse.json();
                 tableContainer_consumption.innerHTML += `

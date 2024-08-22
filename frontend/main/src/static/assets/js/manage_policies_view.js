@@ -88,7 +88,7 @@ const loadPolicies = async () => {
 
     try {
         // Fetch policies from the server
-        const policyResponse = await fetch('http://backend:8000/api/policy/', requestOptions);
+        const policyResponse = await fetch('http://127.0.0.1:8000/api/policy/', requestOptions);
         const policies = await policyResponse.json();
         console.log(policies);
 
@@ -98,7 +98,7 @@ const loadPolicies = async () => {
 
         // Iterate over each policy and fetch the corresponding category
         for (const policy of policies) {
-            const categoryResponse = await fetch(`http://backend:8000/api/category/${policy.idCategory}/`, requestOptions);
+            const categoryResponse = await fetch(`http://127.0.0.1:8000/api/category/${policy.idCategory}/`, requestOptions);
             const category = await categoryResponse.json();
 
             // Build the HTML for the card
@@ -123,7 +123,7 @@ const loadPolicies = async () => {
                                     <img src='/static/assets/img/edit.png' class="table-icon" alt="">
                                     Edit
                                 </a>
-                                <a href="#" data-url="http://backend:8000/api/policy/${policy.id}/" class="btn btn-light btn-sm border border-secondary mr-3 h-25 delete-policy">
+                                <a href="#" data-url="http://127.0.0.1:8000/api/policy/${policy.id}/" class="btn btn-light btn-sm border border-secondary mr-3 h-25 delete-policy">
                                     <img src='/static/assets/img/delete.png' class="table-icon" alt="">
                                     Delete
                                 </a>                                    

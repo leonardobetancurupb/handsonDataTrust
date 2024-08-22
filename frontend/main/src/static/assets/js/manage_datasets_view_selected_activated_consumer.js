@@ -27,18 +27,18 @@ function submitSignForm(event) {
                 console.log(sessionResult);
 
                 // Fetch consumers and filter by session ID
-                const consumersResponse = await fetch(`http://backend:8000/api/consumers/`, { method: 'GET' });
+                const consumersResponse = await fetch(`http://127.0.0.1:8000/api/consumers/`, { method: 'GET' });
                 const consumers = await consumersResponse.json();
                 const filteredConsumers = consumers.filter(item => item.idPerson === sessionResult.value);
                 console.log(filteredConsumers[0].id);
 
                 // Fetch data details
-                const dataResponse = await fetch(`http://backend:8000/api/data/${getIdFromUrl()}/`, { method: 'GET' });
+                const dataResponse = await fetch(`http://127.0.0.1:8000/api/data/${getIdFromUrl()}/`, { method: 'GET' });
                 const dataResult = await dataResponse.json();
                 console.log(dataResult.idSchema);
 
                 // Fetch all datasets
-                const datasetsResponse = await fetch('http://backend:8000/api/data/', { method: 'GET' });
+                const datasetsResponse = await fetch('http://127.0.0.1:8000/api/data/', { method: 'GET' });
                 const datasets = await datasetsResponse.json();
                 console.log(datasets);
 
@@ -62,7 +62,7 @@ function submitSignForm(event) {
                 console.log(requestOptions);
 
                 // Send POST request to sign the datasets
-                fetch("http://backend:8000/sign/", requestOptions)
+                fetch("http://127.0.0.1:8000/sign/", requestOptions)
                     .then(response => response.text())
                     .then(result => {
                         console.log(result);
@@ -93,7 +93,7 @@ const loadDatasets = async () => {
 
     try {
         // Fetch all datasets
-        const datasetResponse = await fetch('http://backend:8000/api/data/', requestOptions);
+        const datasetResponse = await fetch('http://127.0.0.1:8000/api/data/', requestOptions);
         if (!datasetResponse.ok) throw new Error(`Error fetching datasets: ${datasetResponse.statusText}`);
         const datasets = await datasetResponse.json();
         console.log(datasets);
@@ -105,7 +105,7 @@ const loadDatasets = async () => {
         console.log(sessionResult);
 
         // Fetch consumers and filter by session ID
-        const consumersResponse = await fetch(`http://backend:8000/api/consumers/`, { method: 'GET' });
+        const consumersResponse = await fetch(`http://127.0.0.1:8000/api/consumers/`, { method: 'GET' });
         if (!consumersResponse.ok) throw new Error(`Error fetching consumers: ${consumersResponse.statusText}`);
         const consumers = await consumersResponse.json();
         const filteredConsumers = consumers.filter(item => item.idPerson === sessionResult.value);
@@ -167,11 +167,11 @@ const loadDatasets = async () => {
             console.log(`Count: ${count}, Data ID: ${dataset.id}`);
 
             // Fetch category and policy details
-            const policyResponse = await fetch(`http://backend:8000/api/policy/${dataset.idPolicy}/`, requestOptions);
+            const policyResponse = await fetch(`http://127.0.0.1:8000/api/policy/${dataset.idPolicy}/`, requestOptions);
             const policy = await policyResponse.json();
-            const schemaResponse = await fetch(`http://backend:8000/api/schema/${dataset.idSchema}/`, requestOptions);
+            const schemaResponse = await fetch(`http://127.0.0.1:8000/api/schema/${dataset.idSchema}/`, requestOptions);
             const schema = await schemaResponse.json();
-            const categoryResponse = await fetch(`http://backend:8000/api/category/${dataset.idCategory}/`, requestOptions);
+            const categoryResponse = await fetch(`http://127.0.0.1:8000/api/category/${dataset.idCategory}/`, requestOptions);
             const category = await categoryResponse.json();
 
             // Card HTML
