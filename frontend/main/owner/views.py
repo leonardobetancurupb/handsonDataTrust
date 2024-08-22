@@ -56,7 +56,7 @@ def register_datasets(request):
     filtrados = list(filter(lambda diccionario: diccionario["idPerson"] == id_user, response.json()))
     data = filtrados[0]
     print(f'el data desde register data {data['id']}')
-    
+    schema=0
     if request.method == 'POST':
         # Gets the file sent in the form.
         archivo = request.FILES['archivo']
@@ -83,7 +83,6 @@ def register_datasets(request):
     # Passes the access token and the holder ID to the template context.
     context = {
         'token': variable_value,
-        'id_holder': schema
     }
     # Renders the template with the context.
     return render(request, template_name, context)
