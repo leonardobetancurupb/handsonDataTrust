@@ -10,7 +10,7 @@ function fetchPolicies() {
         method: "GET",
         headers: myHeaders2,
     };
-    fetch('http://127.0.0.1:8000/api/category/', requestOptions2)
+    fetch('http://backend:8000/api/category/', requestOptions2)
         .then(response => response.json())
         .then(data => {
             const select = document.getElementById('idCategory');
@@ -37,7 +37,7 @@ async function submitPolicyForm(event) {
 
     try{
         // Fetch existing categories data using a GET request
-        const response = await fetch(`http://127.0.0.1:8000/api/policy/`, { method: 'GET' });
+        const response = await fetch(`http://backend:8000/api/policy/`, { method: 'GET' });
         if (!response.ok) {
             throw new Error(`Error fetching session data: ${response.statusText}`); // Better error message
         }
@@ -85,7 +85,7 @@ async function submitPolicyForm(event) {
             };
             
             // send request post
-            fetch("http://127.0.0.1:8000/api/policy/", requestOptions)
+            fetch("http://backend:8000/api/policy/", requestOptions)
                 .then(response => response.text())
                 .then(result => {
                     console.log(result);

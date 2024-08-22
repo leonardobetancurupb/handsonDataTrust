@@ -101,7 +101,7 @@ const loadDatasets = async () => {
 
     try {
         // Make a GET request to the server to get the datasets
-        const datasetResponse = await fetch('http://127.0.0.1:8000/api/data/', requestOptions);
+        const datasetResponse = await fetch('http://backend:8000/api/data/', requestOptions);
         const datasets = await datasetResponse.json();
         console.log(datasets);
         
@@ -140,11 +140,11 @@ const loadDatasets = async () => {
             console.log(`Count: ${count}, Data ID: ${dataset.id}`);
 
             // Get the corresponding category
-            const policyResponse = await fetch(`http://127.0.0.1:8000/api/policy/${dataset.idPolicy}/`, requestOptions);
+            const policyResponse = await fetch(`http://backend:8000/api/policy/${dataset.idPolicy}/`, requestOptions);
             const policy = await policyResponse.json();
-            const schemaResponse = await fetch(`http://127.0.0.1:8000/api/schema/${dataset.idSchema}/`, requestOptions);
+            const schemaResponse = await fetch(`http://backend:8000/api/schema/${dataset.idSchema}/`, requestOptions);
             const schema = await schemaResponse.json();
-            const categoryResponse = await fetch(`http://127.0.0.1:8000/api/category/${dataset.idCategory}/`, requestOptions);
+            const categoryResponse = await fetch(`http://backend:8000/api/category/${dataset.idCategory}/`, requestOptions);
             const category = await categoryResponse.json();
 
             // Build the HTML for the card with the dataset information

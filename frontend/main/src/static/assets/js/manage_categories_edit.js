@@ -21,7 +21,7 @@ function loadCategoryData() {
         headers: headers,
     };
 
-    fetch(`http://127.0.0.1:8000/api/category/${id}/`, requestOptions)
+    fetch(`http://backend:8000/api/category/${id}/`, requestOptions)
         .then(response => response.json())
         .then(data => {
             document.getElementById('name').value = data.category; // Set the form field value
@@ -46,7 +46,7 @@ async function submitCategoryForm(event) {
     
     try {
         // Fetch existing categories data using a GET request
-        const response = await fetch(`http://127.0.0.1:8000/api/category/`, { method: 'GET' });
+        const response = await fetch(`http://backend:8000/api/category/`, { method: 'GET' });
         if (!response.ok) {
             throw new Error(`Error fetching session data: ${response.statusText}`); // Better error message
         }
@@ -88,7 +88,7 @@ async function submitCategoryForm(event) {
             };
         
             // Send PATCH request to update the category
-            const updateResponse = await fetch(`http://127.0.0.1:8000/api/category/${id}/`, requestOptions);
+            const updateResponse = await fetch(`http://backend:8000/api/category/${id}/`, requestOptions);
             const updateResult = await updateResponse.text();
             console.log(updateResult);
 
@@ -137,7 +137,7 @@ document.getElementById('confirmDeleteButton').addEventListener('click', functio
                 };
     
                 // Send DELETE request to remove the category
-                fetch(`http://127.0.0.1:8000/category/${id}/`, requestOptions)
+                fetch(`http://backend:8000/category/${id}/`, requestOptions)
                     .then(response => response.text())
                     .then(result => {
                         console.log("Category deleted successfully.");
