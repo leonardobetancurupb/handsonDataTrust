@@ -49,7 +49,7 @@ function AdminFormSubmit(person) {
 
     console.log(JSON.stringify(data)); // Log the data being sent
 
-    fetch('http://backend:8000/api/admin/', {
+    fetch('http://127.0.0.1:8000/api/admin/', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -76,7 +76,7 @@ function HolderFormSubmit(person) {
 
     console.log(JSON.stringify(data)); // Log the data being sent
 
-    fetch('http://backend:8000/api/holders/', {
+    fetch('http://127.0.0.1:8000/api/holders/', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -108,7 +108,7 @@ function handleAdditionalFormSubmit(event, person) {
 
     console.log(JSON.stringify(data)); // Log the data being sent
 
-    fetch('http://backend:8000/api/consumers/', {
+    fetch('http://127.0.0.1:8000/api/consumers/', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -148,7 +148,7 @@ function submitRegisterPersonForm(event) {
     };
 
     // Send POST request to the server
-    fetch("http://backend:8000/api/registers/", requestOptions)
+    fetch("http://127.0.0.1:8000/api/registers/", requestOptions)
         .then(response => response.json())
         .then(result => {
             if (formDataObj['role'] === 'consumer') {
@@ -198,7 +198,7 @@ function submitLoginPersonForm(event) {
     };
     
     // Send POST request to the server
-    fetch("http://backend:8000/login/", requestOptions)
+    fetch("http://127.0.0.1:8000/login/", requestOptions)
         .then(response => response.json())
         .then(async result => {
             console.log(result); // Log the server response
@@ -216,7 +216,7 @@ function submitLoginPersonForm(event) {
                 getCacheVariable('id_session');
 
                 // Fetch person details
-                const PersonResponse = await fetch(`http://backend:8000/api/registers/${result.id}/`, {method: "GET"});
+                const PersonResponse = await fetch(`http://127.0.0.1:8000/api/registers/${result.id}/`, {method: "GET"});
                 const person = await PersonResponse.json();
                 
                 // Redirect based on the role of the person

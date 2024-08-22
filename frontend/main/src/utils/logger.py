@@ -39,7 +39,7 @@ class Operations:
 
         #return response.text
         
-address= "http://54.197.173.166:5000"
+address= "http://127.0.0.1:5000"
         
 def get_last_logs(count):
     url = address+"/recent"
@@ -79,7 +79,7 @@ def generate_token(payload):
 
 
 def get_all_logs():
-    url = "http://54.197.173.166:5000/all"
+    url = "http://127.0.0.1:5000/all"
     payload = {}
 
     def generate_token():

@@ -97,7 +97,7 @@ const loadCategories = async () => {
         headers: myHeaders,
     };
     // Send GET request to fetch categories
-    fetch('http://backend:8000/api/category/', requestOptions)
+    fetch('http://127.0.0.1:8000/api/category/', requestOptions)
         .then(response => response.json())
         .then(data => {
             const cardContainer = document.getElementById('cardContainerCategories');
@@ -118,7 +118,7 @@ const loadCategories = async () => {
                         <img src='/static/assets/img/edit.png' class="table-icon" alt="">
                         Edit
                     </a>
-                    <a href="#" data-url="http://backend:8000/api/category/${category.id}/" class="btn btn-light btn-sm border border-secondary mr-3 h-25 delete-category">
+                    <a href="#" data-url="http://127.0.0.1:8000/api/category/${category.id}/" class="btn btn-light btn-sm border border-secondary mr-3 h-25 delete-category">
                         <img src='/static/assets/img/delete.png' class="table-icon" alt="">
                         Delete
                     </a>
