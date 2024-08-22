@@ -36,7 +36,7 @@
                 <h3>
                   Create New Dataset
                 </h3>
-                <div class="container mt-5">
+                <div class="container mt-5" id="form_data_create">
                   
                   <form  id="datasetForm" action="" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
@@ -83,9 +83,7 @@
                       <button type="submit" class="btn btn-success position-absolute mt-5" id="submitBtn" disabled>Submit</button>
                     </div>
                   </form>
-                  <form  class="h-15 d-flex justify-content-center" id="ExportFileform" action="http://54.197.173.166:8000/downloadSchema/{{id_schema}}/" method="post" enctype="multipart/form-data">
-                    <input id="ExportSchema" type="submit" class="btn btn-secondary h-50" value="Download Schema" disabled>
-                  </form>
+                  
                   
                   
                 </div>

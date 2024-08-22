@@ -29,7 +29,7 @@ let select_value_schema;
 document.getElementById('idSchema').addEventListener('change', function() {
     var select = document.getElementById('idSchema');
     var button = document.getElementById('viewSchemaBtn');
-    var buttonExport = document.getElementById('ExportSchema');
+    var buttonExport = document.getElementById('form_dataset_create');
     select_value_schema = select.value;
     console.log(select_value_schema);
 
@@ -37,7 +37,10 @@ document.getElementById('idSchema').addEventListener('change', function() {
     if (select.value) {
         button.disabled = false;
         buttonExport.disabled = false; 
-        
+        buttonExport.innerHTML+= `
+                        <form  class="h-15 d-flex justify-content-center" id="ExportFileform" action="http://54.197.173.166:8000/downloadSchema/${select_value_schema}/" method="post" enctype="multipart/form-data">
+                            <input id="ExportSchema" type="submit" class="btn btn-secondary h-50" value="Download Schema" disabled>
+                        </form>`;
     } else {
         button.disabled = true; 
         buttonExport.disabled = true;
