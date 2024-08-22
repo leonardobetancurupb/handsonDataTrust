@@ -6,7 +6,7 @@ import requests
 from django.conf import settings
 
 
-with open('frontend/main/src/utils/key.txt', 'r') as file:
+with open('../src/utils/key.txt', 'r') as file:
     key = file.read()
 # Renders the main page (home.html) and passes the access token from the cache.
 def menu(request):
