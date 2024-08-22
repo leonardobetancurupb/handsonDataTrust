@@ -3,7 +3,7 @@
 {% load i18n %}
 
 {% block content %}
-  {% if request.user.is_authenticated %}
+{% if token != "Variable not found" %}
     {% load static %}
 
     <div class="row w-100 ml-4 mt-2 justify-content-between">
@@ -11,93 +11,50 @@
         <div class="nav flex-column nav-pills text-center mt-4" id="v-pills-tab" role="tablist" aria-orientation="vertical">
           <ul class="list-group ml-0">
             <li class="list-group-item list-group-item-action ">
-                <a href={% url 'holder:home' %}>Home</a>
+                <a class="text-success" href={% url 'holder:home' %}>Home</a>
               </li >
               <li class="list-group-item list-group-item-action ">
-                <a href={% url 'holder:schemas_owner' %}>Datasets</a>
+                <a class="text-success" href={% url 'holder:schemas_owner' %}>Datasets</a>
               </li>
               <li class="list-group-item list-group-item-action ">
-                <a href={% url 'holder:register_datasets' %}>Create New</a>
+                <a class="text-success" href={% url 'holder:register_datasets' %}>Create New</a>
               </li>
               <li class="list-group-item list-group-item-action ">
-                <a href={% url 'accounts:settings' %}>Settings</a>
+                <a class="text-success" href={% url 'holder:about_owner' %}>About</a>
               </li>
+              <li class="list-group-item list-group-item-action ">
+                <a class="text-success" href={% url 'accounts:log_out' %}>Log out</a>
+            </li>
             </ul>
           </div>
         </div>
         <div class="col-md-9 w-100 vh-100 mt-5 mr-3 align-self-center">
+          <div id="alertContainer" class="position-absolute position-alert"></div> 
           <div class="ventana-home">
             <div class="lap-home  p-2 border border-1">
               <div class="form-group ">
                 <h3>
                   Edit Dataset
                 </h3>
-                <div class="d-flex justify-content-between h-5">
-                  <p class="mb-0">
-                    ID: 21&nbsp;&nbsp;&nbsp;Since 06/07/2024 
-                  </p>
-                  <div class=" d-flex w-25">
-                    <div class="d-block ml-5">
-                      <a href="#" class=" " data-toggle="modal" data-target="#staticBackdrop">
-                        <img src={% static "assets/img/delete.png" %}  alt="">
-                        <p class="">Delete</p>
-                      </a>
-                    </div>  
-                  </div>
-                </div>
-                <div class="container">
-                  <form action="" method="POST" enctype="multipart/form-data">
+                <div class="container mt-5">
+                  <form  id="datasetForm"  method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
-                    <div class="mb-3">
-                      <label for="CategoryInput" class="form-label">Category</label>
-                      <input type="text" class="form-control" id="CategoryInput" placeholder="Propiety">
+                    <div>
+                        <label for="fileInput" class="form-label">File</label>
+                        <div class="custom-file-input  mb-2">
+                          <input type="file" name="archivo" id="fileInput"  class="" onchange="updateFileName()"> 
+                          <label for="archivo" class="custom-file-label w-50">{{url}}</label>
+                        </div>
                     </div>
-                    <div class="mb-3">
-                      <label for="DescriptionInput" class="form-label">Description</label>
-                      <textarea class="form-control" id="DescriptionInput" rows="3" placeholder="Give a description to your dataset"></textarea>
-                    </div>
-                    <div class="mb-3">
-                      <label for="PolicyInput" class="form-label">Policy</label>
-                      <br>
-                      <select name="PolicyInput" id="PolicyInput" class="form-select">
-                        <!-- Opción por defecto -->
-                        <option value="" disabled selected>Select a Policy</option>
-                          <option value="Only for studies">Only for studies</option>
-                          <option value="Only for developments">Only for developments</option>
-                      </select>
-                      <button type="button" class="btn btn-sm btn-outline-primary ml-3" data-toggle="modal" data-target="#ModalPolicy">View policy selected</button>
-                    </div>
-                    <div class="mb-3">
-                      <label for="SchemaInput" class="form-label">Schema</label>
-                      <br>
-                      <select name="SchemaInput" id="SchemaInput" class="form-select">
-                        <!-- Opción por defecto -->
-                        <option value="" disabled selected>Select a Schema</option>
-                          <option value="Medical Cost Personal">Medical Cost Personal</option>
-                          <option value="Bank Personal Loan">Bank Personal Loan</option>
-                      </select>
-                      <button type="button" class="btn btn-sm btn-outline-primary ml-3" data-toggle="modal" data-target="#myModal">View schema selected</button>
-                      
-                    </div>
-                    <div class="mb-3">
-                      <label for="FormatInput" class="form-label">Format</label>
-                      <input class="form-control" type="text" id="FormatInput" value="Excel" aria-label="Excel" disabled readonly>
-                    </div>
-                    <div class="row mb-3 mt-1">
-                      <div class="col-md-6 ">
-                        <button class="btn btn-primary" onclick="exportToExcel()">Export template</button>
-                      </div>
-                      <div class="col-md-6 ">
-                        <div class="custom-file-input ml-2">
-                          <input type="file" name="archivo" id="fileInput" onchange="updateFileName()">
-                          <label for="fileInput" class="custom-file-label ">Choose File</label>
-                      </div>
-                      </div>
-                    </div>
-                    <div class="d-flex justify-content-end">
-                      <button type="submit" class="btn btn-primary">Submit</button>
+                    <div class="d-flex justify-content-end ">
+                      <button type="submit" class="btn btn-success position-absolute mt-5" id="submitBtn" >Submit</button>
                     </div>
                   </form>
+                  <form  class="h-25 d-flex justify-content-center" id="ExportFileform" action="http://54.197.173.166:8000/downloadDataHolder/{{id_holder}}/{{id_schema}}/" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input id="ExportSchema" type="submit" class="btn btn-secondary h-75" value="Download Schema">
+                  </form>
+                  
                 </div>
               </div>
             </div>
@@ -105,137 +62,9 @@
         </div>
       </div>
       <!-- The Modal's Section -->
-      <!-- The Modal Schema Summary-->
-      <div class="modal fade" id="myModal">
-        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-          <div class="modal-content h-100">
-            <!-- Modal Header -->
-            <div class="modal-header">
-              <div>
-                <h4 class="modal-title">Information Schema</h4>
-                Medical Cost Personal
-              </div>
-              
-              <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-            <!-- Modal body -->
-            <div class="modal-body">
-              <!-- Nav tabs -->
-              <ul class="nav nav-tabs" role="tablist">
-                <li class="nav-item">
-                  <a class="nav-link active" data-toggle="tab" href="#home">Summary</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" data-toggle="tab" href="#menu1" id="showJsonBtn">Code View</a>
-                </li>
-              </ul>
-
-              <!-- Tab panes -->
-              <div class="tab-content">
-                <div id="home" class="container tab-pane active"><br>
-                  <p>
-                    ID: 1&nbsp;&nbsp;Since 06/07/2024 <br>
-                    <strong>
-                      Columns
-                    </strong>
-                    <ul>
-                      <li>
-                        age: age of primary beneficiary
-                      </li>
-                      <li>
-                        sex: insurance contractor gender, female, male
-                      </li>
-                      <li>
-                        bmi: Body mass index, providing an understanding of body, weights that are relatively high or low relative to height,
-                        objective index of body weight (kg / m ^ 2) using the ratio of height to weight, ideally 18.5 to 24.9
-                      </li>
-                      <li>
-                        children: Number of children covered by health insurance / Number of dependents
-                      </li>
-                      <li>
-                        smoker: Smoking
-                      </li>
-                      <li>
-                        region: the beneficiary's residential area in the US, northeast, southeast, southwest, northwest.
-                      </li>
-                      <li>
-                        charges: Individual medical costs billed by health insurance
-                      </li>
-                      
-                    </ul>
-                  </p>
-                </div>
-                <div id="menu1" class="container tab-pane fade"><br>
-                  <strong>
-                    JSON Format
-                  </strong>
-                  <div id="jsonOutput" class="mt-3 formatted-json" style="display: none;"></div>
-                </div>
-              </div>
-            </div>
-            <!-- Modal footer -->
-            <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- The Modal Policy Summary-->
-      <div class="modal fade" id="ModalPolicy">
-        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-          <div class="modal-content h-100">
-            <!-- Modal Header -->
-            <div class="modal-header">
-              <div>
-                <h4 class="modal-title">Information Policy</h4>
-                Only for studies
-              </div>
-              
-              <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-            <!-- Modal body -->
-            <div class="modal-body">
-              <div id="home" class="container"><br>
-                <p>
-                  ID: 1&nbsp;&nbsp;Since 06/07/2024<br>
-                  <strong>
-                    Summary
-                  </strong>
-                  <hr>
-                  <ul>
-                    <li>
-                      <strong>Description</strong> This consumption policy stipulates that the
-                        provided data can only be used for academic, research, or educational purposes.
-                        The use of the data for commercial, profit-making, or any other purposes not 
-                        strictly related to academic studies is prohibited. Users must ensure that any
-                        publication, analysis, or result derived from the use of this data is solely 
-                        for the enhancement of knowledge and education,
-                        and that no direct or indirect commercial benefit is derived.
-                    </li>
-                    <li>
-                      <strong>Category</strong> Usage
-                    </li>
-                    <li>
-                      <strong>Estimated Time</strong> 06/07/2024 to 06/01/2025
-                    </li>
-                    <li>
-                      <strong>Value</strong> $0.1
-                    </li>
-                  </ul>
-                </p>
-              </div>
-            </div>
-            <!-- Modal footer -->
-            <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-            </div>
-          </div>
-        </div>
-      </div>
 
       <!-- Modal -->
-      <div class="modal" id="staticBackdrop" >
+      <div class="modal" id="confirmDeleteModal" >
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
@@ -243,74 +72,29 @@
               <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
-              Are you sure to delete that datatset?
+              Are you sure to delete it?
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-danger">Accept</button>
+              <button type="button" class="btn btn-danger " id="confirmDeleteButton">Accept</button>
             </div>
           </div>
         </div>
       </div>
+    </div>
 
     </div>
-    <script src="{% static 'assets/js/manage_datasets.js' %}"></script>
-    <script src="{% static 'assets/js/manage_files.js' %}"></script>
-    <script>
-      document.getElementById('showJsonBtn').addEventListener('click', function() {
-        var json = {
-          "type": "object",
-          "properties": {
-            "age": {
-              "type": "integer",
-              "description": "Age of primary beneficiary"
-            },
-            "sex": {
-              "type": "string",
-              "description": "Insurance contractor gender, female, male",
-              "enum": ["female", "male"]
-            },
-            "bmi": {
-              "type": "number",
-              "description": "Body mass index, providing an understanding of body, weights that are relatively high or low relative to height, objective index of body weight (kg / m ^ 2) using the ratio of height to weight, ideally 18.5 to 24.9"
-            },
-            "children": {
-              "type": "integer",
-              "description": "Number of children covered by health insurance / Number of dependents"
-            },
-            "smoker": {
-              "type": "string",
-              "description": "Smoking",
-              "enum": ["yes", "no"]
-            },
-            "region": {
-              "type": "string",
-              "description": "The beneficiary's residential area in the US, northeast, southeast, southwest, northwest.",
-              "enum": ["northeast", "southeast", "southwest", "northwest"]
-            },
-            "charges": {
-              "type": "number",
-              "description": "Individual medical costs billed by health insurance"
-            }
-          },
-          "required": ["age", "sex", "bmi", "children", "smoker", "region", "charges"]
-        };
-        
 
-          var formattedJson = JSON.stringify(json, null, 2); // Formatea el JSON con indentación de 2 espacios
-          var jsonOutput = document.getElementById('jsonOutput');
-          jsonOutput.textContent = formattedJson;
-          jsonOutput.style.display = 'block'; // Muestra el div que contiene el JSON formateado
-      });
+
+  <script>
+    function updateFileName() {
+        var input = document.getElementById('fileInput');
+        var label = input.nextElementSibling; // El elemento <label> sigue al <input> en el DOM
+        var fileName = input.files.length > 0 ? input.files[0].name : 'Choose File';
+        label.textContent = fileName;
+    }
   </script>
-    <script>
-      function updateFileName() {
-          var input = document.getElementById('fileInput');
-          var label = input.nextElementSibling; // El elemento <label> sigue al <input> en el DOM
-          var fileName = input.files.length > 0 ? input.files[0].name : 'Choose File';
-          label.textContent = fileName;
-      }
-  </script>
+
   {% else %}
     <script>
       window.onload = function () {

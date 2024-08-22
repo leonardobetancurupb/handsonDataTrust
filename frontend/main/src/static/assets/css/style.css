@@ -440,9 +440,9 @@
 
 .sensor-table {
     width: 100%;
+    overflow-y: scroll;
     border-collapse: collapse;
     border-spacing: 0;
-    overflow-y: scroll;
     z-index: 0;
 }
 
@@ -1054,7 +1054,7 @@ body{
 
 .logo{
     height: 4vh;
-    width: 8vh;
+    width: 9vh;
 }
 
 .table-icon {
@@ -1084,7 +1084,6 @@ body{
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 300px; /* Ajusta el tamaño según tus necesidades */
 }
 
 .h-5{
@@ -1095,10 +1094,47 @@ body{
     height: 15% !important;
 }
 
+.h-90{
+    height: 90% !important;
+}
+
+.w-90{
+    width: 90% !important;
+}
+
+.w-20{
+    width: 20% !important;
+}
+
+.mt-6 {
+    margin-top: 13rem !important;
+}
+
 .formatted-json {
     white-space: pre-wrap; /* Preserva los saltos de línea y los espacios */
     background-color: #f8f9fa; /* Color de fondo claro para resaltar */
     padding: 10px;
     border-radius: 5px;
     border: 1px solid #ddd;
+}
+
+.font-size-small{
+    font-size: 0.8rem;
+}
+
+.display_ocult{
+    display: none;
+}
+
+.form-group select{
+    height: 3vh;
+    font-size: small;
+    width: 30vw;
+    padding-left: .325rem;
+    padding-bottom: 0;
+    padding-top: 0;
+}
+
+.position-alert{
+    top: -3.5vh;
 }

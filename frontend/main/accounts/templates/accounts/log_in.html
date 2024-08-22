@@ -4,34 +4,33 @@
 {% load i18n %}
 
 {% block content %}
-<div class="inicio-de-sesin d-flex flex-column">
+<div id="alertContainer" class="position-absolute position-alert"></div> 
+<div class="inicio-de-sesin d-flex flex-column ml-5">
     <div class="text-sesion-title mt-5">
       {% trans 'Log in' %}
     </div>
 
-    <form method="post" class="centrar_form">
+    <form id="login_form" class="centrar_form">
       {% csrf_token %}
-      {% bootstrap_form form %}
+      <div class="form-group">
+        <label for="username">Email</label>
+        <input type="text" class="form-control" id="username" name="username" placeholder="Enter email">
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" class="form-control" id="password" name="password" placeholder="Enter password">
+      </div>
   
       <button class="btn btn-success">{% trans 'Log in' %}</button>
     </form>
   
-    <hr />
+    <hr/>
     <div class="">
-      <ul>
-        <li>
-          <a href="{% url 'accounts:restore_password' %}">{% trans 'Forgot your password?' %}</a>
-        </li>
-        <li>
-          <a href="{% url 'accounts:remind_username' %}">{% trans 'Forgot your username?' %}</a>
-        </li>
-        <li>
-          <a href="{% url 'accounts:resend_activation_code' %}">{% trans 'Resend an activation code' %}</a>
-        </li>
-      </ul>
+
       <div class="centrar">
         <a class="" href="{% url 'accounts:sign_up' %}">{% trans 'Create an account' %}</a>
       </div>
     </div>
 </div>
+<script src={% static 'assets/js/manage_persons.js' %}></script>
 {% endblock %}

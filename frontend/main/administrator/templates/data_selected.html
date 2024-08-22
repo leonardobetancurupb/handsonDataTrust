@@ -4,11 +4,10 @@
 
 {% block content %}
 
-    {% if request.user.is_authenticated %}
+    {% if token != "Variable not found" %}
 
     {% load static %}
 
-    
 
     <div class="row w-100 ml-4 mt-2 justify-content-between">
         <div class="col-sm-2 shadow-sm p-1 border border-1">
@@ -17,6 +16,12 @@
                     <li class="list-group-item list-group-item-action ">
                         <a href={% url 'administrator:menu' %}>Home</a>
                     </li >
+                    <li class="list-group-item list-group-item-action ">
+                        <a href={% url 'administrator:category' %}>Category</a>
+                    </li>
+                    <li class="list-group-item list-group-item-action ">
+                        <a href={% url 'administrator:create_category' %}>New Category</a>
+                    </li>
                     <li class="list-group-item list-group-item-action ">
                         <a href={% url 'administrator:policy' %}>Policies</a>
                     </li>
@@ -39,136 +44,79 @@
                         <a href={% url 'administrator:history' %}>History</a>
                     </li>
                     <li class="list-group-item list-group-item-action ">
-                        <a href={% url 'accounts:settings' %}>Settings</a>
+                      <a href={% url 'administrator:about_admin' %}>About</a>
+                  </li>
+                    <li class="list-group-item list-group-item-action ">
+                        <a href={% url 'accounts:log_out' %}>Log out</a>
                     </li>
                 </ul>
             </div>
         </div>
         <div class="col-md-9 w-100 vh-100 mt-5 mr-3 align-self-center">
+          <div id="alertContainer" class="position-absolute position-alert"></div> 
             <div class="ventana-home">
-                <div class="lap-home  p-2 border border-1">
-                    <div class="form-group ">
-                        <h3>
-                            Medical Cost Personal 
-                        </h3>
-                        <div class="d-flex justify-content-between">
-                            <p>
-                                ID: 21 <br>
-                                Expiration 06/07/2025 
-                            </p>
-                        </div>
-                        <div class="container mt-2 ">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h4 id="item-category">Category: Clustering </h4>
-                                </div>
-                                <div class="card-body">
-                                    <p id="item-description"><strong>Description: </strong>
-                                        Machine Learning with R by Brett Lantz is a book that provides an introduction to machine learning using R. 
-                                        As far as I can tell, Packt Publishing does not make its datasets available online unless you buy the book 
-                                        and create a user account which can be a problem if you are checking the book out from the library or borrowing 
-                                        the book from a friend. All of these datasets are in the public domain but simply needed some cleaning up and 
-                                        recoding to match the format in the book.</p>
-                                    <div class="row">
-                                        <div class="col"> 
-                                            <p id="item-format"><strong>Format: </strong>Excel</p>
-                                        </div>
-                                        <div class="col"> 
-                                            <p id="item-idPolicy"><strong>Policy: </strong>Only for studies</p>
-                                            <button type="button" class="btn btn-sm btn-outline-primary ml-3" data-toggle="modal" data-target="#ModalPolicy">View policy selected</button>
-                                        </div>
-                                    </div>
-                                    <div class="col"> 
-                                        <p>
-                                            ID: 1&nbsp;&nbsp;Since 06/07/2024 <br>
-                                            <strong>Columns</strong>
-                                            <ul>
-                                                <li>
-                                                age: age of primary beneficiary
-                                                </li>
-                                                <li>
-                                                sex: insurance contractor gender, female, male
-                                                </li>
-                                                <li>
-                                                bmi: Body mass index, providing an understanding of body, weights that are relatively high or low relative to height,
-                                                objective index of body weight (kg / m ^ 2) using the ratio of height to weight, ideally 18.5 to 24.9
-                                                </li>
-                                                <li>
-                                                children: Number of children covered by health insurance / Number of dependents
-                                                </li>
-                                                <li>
-                                                smoker: Smoking
-                                                </li>
-                                                <li>
-                                                region: the beneficiary's residential area in the US, northeast, southeast, southwest, northwest.
-                                                </li>
-                                                <li>
-                                                charges: Individual medical costs billed by health insurance
-                                                </li>
-                                                
-                                            </ul>
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="lap-home  p-2 border border-1 sensor-table">
+                  <div class="form-group " id="cardContainerDatasets">
+                    
+                    
+                  </div>
+                  
                 </div>
-            </div>
             </div>
         </div>
         <!-- The Modal Policy Summary-->
         <div class="modal fade" id="ModalPolicy">
-            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-                <div class="modal-content h-100">
-                    <!-- Modal Header -->
-                    <div class="modal-header">
-                        <div>
-                            <h4 class="modal-title">Information Policy</h4>
-                            Only for studies
-                        </div>
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    </div>
-                    <!-- Modal body -->
-                    <div class="modal-body">
-                        <div id="home" class="container"><br>
-                            <p>
-                                ID: 1&nbsp;&nbsp;Since 06/07/2024<br>
-                                <strong>
-                                    Summary
-                                </strong>
-                                <hr>
-                                <ul>
-                                    <li>
-                                    <strong>Description</strong> This consumption policy stipulates that the
-                                        provided data can only be used for academic, research, or educational purposes.
-                                        The use of the data for commercial, profit-making, or any other purposes not 
-                                        strictly related to academic studies is prohibited. Users must ensure that any
-                                        publication, analysis, or result derived from the use of this data is solely 
-                                        for the enhancement of knowledge and education,
-                                        and that no direct or indirect commercial benefit is derived.
-                                    </li>
-                                    <li>
-                                        <strong>Category</strong> Usage
-                                    </li>
-                                    <li>
-                                        <strong>Estimated Time</strong> 06/07/2024 to 06/01/2025
-                                    </li>
-                                    <li>
-                                        <strong>Value</strong> $0.1
-                                    </li>
-                                </ul>
-                            </p>
-                        </div>
-                    </div>
-                    <!-- Modal footer -->
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                    </div>
+          <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content h-100">
+              <!-- Modal Header -->
+              <div class="modal-header">
+                <div>
+                  <h4 class="modal-title">Information Policy</h4>
+                  Only for studies
                 </div>
+                
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+              </div>
+              <!-- Modal body -->
+              <div class="modal-body">
+                <div id="home" class="container"><br>
+                  <p>
+                    ID: 1&nbsp;&nbsp;Since 06/07/2024<br>
+                    <strong>
+                      Summary
+                    </strong>
+                    <hr>
+                    <ul>
+                      <li>
+                        <strong>Description</strong> This consumption policy stipulates that the
+                          provided data can only be used for academic, research, or educational purposes.
+                          The use of the data for commercial, profit-making, or any other purposes not 
+                          strictly related to academic studies is prohibited. Users must ensure that any
+                          publication, analysis, or result derived from the use of this data is solely 
+                          for the enhancement of knowledge and education,
+                          and that no direct or indirect commercial benefit is derived.
+                      </li>
+                      <li>
+                        <strong>Category</strong> Usage
+                      </li>
+                      <li>
+                        <strong>Estimated Time</strong> 06/07/2024 to 06/01/2025
+                      </li>
+                      <li>
+                        <strong>Value</strong> $0.1
+                      </li>
+                    </ul>
+                  </p>
+                </div>
+              </div>
+              <!-- Modal footer -->
+              <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+              </div>
             </div>
+          </div>
         </div>
-  
+
         <!-- The Modal Policy Summary-->
         <div class="modal fade" id="ModalTerms">
           <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
@@ -205,41 +153,41 @@
               <!-- Modal footer -->
               <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-success" data-dismiss="modal">Accept</button>
+                <button type="button" class="btn btn-success" data-dismiss="modal" id="confirm_terms">Accept</button>
               </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-      <!-- Modal -->
-      {% comment %} <div class="modal" id="staticBackdrop" >
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title">Delete</h5>
-              <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-            <div class="modal-body">
-              Are you sure to delete that datatset?
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-danger">Accept</button>
             </div>
           </div>
         </div>
-      </div>
-    </div> {% endcomment %}
 
+
+        <!-- Modal -->
+        <div class="modal" id="confirmDeleteModal" >
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Delete</h5>
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                  Are you sure to delete it?
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-danger " id="confirmDeleteButton">Accept</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <script src={% static 'assets/js/manage_datasets_view_selected_admin.js' %}></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
     {% else %}
     <script>
         window.onload=function() {
-            window.location.href = "{% url 'accounts:log_in' %}";
+        window.location.href = "{% url 'accounts:log_in' %}";
         }  
     </script>
     {% endif %}
 {% endblock %}
-
-
-
