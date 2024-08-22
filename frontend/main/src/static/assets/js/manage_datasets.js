@@ -70,7 +70,8 @@ document.getElementById('idSchema').addEventListener('change', async function() 
                     </div>
                 </div>
             `;
-        buttonExport.innerHTML+= `
+        buttonExport.innerHTML=``
+        buttonExport.innerHTML= `
                         <form  class="h-15 d-flex justify-content-center" id="ExportFileform" action="http://54.197.173.166:8000/downloadSchema/${select_value_schema}/" method="post" enctype="multipart/form-data">
                             <input id="ExportSchema" type="submit" class="btn btn-secondary h-50" value="Download Schema">
                         </form>`;
