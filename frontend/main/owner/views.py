@@ -8,6 +8,8 @@ from django.conf import settings
 
 with open('/code/src/utils/key.txt', 'r') as file:
     key = file.read()
+print(key)    
+
 # Renders the main page (home.html) and passes the access token from the cache.
 def menu(request):
     template_name = 'home.html'
@@ -53,6 +55,7 @@ def register_datasets(request):
     # Filters the holders to get the one corresponding to the current user.
     filtrados = list(filter(lambda diccionario: diccionario["idPerson"] == id_user, response.json()))
     data = filtrados[0]
+    print(f'el data desde register data {data['id']}')
     
     if request.method == 'POST':
         # Gets the file sent in the form.

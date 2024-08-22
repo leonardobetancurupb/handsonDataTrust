@@ -13,6 +13,12 @@ async function submitCategoryForm(event) {
     const form = event.target; // Obtains the submitted form
     const formData = new FormData(form); // Creates a FormData object from the form data
     const myApiKey = await getKey();
+
+    // Convert FormData to JSON format
+    const formDataObj = {};
+    formData.forEach((value, key) => {
+        formDataObj[key] = value;
+    });
     // Try validating the category and fetching the token
     try {
         // Fetches existing categories data using GET request
