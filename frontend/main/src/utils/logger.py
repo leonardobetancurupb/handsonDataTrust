@@ -15,7 +15,7 @@ class Operations:
     
     @staticmethod
     def send_log(type,content,source,destination):
-        url = "http://127.0.0.1:5000/response"
+        url = "http://audit:5000/response"
         payload = {
             "type" : type,
             "from" : source,
@@ -39,7 +39,7 @@ class Operations:
 
         #return response.text
         
-address= "http://127.0.0.1:5000"
+address= "http://audit:5000"
         
 def get_last_logs(count):
     url = address+"/recent"
@@ -79,7 +79,7 @@ def generate_token(payload):
 
 
 def get_all_logs():
-    url = "http://127.0.0.1:5000/all"
+    url = "http://audit:5000/all"
     payload = {}
 
     def generate_token():
@@ -131,6 +131,7 @@ def get_all_types():
   return data
 
 print(get_all_types())
+print(requests.request("GET", "http://backend:8000/api/registers/", headers={}, data=""))
 
 def get_user_consumers(user):
 
