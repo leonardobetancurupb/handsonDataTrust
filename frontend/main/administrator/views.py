@@ -9,14 +9,20 @@ from django.middleware.csrf import get_token
 from django.core.cache import cache
 from django.conf import settings
 
+
+with open('frontend/main/src/utils/key.txt', 'r') as file:
+    key = file.read()
 # Create your views here.
 def menu(request):
     template_name = 'menu.html'
     variable_value = cache.get('access', 'Variable not found')
-    url = "http://{settings.MY_API_KEY}:8000/api/policy/"
-    url2 = "http://{settings.MY_API_KEY}:8000/api/consumers/"
+    
+    
     headers = {}
     payload = ""
+    
+    url = f"http://{key}:8000/api/policy/"
+    url2 = f"http://{key}:8000/api/consumers/"
     response2 = requests.get(url2, headers=headers, data=payload)
     response = requests.get(url,headers=headers, data=payload)
     policies=response.json()

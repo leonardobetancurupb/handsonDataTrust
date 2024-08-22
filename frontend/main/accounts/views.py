@@ -79,6 +79,9 @@ def get_cache_variable(request):
     return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
 
 def key(request):
+    
+    with open('frontend/main/src/utils/key.txt', 'r') as file:
+        content = file.read()
     return JsonResponse({
-        'my_api_key': settings.MY_API_KEY,
+        'my_api_key': content,
     })
