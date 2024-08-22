@@ -26,31 +26,94 @@ function getCookie(name) {
 
 
 let select_value_schema;
-document.getElementById('idSchema').addEventListener('change', function() {
+document.getElementById('idSchema').addEventListener('change', async function() {
     var select = document.getElementById('idSchema');
     var button = document.getElementById('viewSchemaBtn');
-    var buttonExport = document.getElementById('form_dataset_create');
+    const buttonExport = document.getElementById('form_dataset_create');
     select_value_schema = select.value;
     console.log(select_value_schema);
 
 
     if (select.value) {
         button.disabled = false;
-        buttonExport.disabled = false; 
+        const schemaResponse = await fetch(`http://${myApiKey}:8000/api/schema/${dataset.idSchema}/`);
+        const schema = await schemaResponse.json();
+
+        // Update modals
+        const newName = schema.name.replace(/_/g, " ");
+        const structure = schema.structure.replace(/\s/g, ", ");
+        const modalSchemaContainer = document.getElementById('myModal');
+        modalSchemaContainer.innerHTML = `
+                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                    <div class="modal-content h-100">
+                        <div class="modal-header">
+                            <div>
+                                <h4 class="modal-title">Information Schema</h4>
+                                ${newName}
+                            </div>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <div id="home" class="container"><br>
+                                <p>ID: ${schema.id}<br><strong>Summary</strong><hr>
+                                <ul>
+                                    <li><strong>Description</strong> ${schema.description}</li>
+                                    <li><strong>Columns</strong> ${structure}</li>
+                                    <li><strong>Encrypted columns</strong> ${schema.fieldToEncrypt}</li>
+                                </ul>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            `;
         buttonExport.innerHTML+= `
                         <form  class="h-15 d-flex justify-content-center" id="ExportFileform" action="http://54.197.173.166:8000/downloadSchema/${select_value_schema}/" method="post" enctype="multipart/form-data">
                             <input id="ExportSchema" type="submit" class="btn btn-secondary h-50" value="Download Schema" disabled>
                         </form>`;
     } else {
         button.disabled = true; 
-        buttonExport.disabled = true;
+
     }
 });
-document.getElementById('idPolicy').addEventListener('change', function() {
+document.getElementById('idPolicy').addEventListener('change', async function() {
     var select = document.getElementById('idPolicy');
     var button = document.getElementById('viewPolicyBtn');
     if (select.value) {
         button.disabled = false; 
+        const policyResponse = await fetch(`http://${myApiKey}:8000/api/policy/${dataset.idPolicy}/`);
+        const policy = await policyResponse.json();
+        const modalPolicyContainer = document.getElementById('ModalPolicy');
+                    modalPolicyContainer.innerHTML = `
+                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                            <div class="modal-content h-100">
+                                <div class="modal-header">
+                                    <div>
+                                        <h4 class="modal-title">Information Policy</h4>
+                                        ${policy.name}
+                                    </div>
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                </div>
+                                <div class="modal-body">
+                                    <div id="home" class="container"><br>
+                                        <p>ID: ${policy.id}<br><strong>Summary</strong><hr>
+                                        <ul>
+                                            <li><strong>Description</strong> ${policy.description}</li>
+                                            <li><strong>Expiration Time</strong> ${policy.estimatedTime}</li>
+                                            <li><strong>Value</strong> $${policy.Value}</li>
+                                        </ul>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
         
     } else {
         button.disabled = true; 
@@ -80,39 +143,8 @@ async function fetchDatasets() {
                 option.value = schema.id;
                 option.textContent = schema.description;
                 select.appendChild(option);
-                // Update modals
-                const newName = schema.name.replace(/_/g, " ");
-                const structure = schema.structure.replace(/\s/g, ", ");
-                if(schema.id===select_value_schema){
-                    const modalSchemaContainer = document.getElementById('myModal');
-                    modalSchemaContainer.innerHTML = `
-                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-                            <div class="modal-content h-100">
-                                <div class="modal-header">
-                                    <div>
-                                        <h4 class="modal-title">Information Schema</h4>
-                                        ${newName}
-                                    </div>
-                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                </div>
-                                <div class="modal-body">
-                                    <div id="home" class="container"><br>
-                                        <p>ID: ${schema.id}<br><strong>Summary</strong><hr>
-                                        <ul>
-                                            <li><strong>Description</strong> ${schema.description}</li>
-                                            <li><strong>Columns</strong> ${structure}</li>
-                                            <li><strong>Encrypted columns</strong> ${schema.fieldToEncrypt}</li>
-                                        </ul>
-                                        </p>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                }
+                
+                
             });
 
         })
@@ -129,36 +161,9 @@ async function fetchDatasets() {
                 option.textContent = policy.name;
                 select.appendChild(option);
 
-                if(policy.id === select_policy.value){
-                    const modalPolicyContainer = document.getElementById('ModalPolicy');
-                    modalPolicyContainer.innerHTML = `
-                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-                            <div class="modal-content h-100">
-                                <div class="modal-header">
-                                    <div>
-                                        <h4 class="modal-title">Information Policy</h4>
-                                        ${policy.name}
-                                    </div>
-                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                </div>
-                                <div class="modal-body">
-                                    <div id="home" class="container"><br>
-                                        <p>ID: ${policy.id}<br><strong>Summary</strong><hr>
-                                        <ul>
-                                            <li><strong>Description</strong> ${policy.description}</li>
-                                            <li><strong>Expiration Time</strong> ${policy.estimatedTime}</li>
-                                            <li><strong>Value</strong> $${policy.Value}</li>
-                                        </ul>
-                                        </p>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                }
+                
+                    
+                
                 
             });
             

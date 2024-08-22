@@ -60,10 +60,10 @@ def register_datasets(request):
     if request.method == 'POST':
         # Gets the file sent in the form.
         archivo = request.FILES['archivo']
-        policy = request.POST.get['idPolicy']
-        schema = request.POST.get['idSchema']
-        format = request.POST.get['format']
-        category = request.POST.get['idCategory']
+        policy = request.POST.get('idPolicy')
+        schema = request.POST.get('idSchema')
+        format = request.POST.get('format')
+        category = request.POST.get('idCategory')
         
         body={
             'idPolicy':policy,
