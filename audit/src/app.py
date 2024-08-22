@@ -5,6 +5,8 @@ import pandas as pd
 from flask import Flask, jsonify, request, Response	
 from datetime import datetime
 
+# Log file path
+file = "audit.txt"
 
 # Function: Add log to file
 def add_log(content, source, destination, type):
@@ -167,7 +169,7 @@ def search_logs(file, key, value):
 
 def get_logs_by_user(user):
     
-  df = pd.read_json("src/audit.txt", lines=True)
+  df = pd.read_json(file, lines=True)
   result = df[df['source']==user]
 
   x = result.to_json(orient='records', date_format='iso')
@@ -246,7 +248,7 @@ def get_all_logs():
 def get_consumers(user):
 
 
-  df = pd.read_json("src/audit.txt", lines=True)
+  df = pd.read_json(file, lines=True)
   df = df[df['source']==user]
   result = df[df['type']=="UPDATE CONSUMPTION"]
 
@@ -261,7 +263,7 @@ print(get_consumers("user_1"))
 
 def get_all_types():
   
-  df = pd.read_json("src/audit.txt", lines=True)
+  df = pd.read_json(file, lines=True)
 
   create = (df['type'] == "CREATE").sum()
   get = (df['type'] == "GET").sum()
@@ -284,7 +286,7 @@ def get_all_types():
 def get_logs_date_user(user):
 
 
-  df = pd.read_json("src/audit.txt", lines=True)
+  df = pd.read_json(file, lines=True)
   user_logs = df[df['source']==user]
   user_logs['timestamp'] = pd.to_datetime(user_logs['timestamp'])
   registers_per_day = user_logs.groupby(user_logs['timestamp'].dt.date).size()
@@ -295,7 +297,7 @@ def get_logs_date_user(user):
 
 def get_logs_date():
 
-  df = pd.read_json("src/audit.txt", lines=True)
+  df = pd.read_json(file, lines=True)
   user_logs = df
   user_logs['timestamp'] = pd.to_datetime(user_logs['timestamp'])
   registers_per_day = user_logs.groupby(user_logs['timestamp'].dt.date).size()
@@ -307,8 +309,7 @@ def get_logs_date():
 
 app = Flask(__name__)
 
-# Log file path
-file = "src/audit.txt"
+
 
 @app.route('/response', methods=['POST'])
 def log_reply():

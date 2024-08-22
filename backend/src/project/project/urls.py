@@ -1,7 +1,7 @@
 """project URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/4.0/topics/http/urls/
+
 Examples:
 Function views
     1. Add an import:  from my_app import views
@@ -30,8 +30,7 @@ router.register(r'schema', views.SchemaViewSet)
 router.register(r'count', views.CountCollectionViewSet)
 
 
-urlpatterns = [
-    
+urlpatterns = [    
     path('', include(router.urls)),
     path('login/', views.LoginView.as_view(), name='login'),
     path('saveData/<str:userType>/<str:idUser>/', views.saveData, name='saveData'),
@@ -39,7 +38,8 @@ urlpatterns = [
     path('deleteData/<str:idData>/', views.deleteData, name='deleteData'),
     path('downloadSchema/<str:idSchema>/', views.downloadSchema, name='downloadSchema'),
     path('downloadDataHolder/<str:idHolder>/<str:idSchema>/', views.downloadDataHolder, name='downloadDataHolder'),
-    path('downloadEncrypted/<str:idConsumer>/<str:idSchema>/', views.downloadEncrypted, name='downloadEncrypted'),
+    path('downloadEncrypted/<str:idConsumer>/<str:idSchema>/<str:carpet>/', views.downloadEncrypted, name='downloadEncrypted'),
     path('sign/', views.sign, name='sign'),
+    path('verifyDate/', views.verifyDate, name='verifyDate'),
     path('api/', include(router.urls)),
 ]

@@ -1,3 +1,8 @@
+"""
+    Serializer class is essentially a class that converts complex data structures (like Django model instances) 
+    into simple Python data types. 
+    These simple data types can then be easily rendered into formats like JSON, XML, or other content types.
+"""
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from .models import Category, Holder, Consumer, Admin, Data, CountCollection, Policy, Schema, CustomUser
@@ -24,13 +29,13 @@ class HolderSerializer(serializers.ModelSerializer):
     idPerson = serializers.PrimaryKeyRelatedField(queryset=CustomUser.objects.all())
     class Meta:
         model = Holder
-        fields = ['id','idPerson', 'data', 'authorization']
+        fields = ['id','idPerson', 'data', 'authorization','money']
 
 class ConsumerSerializer(serializers.ModelSerializer):
     idPerson = serializers.PrimaryKeyRelatedField(queryset=CustomUser.objects.all())
     class Meta:
         model = Consumer
-        fields = ['id','idPerson','company','nit','authorization']
+        fields = ['id','idPerson','company','nit','authorization','moneyPaid']
 
 class AdminSerializer(serializers.ModelSerializer):
     idPerson = serializers.PrimaryKeyRelatedField(queryset=CustomUser.objects.all())
@@ -42,7 +47,6 @@ class CountCollectionSerializer(serializers.ModelSerializer):
     class Meta:
         model = CountCollection
         fields = ['id','collection','count']
-
 
 class PolicySerializer(serializers.ModelSerializer):
     class Meta:
