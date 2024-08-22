@@ -55,7 +55,6 @@ def register_datasets(request):
     # Filters the holders to get the one corresponding to the current user.
     filtrados = list(filter(lambda diccionario: diccionario["idPerson"] == id_user, response.json()))
     data = filtrados[0]
-    print(f'el data desde register data {data['id']}')
     schema=0
     if request.method == 'POST':
         # Gets the file sent in the form.
@@ -76,7 +75,7 @@ def register_datasets(request):
         files = {'archivo': archivo}
         # Makes a POST request to send the file.
         response = requests.request("POST", url_file, headers=headers, files=files, data=body)
-        
+        print(response.text)
         # Redirects to the 'schemas_owner' view after sending the file.
         return redirect('/holder/schemas_owner/')
     
@@ -112,7 +111,7 @@ def dataset_selected(request, id):
     
     # Makes GET requests to fetch holders and datasets.
     response = requests.request("GET", url, headers=headers, data=payload)
-    response_data = requests.request("GET", url_data, headers=headers, data=payload)
+    response_data = requests.request("GET", url_data, headers=headers, data=payload, )
     
     # Filters the holders to get the one corresponding to the current user.
     filtrados = list(filter(lambda diccionario: diccionario["idPerson"] == id_user, response.json()))
@@ -138,14 +137,12 @@ def edit_datasets(request, id):
     # Retrieves the access token from the cache.
     variable_value = cache.get('access', 'Variable not found')
     # Retrieves the user ID from the cache.
-    id_user = cache.get('id_session')
-    url_ini="http://127.0.0.1:80/accounts/key/"
-    key = requests.get(url_ini, headers=headers, data=payload)
-    # Defines the URLs to fetch holders and datasets.
-    url = f"http://{key.text}:8000/api/holders/"
-    url_data = f"http://{key.text}:8000/data/"
     payload = ""
     headers = {}
+    id_user = cache.get('id_session')
+    # Defines the URLs to fetch holders and datasets.
+    url = f"http://{key}:8000/api/holders/"
+    url_data = f"http://{key}:8000/data/"
     
     # Makes GET requests to fetch holders and datasets.
     response = requests.request("GET", url, headers=headers, data=payload)
@@ -165,7 +162,7 @@ def edit_datasets(request, id):
         # Gets the file sent in the form.
         archivo = request.FILES['archivo']
         # Defines the URL to send the updated file.
-        url_file = f"http://{key.text}:8000/updateData/{dataset['id']}/"
+        url_file = f"http://{key}:8000/updateData/{dataset['id']}/"
         files = {'archivo': archivo}
         # Makes a POST request to send the updated file.
         response = requests.request("POST", url_file, headers=headers, files=files)
