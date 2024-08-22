@@ -1,0 +1,15 @@
+{
+    "log_id": 1,
+    "timestamp": 1717956722.532317,
+    "source": "user_1",
+    "destination": "rds_db_1",
+    "type": "query",
+    "description": {
+        "content": {
+            "database": "db_identifier",
+            "query": "SELECT * FROM TABLE personas"
+        }
+    },
+    "last_hash": "3683b51926e1976efd40f3d67356859d016a4a057ae7bc631be551ff7ab410a4",
+    "actual_hash": "3ad13d39b47d08432062f98e4a42d6512de44f21f6969e4a6b3431cdf511292e"
+}

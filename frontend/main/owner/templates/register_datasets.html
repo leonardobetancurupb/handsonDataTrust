@@ -3,7 +3,7 @@
 {% load i18n %}
 
 {% block content %}
-  {% if request.user.is_authenticated %}
+{% if token != "Variable not found" %}
     {% load static %}
 
     <div class="row w-100 ml-4 mt-2 justify-content-between">
@@ -11,121 +11,102 @@
         <div class="nav flex-column nav-pills text-center mt-4" id="v-pills-tab" role="tablist" aria-orientation="vertical">
           <ul class="list-group ml-0">
             <li class="list-group-item list-group-item-action ">
-                <a href={% url 'holder:home' %}>Home</a>
+                <a class="text-success" href={% url 'holder:home' %}>Home</a>
               </li >
               <li class="list-group-item list-group-item-action ">
-                <a href={% url 'holder:schemas_owner' %}>Datasets</a>
+                <a class="text-success" href={% url 'holder:schemas_owner' %}>Datasets</a>
               </li>
               <li class="list-group-item list-group-item-action ">
-                <a href={% url 'holder:register_datasets' %}>Create New</a>
+                <a class="text-success" href={% url 'holder:register_datasets' %}>Create New</a>
               </li>
               <li class="list-group-item list-group-item-action ">
-                <a href={% url 'accounts:settings' %}>Settings</a>
+                <a class="text-success" href={% url 'holder:about_owner' %}>About</a>
+              </li>
+              <li class="list-group-item list-group-item-action ">
+                <a class="text-success" href={% url 'accounts:log_out' %}>Log out</a>
               </li>
             </ul>
           </div>
         </div>
         <div class="col-md-9 w-100 vh-100 mt-5 mr-3 align-self-center">
+          <div id="alertContainer" class="position-absolute position-alert"></div> 
           <div class="ventana-home">
             <div class="lap-home  p-2 border border-1">
               <div class="form-group ">
                 <h3>
                   Create New Dataset
                 </h3>
-                <div class="container mt-5">
-                  <form action="" method="POST" enctype="multipart/form-data">
+                <div class="container mt-5" >
+                  
+                  <form  id="datasetForm" action="" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
-                    <div class="mb-3">
-                      <label for="CategoryInput" class="form-label">Category</label>
-                      <input type="text" class="form-control" id="CategoryInput" placeholder="Propiety">
-                    </div>
-                    <div class="mb-3">
-                      <label for="DescriptionInput" class="form-label">Description</label>
-                      <textarea class="form-control" id="DescriptionInput" rows="3" placeholder="Give a description to your dataset"></textarea>
-                    </div>
-                    <div class="mb-3">
-                      <label for="PolicyInput" class="form-label">Policy</label>
+                    <div class="mb-3 ">
+                      <label for="idCategory" class="form-label">Category</label>
                       <br>
-                      <select name="PolicyInput" id="PolicyInput" class="form-select">
+                      {% comment %} <input type="text" class="form-control" id="CategoryInput" placeholder="Propiety"> {% endcomment %}
+                      <select name="idCategory" id="idCategory" class="form-select w-50">
+                        <!-- Opción por defecto -->
+                        <option value="" disabled selected>Select a Category</option>
+                      </select>
+                    </div>
+                    <div class="mb-3">
+                      <label for="idPolicy" class="form-label">Policy</label>
+                      <br>
+                      <select name="idPolicy" id="idPolicy" class="form-select  w-50">
                         <!-- Opción por defecto -->
                         <option value="" disabled selected>Select a Policy</option>
-                          <option value="Only for studies">Only for studies</option>
-                          <option value="Only for developments">Only for developments</option>
                       </select>
-                      <button class="btn btn-sm btn-outline-primary ml-3" id="viewPolicyBtn" disabled>View policy selected</button>
+                      <button class="btn btn-sm btn-outline-success ml-3" id="viewPolicyBtn" disabled>View policy selected</button>
                     </div>
                     <div class="mb-3">
-                      <label for="SchemaInput" class="form-label">Schema</label>
+                      <label for="idSchema" class="form-label">Schema</label>
                       <br>
-                      <select name="SchemaInput" id="SchemaInput" class="form-select">
+                      <select name="idSchema" id="idSchema" class="form-select  w-50">
                         <!-- Opción por defecto -->
                         <option value="" disabled selected>Select a Schema</option>
-                          <option value="Medical Cost Personal">Medical Cost Personal</option>
-                          <option value="Bank Personal Loan">Bank Personal Loan</option>
                       </select>
-                      <button class="btn btn-sm btn-outline-primary ml-3" id="viewSchemaBtn" disabled>View schema selected</button>
+                      <button class="btn btn-sm btn-outline-success ml-3" id="viewSchemaBtn" disabled>View schema selected</button>
                       
                     </div>
                     <div class="mb-3">
                       <label for="FormatInput" class="form-label">Format</label>
-                      <input class="form-control" type="text" id="FormatInput" value="Excel" aria-label="Excel" disabled readonly>
+                      <input class="form-control" type="text" id="FormatInput" name="format" value="xlsx" aria-label="xlsx" >
                     </div>
-                    <div class="row mb-3 mt-1">
-                      <div class="col-md-6 ">
-                        <button class="btn btn-primary" onclick="exportToExcel()" id="exportToExcelBtn" disabled>Export template</button>
-                      </div>
-                      <div class="col-md-6 ">
-                        <div class="custom-file-input ml-2">
-                          <input type="file" name="archivo" id="fileInput" onchange="updateFileName()">
-                          <label for="fileInput" class="custom-file-label ">Choose File</label>
-                      </div>
-                      </div>
+                    <div>
+                        <label for="fileInput" class="form-label">File</label>
+                        <div class="custom-file-input  mb-2">
+                          <input type="file" name="archivo" id="fileInput"  class="" onchange="updateFileName()"> 
+                          <label for="fileInput" class="custom-file-label w-50">Choose File</label>
+                        </div>
                     </div>
-                    <div class="d-flex justify-content-end">
-                      <button type="submit" class="btn btn-primary">Submit</button>
+                    <div class="d-flex justify-content-end ">
+                      <button type="submit" class="btn btn-success position-absolute mt-5" id="submitBtn" disabled>Submit</button>
                     </div>
                   </form>
                   
+                </div>
+                <div id="form_dataset_create">
+
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+
+            <!-- The Modal Schema Summary-->
+            <div class="modal fade" id="myModal">
+        
+            </div>
+      
+            <!-- The Modal Policy Summary-->
+            <div class="modal fade" id="ModalPolicy">
+              
+            </div>
     </div>
     <script src="{% static 'assets/js/manage_datasets.js' %}"></script>
-    <script src="{% static 'assets/js/manage_files.js' %}"></script>
-    <script>
-      function updateFileName() {
-          var input = document.getElementById('fileInput');
-          var label = input.nextElementSibling; // El elemento <label> sigue al <input> en el DOM
-          var fileName = input.files.length > 0 ? input.files[0].name : 'Choose File';
-          label.textContent = fileName;
-      }
-  </script>
-  <script>
-    document.getElementById('SchemaInput').addEventListener('change', function() {
-        var select = document.getElementById('SchemaInput');
-        var button = document.getElementById('viewSchemaBtn');
-        var buttonExport = document.getElementById('exportToExcelBtn');
-        if (select.value) {
-            button.disabled = false;
-            buttonExport.disabled = false; // Habilita el botón si se selecciona una opción
-        } else {
-            button.disabled = true; // Deshabilita el botón si no hay ninguna opción seleccionada
-            buttonExport.disabled = true;
-        }
-    });
-    document.getElementById('PolicyInput').addEventListener('change', function() {
-      var select = document.getElementById('PolicyInput');
-      var button = document.getElementById('viewPolicyBtn');
-      if (select.value) {
-          button.disabled = false; // Habilita el botón si se selecciona una opción
-      } else {
-          button.disabled = true; // Deshabilita el botón si no hay ninguna opción seleccionada
-      }
-  });
-</script>
+
+
   {% else %}
     <script>
       window.onload = function () {

@@ -1,65 +1,125 @@
-
-const API_BASE_URL = 'https://http://127.0.0.1:8000/';
-function getPolicies_dropdown() {
-    // Example policies - replace with your actual data fetching logic
-    const policies = [
-        { id: 1, name: 'Policy 1' },
-        { id: 2, name: 'Policy 2' },
-        { id: 3, name: 'Policy 3' }
-    ];
-
-    const select = document.getElementById('idPolicy');
-    policies.forEach(policy => {
-        const option = document.createElement('option');
-        option.value = policy.id;
-        option.textContent = policy.name;
-        select.appendChild(option);
-    });
+// Function to get key
+async function getKey() {
+    var Response = await fetch('/accounts/key/');
+    var key_json = await Response.json();
+    console.log(key_json.my_api_key);
+    return key_json.my_api_key;
 }
 
 
-document.addEventListener('DOMContentLoaded', getPolicies_dropdown);
-
-
-async function createPolicy(policyData) {
-    const response = await fetch(`${API_BASE_URL}/policy/`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(policyData)
-    });
-    return response.json();
+document.addEventListener("DOMContentLoaded", function() {
+    fetchPolicies();
+});
+async function fetchPolicies() {
+    const myHeaders2 = new Headers();
+    myHeaders2.append("Content-Type", "application/json");
+    const myApiKey = await getKey();
+    const requestOptions2 = {
+        method: "GET",
+        headers: myHeaders2,
+    };
+    fetch(`http://${myApiKey}:8000/api/category/`, requestOptions2)
+        .then(response => response.json())
+        .then(data => {
+            const select = document.getElementById('idCategory');
+            data.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category.id;
+                option.textContent = category.category;
+                select.appendChild(option);
+            });
+        })
+        .catch(error => console.error('Error fetching categories:', error));
 }
+async function submitPolicyForm(event) {
+    event.preventDefault(); 
+    const myApiKey = await getKey();
+    const form = event.target; // get form
+    const formData = new FormData(form); 
+    
+    
+    const formDataObj = {};
+    formData.forEach((value, key) => {
+        formDataObj[key] = value;
+    });
 
-async function getPolicy(id) {
-    const response = await fetch(`${API_BASE_URL}/policy/${id}/`, {
+    try{
+        // Fetch existing categories data using a GET request
+        const response = await fetch(`http://${myApiKey}:8000/api/policy/`, { method: 'GET' });
+        if (!response.ok) {
+            throw new Error(`Error fetching session data: ${response.statusText}`); // Better error message
+        }
+        const policies = await response.json();
+        console.log(policies);
+    
+        // Check for duplicate category names
+        let isUnique = true;
+        for (const policy of policies) {
+            if (policy.name === formData.get('policy')) {
+                isUnique = false;
+                break; // Stop iterating if a duplicate is found
+            }
+        }
+    
+        if (!isUnique) {
+            throw new Error("Policy already exists."); // Duplicate category error
+        }
+    
+        // Check if the category name is less than 4 characters or a duplicate
+        if (formData.get('name').length < 4 || !isUnique) {
+            throw new Error("More than 4 characters are expected."); // Length validation error
+        }
+    
+
+    
+
+    fetch(`/accounts/get_cache/?key=access`, {
         method: 'GET'
-    });
-    return response.json();
-}
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.value) {
+            console.log(data.value);
 
-async function updatePolicy(id, policyData) {
-    const response = await fetch(`${API_BASE_URL}/policy/${id}/`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(policyData)
+            // headers options
+            const myHeaders = new Headers();
+            myHeaders.append("Content-Type", "application/json");
+            myHeaders.append("Authorization", "Bearer " + data.value);
+            formDataObj['Value'] = parseFloat(formDataObj['Value'])
+            const requestOptions = {
+                method: "POST",
+                headers: myHeaders,
+                body: JSON.stringify(formDataObj),
+            };
+            
+            // send request post
+            fetch(`http://${myApiKey}:8000/api/policy/`, requestOptions)
+                .then(response => response.text())
+                .then(result => {
+                    console.log(result);
+                    window.location.href = '/administrator/policy';
+                })
+                .catch(error => console.error('POST Error:', error));
+        } else {
+            console.error('Token not found in response.');
+        }
+    })
+    .catch(error => {
+        console.error('GET Error:', error);
     });
-    return response.json();
+} catch (error) {
+    // Display error message to the user
+    const alertContainer = document.getElementById('alertContainer');
+    alertContainer.innerHTML = `
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Error:</strong> Something went wrong: ${error}.
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    `;
 }
+}
+// Event listener to send form
+document.getElementById('policyForm').addEventListener('submit', submitPolicyForm);
 
-async function deletePolicy(id) {
-    const response = await fetch(`${API_BASE_URL}/policy/${id}/`, {
-        method: 'DELETE'
-    });
-    return response.status === 204; 
-}
-
-async function listPolicies() {
-    const response = await fetch(`${API_BASE_URL}/policy/`, {
-        method: 'GET'
-    });
-    return response.json();
-}

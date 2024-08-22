@@ -4,22 +4,13 @@
 
 {% block content %}
 
-    {% if request.user.is_authenticated %}
-
     {% load static %}
-
-    
-    {% comment %} <a href={% url 'consumer:info' %}>Home</a>
-    <a href={% url 'consumer:view_datasets' %}>Datasets</a>
-    <a href={% url 'consumer:consumer_history' %}>Projects</a>
-    <a href={% url 'accounts:settings' %}>Settings</a> {% endcomment %}
-
     <div class="row w-100 ml-4 mt-3 justify-content-between">
         <div class="col-sm-2 shadow-sm p-1 border border-1">
             <div class="nav flex-column nav-pills text-center mt-5" id="v-pills-tab" role="tablist" aria-orientation="vertical">
                 <ul class="list-group ml-0">
                     <li class="list-group-item list-group-item-action ">
-                        <a href={% url 'accounts:settings' %}>Settings</a>
+                        <a href={% url 'accounts:log_in' %}>Back</a>
                     </li>
                 </ul>
             </div>
@@ -27,27 +18,7 @@
         <div class="col-md-9 w-100 vh-100 mt-5 mr-3 align-self-center">
             <div class="ventana-home">
                 <div class="lap-home  p-2 border border-1 sensor-table">
-                  <div class="form-group ">
-                    <h3>
-                      Privileges
-                    </h3>
-                    <p class="text-light">
-                      Select User Privileges to Continue
-                    </p>
-                    <div class="container mt-2  w-50 text-center">
-                      <ul class="w-100 h-100 mt-3">
-                        <li class="p-3  bg-secondary mb-2 text-white rounded">
-                          <a class="text-white" href={% url 'holder:home' %}>Holder</a>
-                        </li>
-                        <li class="p-3  bg-secondary mb-2 text-white rounded">
-                          <a class="text-white" href={% url 'administrator:menu' %}>Admin</a>
-                        </li>
-                        <li class="p-3  bg-secondary mb-2 text-white rounded">
-                          <a class="text-white" href={% url 'consumer:info' %}>Consumer</a>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
+                  ERROR 403
                 </div>
             </div>
         </div>
@@ -55,11 +26,11 @@
 
     <script src={% static 'assets/js/manage_analitycs.js' %}></script>
     <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
-    {% else %}
+    
     <script>
         window.onload=function() {
         window.location.href = "{% url 'accounts:log_in' %}";
         }  
     </script>
-    {% endif %}
+    
 {% endblock %}
