@@ -365,7 +365,7 @@ def get_user_consumers(user):
 
   return dict
 
-print(get_user_consumers("user_1"))
+#print(get_user_consumers("user_1"))
 
 #CALL FOR Echarts
 
@@ -420,3 +420,28 @@ def get_logs_date():
   return dict
 
 #print(get_logs_date())
+
+def get_csv():
+
+  url = address+"/csv"
+  
+  payload = {}
+  output_file = "data.csv"
+  def generate_token():
+    token = "PALABRA"+str(payload)+time.strftime("%Y-%m-%d", time.localtime())
+    token = hashlib.sha256(token.encode()).hexdigest()
+    return token
+
+  generated_token = generate_token()
+
+  headers = {
+  'Content-Type': 'application/json',
+  'Authorization': f'Bearer {generated_token}'
+  }
+
+  response = requests.request("GET", url, headers=headers, data=json.dumps(payload))
+  with open(output_file,'wb') as file:
+    file.write(response.content)
+  print(f'CSV file saved as {output_file}') 
+
+get_csv()

@@ -256,9 +256,6 @@ def get_consumers(user):
   return x
 
 
-
-print(get_consumers("user_1"))
-
 # Redux functions
 
 def get_all_types():
@@ -305,6 +302,12 @@ def get_logs_date():
 
   x = registers_per_day.to_json(orient='records', date_format='iso')
   return x
+
+def get_csv():
+
+    df = pd.read_json("src/audit.txt", lines=True)
+    csv_data = df.to_csv(index=False)
+    return csv_data
 
 
 app = Flask(__name__)
@@ -557,6 +560,20 @@ def get_logs_user_consumers():
 
     return jsonify(response), 201
 
+@app.route('/csv', methods=['GET'])
+def get_csv_logs():
+
+    payload = request.get_data(as_text=True)
+    
+    if validate_token(payload):
+        
+        csv = get_csv()
+
+    else: 
+        response = {'auth' : 'Invalid token :(', 'response' : " null "}
+        return response
+
+    return Response(csv, mimetype='text/csv', headers={'Content-Disposition': 'attachment;filename=data.csv'})
 ##PARAM 
 
 if __name__ == '__main__':
