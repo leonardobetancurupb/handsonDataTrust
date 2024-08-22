@@ -1,4 +1,3 @@
-
 import requests
 import random
 from datetime import datetime
@@ -7,7 +6,6 @@ import string
 import os
 import pandas as pd
 import openpyxl
-import csv
 import sys
 
 
@@ -25,9 +23,19 @@ endpoints={
 }
 
 def poblateDBUsers(urlUser, urlHolder, urlConsumer, urlAdmin, nUsers):
+    """
+    Poblate the database with different users, consumers, admin y users like subjects
+
+    Args:
+        urlUser:str Endpoint to register users.
+        urlHolder:str Endpoint to register subjects.
+        urlConsumer:str Endpoint to register consumers.
+        urlAdmin:str Endpoint to register one admin.
+        nUsers:int How many users wants to create.
+    """
     headers = {
-  'Content-Type': 'application/json'
-}
+    'Content-Type': 'application/json'
+    }
     password="user"
     role=['holder',"consumer"]
     lstUsers=[]
@@ -90,6 +98,12 @@ def poblateDBUsers(urlUser, urlHolder, urlConsumer, urlAdmin, nUsers):
     return lstUsers, lstUserHolder, lstUserConsumer
 
 def poblateSchema(headers):
+    """    
+    Poblate the database with different Schemas
+
+    Args:
+        headers: Headers with tokens to create schema
+    """
     schemasCreated=[]
     payload={        
         "name":"insurance",
@@ -115,6 +129,12 @@ def poblateSchema(headers):
     return schemasCreated
 
 def poblateCategory(headers):
+    """    
+    Poblate the database with different Categories
+
+    Args:
+        headers: Headers with tokens to create category
+    """
     category=""
     categoriesCreated=[]
     payload={
@@ -131,6 +151,12 @@ def poblateCategory(headers):
     return categoriesCreated
 
 def poblatePolicy(headers):
+    """    
+    Poblate the database with different Policies
+
+    Args:
+        headers: Headers with tokens to create Policy
+    """
     policyCreated=[]
     dateNow=datetime.today().date()
     newDate=dateNow.month+4
@@ -160,38 +186,26 @@ def poblatePolicy(headers):
             print("rPolicy: "+str(rPolicy.status_code))
     return policyCreated
     
-def generar_datos_aleatorios():
-    """Genera datos aleatorios para nombre, cédula y dirección."""
+def generateDataRandom():
+    """
+        generate random name and address data.
+    """
     nombre = ' '.join([random.choice(string.ascii_letters) for _ in range(10)]).title()
     direccion = ' '.join([random.choice(string.ascii_letters) for _ in range(20)]).title()
     return nombre, direccion
 
-def crear_datos_dummies(origen,destino):
-    df=pd.read_csv(origen,delimiter=",")
-    dfHeaders=df.columns.tolist()
-    dfHeaders.extend(['Nombre', 'Cédula', 'Dirección'])  
-    for index, row in df.iterrows():
-        nombre, cedula, direccion = generar_datos_aleatorios()
-        nueva_fila = pd.DataFrame([[*row, nombre, cedula, direccion]], columns=dfHeaders)
-        nombre_archivo = f"Bank_Personal_Loan_Modelling.xlsx"
-        os.makedirs(f"{destino}\\{index}", exist_ok=True)
-        ruta_completa = f"{destino}\\{index}\\{nombre_archivo}"
-        nueva_fila.to_excel(ruta_completa, index=False)
+def poblateConsumption(lstConsumers, lstData):
+    """    
+    Poblate the database with different consumption from consumers to data subject
 
-def poblateConsumption(lstConsumidores, lstData):
-    '''
-    {
-    "idConsumer":"2",
-    "lstDataId":["4","5"],
-    "idSchema":"1"
-    }
-    '''
+    Args:
+        lstConsumers:list list of consumers objects
+        lastData:list list of data objects from the subjects
+    """
     headers = {
         'Content-Type': 'application/json'
         }
-    #por consumidor
-    for consumer in lstConsumidores:
-        #numero aleatorio entre 1 y la cantidad de data almacenada-1
+    for consumer in lstConsumers:
         randomNroData=random.randint(1, len(lstData)-1)
         copylstData=lstData
         lstDataIdSchema1Policy0=[]
@@ -201,11 +215,9 @@ def poblateConsumption(lstConsumidores, lstData):
         dataId=""
         idSchema=""
         idPolicy=""
-        #desde 0 hasta el numero aleatorio
+        
         for i in range(randomNroData):
-            #numero aleatorio entre 0 y la cantidad de data almacenada -1
             randomData=random.randint(0, len(lstData)-1)
-            #el numero aleatorio es el index del cual agarraré el id de ese index y el esquema correspondiente
             dataId=copylstData[randomData]['id']
             idSchema=copylstData[randomData]['idSchema']
             idPolicy=copylstData[randomData]['idPolicy']
@@ -223,12 +235,12 @@ def poblateConsumption(lstConsumidores, lstData):
                 "idSchema":"",
                 "idPolicy":""
             }
-        #si hay ids almacenados en esquema 1 y esquema 2 entonces...
+        
         if len(lstDataIdSchema0Policy0)!=0:
             payload["lstDataId"]=lstDataIdSchema0Policy0
             payload["idPolicy"]="0"
             payload["idSchema"]="0"
-            r = requests.post(f'http://54.197.173.166:8000/sign/', data=json.dumps(payload), headers=headers)
+            r = requests.post(f'{url}sign/', data=json.dumps(payload), headers=headers)
             if 200<=r.status_code<300:
                 print("Ok1")        
             else:
@@ -238,7 +250,7 @@ def poblateConsumption(lstConsumidores, lstData):
             payload["idSchema"]="0"
             payload["idPolicy"]="1"
             payload["lstDataId"]=lstDataIdSchema0Policy1
-            res = requests.post(f'http://54.197.173.166:8000/sign/', data=json.dumps(payload), headers=headers)
+            res = requests.post(f'{url}sign/', data=json.dumps(payload), headers=headers)
             if 200<=res.status_code<300:
                 print("Ok2")        
             else:
@@ -248,7 +260,7 @@ def poblateConsumption(lstConsumidores, lstData):
             payload["idSchema"]="1"
             payload["idPolicy"]="0"
             payload["lstDataId"]=lstDataIdSchema1Policy0
-            resp = requests.post(f'http://54.197.173.166:8000/sign/', data=json.dumps(payload), headers=headers)                        
+            resp = requests.post(f'{url}sign/', data=json.dumps(payload), headers=headers)                        
             if 200<=resp.status_code<300:
                 print("Ok3")
             else:
@@ -258,49 +270,45 @@ def poblateConsumption(lstConsumidores, lstData):
             payload["idSchema"]="1"
             payload["idPolicy"]="1"
             payload["lstDataId"]=lstDataIdSchema1Policy1
-            respo = requests.post(f'http://54.197.173.166:8000/sign/', data=json.dumps(payload), headers=headers)                                                    
+            respo = requests.post(f'{url}sign/', data=json.dumps(payload), headers=headers)                                                    
             if 200<=respo.status_code<300:
                 print("Ok4")
             else:
                 print("4error lstData schema 1 - policy 1: "+str(respo.status_code))
         print("Consumer: "+str(consumer)+": Ok")
 
-def poblateData(schemasCreated,categoriesCreated, policiesCreated, lstUserHolder, ):
-    #crear archivo con plantillas escogida aleatoriamente, el archivo con 
-    #datos sacados ordenadamente del csv proporcionado
-    #y posteriormente subirlo con el id del holder actual
-    '''
-        {
-            "idCategory":"",
-            "format":"",
-            "idSchema":"",
-            "idPolicy":"",
-        }
-    '''
-    # Define your headers as a list
-    #por holder en los holders creados
+def poblateData(schemasCreated,categoriesCreated, policiesCreated, lstUserHolder):
+    """    
+    Poblate the database with different data subject
+
+    Args:
+        schemasCreated:list list of schemas objects created
+        categoriesCreated:list list of categories objects created
+        policiesCreated:list list of policies objects created
+        lstUserHolder:list list of subjects objects created
+    """
     count=0
     lstData=[]
     for holder in lstUserHolder:
-        #por esquema en los esquemas creados
+       
         for schema in schemasCreated:
             workbook = openpyxl.Workbook()
             headers = schema['structures'].split(" ")
             worksheet = workbook.active
             for col_num, header in enumerate(headers, start=1):
                 worksheet.cell(row=1, column=col_num, value=header)
-            #leer excel con ese nombre
-            path="handsonDataTrust/scripts/filesBot/"+schema['name']+".csv"
+           
+            path="filesBot/"+schema['name']+".csv"
             df=pd.read_csv(path,delimiter=",")
             nroFilasDf=df.shape[0]
             randomData=random.randint(1, nroFilasDf-1)
-            nombre, direccion = generar_datos_aleatorios()
-            new_row = [nombre, direccion] + list(df.iloc[randomData])
+            name, address = generateDataRandom()
+            new_row = [name, address] + list(df.iloc[randomData])
             worksheet.append(new_row)
-            workbook.save("handsonDataTrust/scripts/dataGenerated/"+schema['name']+str(holder)+".xlsx")
+            workbook.save("dataGenerated/"+schema['name']+str(holder)+".xlsx")
             
             randomPolicy=random.randint(0, len(policiesCreated)-1)
-            #request
+           
             idCategory=""
             for category in categoriesCreated:
                 if schema['name']=="Insurance" and category['category']=="Medical":
@@ -308,7 +316,7 @@ def poblateData(schemasCreated,categoriesCreated, policiesCreated, lstUserHolder
                 elif schema['name']=="BankPersonal" and category['category']=="Financial":
                     idCategory=category['idCategory']
             
-            files={'archivo':open("handsonDataTrust/scripts/dataGenerated/"+schema['name']+str(holder)+".xlsx",'rb')}
+            files={'archivo':open("dataGenerated/"+schema['name']+str(holder)+".xlsx",'rb')}
             workbook.close()
             data={
                 'idCategory': idCategory,
@@ -316,8 +324,8 @@ def poblateData(schemasCreated,categoriesCreated, policiesCreated, lstUserHolder
                 'idSchema': schema['idSchema'],
                 'idPolicy': policiesCreated[randomPolicy]['idPolicy']
             }
-            response = requests.post(f'http://54.197.173.166:8000/saveData/holder/{holder}/', files=files, data=data)
-            # Maneja la respuesta
+            response = requests.post(f'{url}saveData/holder/{holder}/', files=files, data=data)
+           
             if response.status_code == 200:
                 lstData.append({"id":count,"idCategory":idCategory,"idSchema":schema['idSchema'],"idPolicy":policiesCreated[randomPolicy]['idPolicy'], "idHolder":holder})
                 count+=1
@@ -342,6 +350,15 @@ def deleteFilesGenerated(path):
 
 
 def poblateDBSchema(urlLogin,lstUsers, lstUserHolder, lstUserConsumer):
+    """    
+        Integrator function to poblate the database
+
+    Args:
+        urlLogin:str url for login users.
+        lstUsers:list list of users objects created
+        lstUserHolder:list list of subjects objects created
+        lstUserConsumer:list list of consumers objects created
+    """
     headersc = {
   'Content-Type': 'application/json'
 }
@@ -379,7 +396,7 @@ def main():
         sys.exit(1)
     lstUsers, lstUserHolder, lstUserConsumer=poblateDBUsers(endpoints['register'],endpoints["holders"],endpoints["consumers"],endpoints["admin"],numero)
     poblateDBSchema(endpoints["login"],lstUsers, lstUserHolder, lstUserConsumer)
-    deleteFilesGenerated("handsonDataTrust/scripts/dataGenerated")
+    deleteFilesGenerated("dataGenerated")
     return
 
 if __name__ == "__main__":
