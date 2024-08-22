@@ -59,7 +59,7 @@ const loadDatasets = async () => {
         method: "GET",
         headers: headers,
     };
-    const myApiKey = getKey();
+    const myApiKey = await getKey();
     try {
         // Fetch datasets from server
         const response = await fetch(`http://${myApiKey}:8000/api/data/`, requestOptions);

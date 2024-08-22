@@ -9,7 +9,7 @@ async function getKey() {
 const loadDatasets = async () => {
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
-    const myApiKey = getKey();
+    const myApiKey = await getKey();
     const requestOptions = {
         method: "GET",
         headers: myHeaders,

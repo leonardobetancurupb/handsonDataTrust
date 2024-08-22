@@ -54,10 +54,10 @@ document.getElementById('idPolicy').addEventListener('change', function() {
     }
 });
 
-function fetchDatasets() {
+async function fetchDatasets() {
     const myHeaders2 = new Headers();
     myHeaders2.append("Content-Type", "application/json");
-    const myApiKey = getKey();
+    const myApiKey = await getKey();
     const requestOptions2 = {
         method: "GET",
         headers: myHeaders2,

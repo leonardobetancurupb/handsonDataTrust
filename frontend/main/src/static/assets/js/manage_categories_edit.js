@@ -18,11 +18,11 @@ function getIdFromUrl() {
 }
 
 // Function to load and set form data to update a category
-function loadCategoryData() {
+async function loadCategoryData() {
     const id = getIdFromUrl();
     console.log(id);
     if (!id) return; // Exit if there's no ID
-    const myApiKey = getKey();
+    const myApiKey = await getKey();
     const headers = new Headers();
     headers.append("Content-Type", "application/json");
     
@@ -44,7 +44,7 @@ async function submitCategoryForm(event) {
     const id = getIdFromUrl();
     console.log(id);
     if (!id) return;
-    const myApiKey = getKey();
+    const myApiKey = await getKey();
     const form = event.target; // Get the form element
     const formData = new FormData(form); // Create a FormData object
     
@@ -126,11 +126,11 @@ async function submitCategoryForm(event) {
 document.getElementById('categoryForm').addEventListener('submit', submitCategoryForm);
 
 // Function to delete a category
-document.getElementById('confirmDeleteButton').addEventListener('click', function() {
+document.getElementById('confirmDeleteButton').addEventListener('click', async function() {
     const id = getIdFromUrl();
     console.log(id);
     if (!id) return;
-    const myApiKey = getKey();
+    const myApiKey = await getKey();
     fetch(`/accounts/get_cache/?key=access`, { method: 'GET' })
         .then(response => response.json())
         .then(data => {

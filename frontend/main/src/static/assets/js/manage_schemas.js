@@ -23,7 +23,7 @@ function updateSelectOptions() {
 
 async function submitSchemaForm(event) {
     event.preventDefault(); // Evita el envío tradicional del formulario
-    const myApiKey = getKey();
+    const myApiKey = await getKey();
     const form = event.target; // Obtiene el formulario
     const formData = new FormData(form); // Crea un objeto FormData con los datos del formulario
     

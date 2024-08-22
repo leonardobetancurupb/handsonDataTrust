@@ -21,7 +21,7 @@ async function loadSchemaData() {
     const id = getIdFromUrl();
     console.log(id);
     if (!id) return;
-    const myApiKey = getKey();
+    const myApiKey = await getKey();
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
@@ -81,7 +81,7 @@ async function submitSchemaForm(event) {
     const id = getIdFromUrl();
     console.log(id);
     if (!id) return;
-    const myApiKey = getKey();
+    const myApiKey = await getKey();
     const form = event.target; // get form
     const formData = new FormData(form); // create new form with data
     
@@ -195,11 +195,11 @@ async function submitSchemaForm(event) {
 document.getElementById('schemaForm').addEventListener('submit', submitSchemaForm);
 
 // delete validation function
-document.getElementById('confirmDeleteButton').addEventListener('click', function() {
+document.getElementById('confirmDeleteButton').addEventListener('click', async function() {
     const id = getIdFromUrl();
     console.log(id);
     if (!id) return;
-    const myApiKey = getKey();
+    const myApiKey = await getKey();
     fetch(`/accounts/get_cache/?key=access`, {
         method: 'GET'
         })

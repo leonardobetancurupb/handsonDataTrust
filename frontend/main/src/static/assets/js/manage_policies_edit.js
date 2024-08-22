@@ -22,7 +22,7 @@ async function loadCategoryOptions(selectedCategoryId) {
         method: "GET",
         headers: myHeaders,
     };
-    const myApiKey = getKey();
+    const myApiKey = await getKey();
     try {
         const response = await fetch(`http://${myApiKey}:8000/category/`, requestOptions);
         const categories = await response.json();
@@ -52,7 +52,7 @@ async function loadPolicyData() {
 
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
-    const myApiKey = getKey();
+    const myApiKey = await getKey();
     const requestOptions = {
         method: "GET",
         headers: myHeaders,
@@ -85,7 +85,7 @@ async function submitPolicyForm(event) {
     if (!id) return;
     const form = event.target; // get form
     const formData = new FormData(form); // create new form with data
-    const myApiKey = getKey();
+    const myApiKey = await getKey();
     // FormData to Json format
     const formDataObj = {};
     formData.forEach((value, key) => {
@@ -173,11 +173,11 @@ async function submitPolicyForm(event) {
 
 document.getElementById('policyForm').addEventListener('submit', submitPolicyForm);
 // delete validation function
-document.getElementById('confirmDeleteButton').addEventListener('click', function() {
+document.getElementById('confirmDeleteButton').addEventListener('click', async function() {
     const id = getIdFromUrl();
     console.log(id);
     if (!id) return;
-    const myApiKey = getKey();
+    const myApiKey = await getKey();
     fetch(`/accounts/get_cache/?key=access`, {
         method: 'GET'
         })

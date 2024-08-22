@@ -44,9 +44,9 @@ function deleteCategory(event) {
 }
 
   // Function to handle delete confirmation button click
-document.getElementById('confirmDeleteButton').addEventListener('click', function() {
+document.getElementById('confirmDeleteButton').addEventListener('click', async function() {
     // Fetch access token
-    const myApiKey = getKey();
+    const myApiKey = await getKey();
     fetch(`/accounts/get_cache/?key=access`, {
         method: 'GET'
         })
@@ -99,7 +99,7 @@ const loadCategories = async () => {
     // Create headers for GET request
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
-    const myApiKey = getKey();
+    const myApiKey = await getKey();
     // Create request options for GET request
     const requestOptions = {
         method: "GET",
