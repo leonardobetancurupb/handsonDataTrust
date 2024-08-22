@@ -80,7 +80,7 @@ def get_cache_variable(request):
 
 def key(request):
     
-    with open('frontend/main/src/utils/key.txt', 'r') as file:
+    with open('/code/src/utils/key.txt', 'r') as file:
         content = file.read()
     return JsonResponse({
         'my_api_key': content,

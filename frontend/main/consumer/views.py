@@ -6,7 +6,7 @@ from django.conf import settings
 # View to render the main menu page
 
 
-with open('../src/utils/key.txt', 'r') as file:
+with open('/code/src/utils/key.txt', 'r') as file:
         key = file.read()
         
 def menu(request):
