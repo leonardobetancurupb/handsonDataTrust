@@ -54,7 +54,7 @@ The project is organized as follows:
    You need to change the url to your domain or ip in line 12 of the populate_data.py file
 
    ```bash
-   python populate_data.py
+   python populate_data.py nUsers
    ```
 
 4. **Access the application**:
