@@ -33,7 +33,7 @@ document.getElementById('idSchema').addEventListener('change', async function() 
     select_value_schema = select.value;
     console.log(select_value_schema);
 
-
+    const myApiKey = await getKey();
     if (select.value) {
         button.disabled = false;
         const schemaResponse = await fetch(`http://${myApiKey}:8000/api/schema/${dataset.idSchema}/`);
@@ -81,6 +81,7 @@ document.getElementById('idSchema').addEventListener('change', async function() 
 });
 document.getElementById('idPolicy').addEventListener('change', async function() {
     var select = document.getElementById('idPolicy');
+    const myApiKey = await getKey();
     var button = document.getElementById('viewPolicyBtn');
     if (select.value) {
         button.disabled = false; 
@@ -149,8 +150,6 @@ async function fetchDatasets() {
 
         })
         .catch(error => console.error('Error fetching schemas:', error));
-
-        var select_policy = document.getElementById('idPolicy');
         fetch(`http://${myApiKey}:8000/policy/`, requestOptions2)
         .then(response => response.json())
         .then(data => {
