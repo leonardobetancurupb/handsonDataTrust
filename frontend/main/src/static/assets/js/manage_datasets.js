@@ -36,7 +36,7 @@ document.getElementById('idSchema').addEventListener('change', async function() 
     const myApiKey = await getKey();
     if (select.value) {
         button.disabled = false;
-        const schemaResponse = await fetch(`http://${myApiKey}:8000/api/schema/${dataset.idSchema}/`);
+        const schemaResponse = await fetch(`http://${myApiKey}:8000/api/schema/${select.value}/`);
         const schema = await schemaResponse.json();
 
         // Update modals
@@ -85,7 +85,7 @@ document.getElementById('idPolicy').addEventListener('change', async function() 
     var button = document.getElementById('viewPolicyBtn');
     if (select.value) {
         button.disabled = false; 
-        const policyResponse = await fetch(`http://${myApiKey}:8000/api/policy/${dataset.idPolicy}/`);
+        const policyResponse = await fetch(`http://${myApiKey}:8000/api/policy/${select.value}/`);
         const policy = await policyResponse.json();
         const modalPolicyContainer = document.getElementById('ModalPolicy');
                     modalPolicyContainer.innerHTML = `
